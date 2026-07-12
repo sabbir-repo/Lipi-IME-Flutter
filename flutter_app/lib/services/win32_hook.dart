@@ -507,8 +507,7 @@ class Win32Hook {
   }
 
   void injectBackspaceAndChar(String char) {
-    _isInjecting = true;
-    
+
     final pInputs = calloc<INPUT_KBD>(4 + char.length * 2);
     
     pInputs[0].type = INPUT_KEYBOARD;
@@ -546,10 +545,6 @@ class Win32Hook {
     
     mySendInput(idx, pInputs, sizeOf<INPUT_KBD>());
     calloc.free(pInputs);
-    
-    Future.delayed(const Duration(milliseconds: 10), () {
-      _isInjecting = false;
-    });
   }
 
   String? getMappedChar(int vkCode, bool isShift, String langCode) {
