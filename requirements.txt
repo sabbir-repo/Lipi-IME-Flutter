@@ -1,0 +1,6 @@
+requests==2.31.0
+keyboard==0.13.5
+pyinstaller
+pystray==0.19.5
+pillow==10.2.0
+avro-py

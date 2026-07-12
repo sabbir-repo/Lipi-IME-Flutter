@@ -1,0 +1,117 @@
+import 'dart:ffi';
+import 'package:ffi/ffi.dart';
+import 'win32_ffi.dart';
+import 'win32_caret.dart' as caret_lib;
+import 'ime_controller.dart';
+
+// --- Windows API Constants ---
+const int EVENT_SYSTEM_FOREGROUND = 0x0003;
+const int WINEVENT_OUTOFCONTEXT = 0x0000;
+const int WINEVENT_SKIPOWNPROCESS = 0x0002;
+
+// --- Custom FFI Bindings for WinEventHook ---
+typedef SetWinEventHookC = IntPtr Function(
+  Uint32 eventMin,
+  Uint32 eventMax,
+  IntPtr hmodWinEventProc,
+  Pointer<NativeFunction<Void Function(IntPtr, Uint32, IntPtr, Int32, Int32, Uint32, Uint32)>> pfnWinEventProc,
+  Uint32 idProcess,
+  Uint32 idThread,
+  Uint32 dwFlags
+);
+typedef SetWinEventHookDart = int Function(
+  int eventMin,
+  int eventMax,
+  int hmodWinEventProc,
+  Pointer<NativeFunction<Void Function(IntPtr, Uint32, IntPtr, Int32, Int32, Uint32, Uint32)>> pfnWinEventProc,
+  int idProcess,
+  int idThread,
+  int dwFlags
+);
+
+typedef UnhookWinEventC = Int32 Function(IntPtr hWinEventHook);
+typedef UnhookWinEventDart = int Function(int hWinEventHook);
+
+final user32 = DynamicLibrary.open('user32.dll');
+final mySetWinEventHook = user32.lookupFunction<SetWinEventHookC, SetWinEventHookDart>('SetWinEventHook');
+final myUnhookWinEvent = user32.lookupFunction<UnhookWinEventC, UnhookWinEventDart>('UnhookWinEvent');
+
+class FocusTracker {
+  static final FocusTracker _instance = FocusTracker._internal();
+  factory FocusTracker() => _instance;
+  FocusTracker._internal();
+
+  int _hWinEventHook = 0;
+  NativeCallable<Void Function(IntPtr, Uint32, IntPtr, Int32, Int32, Uint32, Uint32)>? _winEventCallback;
+
+  void start() {
+    if (_hWinEventHook != 0) return;
+
+    // 🟢 বাগ ফিক্স: Void ফাংশনের ক্ষেত্রে exceptionalReturn দেওয়া যায় না
+    _winEventCallback = NativeCallable<Void Function(IntPtr, Uint32, IntPtr, Int32, Int32, Uint32, Uint32)>.isolateLocal(
+      _winEventProc
+    );
+
+    // 🟢 নেটিভ উইন্ডোজ ইভেন্ট হুক বসানো হলো
+    _hWinEventHook = mySetWinEventHook(
+      EVENT_SYSTEM_FOREGROUND,
+      EVENT_SYSTEM_FOREGROUND,
+      0,
+      _winEventCallback!.nativeFunction,
+      0,
+      0,
+      WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS
+    );
+  }
+
+  void stop() {
+    if (_hWinEventHook != 0) {
+      myUnhookWinEvent(_hWinEventHook);
+      _hWinEventHook = 0;
+      _winEventCallback?.close();
+      _winEventCallback = null;
+    }
+  }
+
+  static void _winEventProc(int hWinEventHook, int event, int hwnd, int idObject, int idChild, int idEventThread, int dwmsEventTime) {
+    if (event == EVENT_SYSTEM_FOREGROUND && hwnd != 0) {
+      _updateActiveProcess(hwnd);
+    }
+  }
+
+  static void _updateActiveProcess(int hwnd) {
+    try {
+      final pPid = calloc<Uint32>();
+      caret_lib.myGetWindowThreadProcessId(hwnd, pPid);
+      final pidVal = pPid.value;
+      calloc.free(pPid);
+
+      if (pidVal == 0) return;
+
+      int hProcess = myOpenProcess(0x1000, 0, pidVal); // PROCESS_QUERY_LIMITED_INFORMATION
+      if (hProcess == 0) {
+        hProcess = myOpenProcess(0x0400, 0, pidVal); // PROCESS_QUERY_INFORMATION
+      }
+
+      String processName = "";
+      if (hProcess != 0) {
+        final buffer = calloc<Uint16>(512);
+        final size = calloc<Uint32>()..value = 512;
+        final ok = myQueryFullProcessImageName(hProcess, 0, buffer.cast<Utf16>(), size);
+        if (ok != 0) {
+          final path = buffer.cast<Utf16>().toDartString();
+          processName = path.split('\\').last.toLowerCase();
+        }
+        calloc.free(buffer);
+        calloc.free(size);
+        myCloseHandle(hProcess);
+      }
+
+      if (processName.isNotEmpty && ImeController().currentActiveExe != processName) {
+        ImeController().currentActiveExe = processName;
+        // 🟢 UI ক্র্যাশ রোধ করে নিরাপদে স্টেট আপডেট
+        Future.microtask(() => ImeController().notifyListeners());
+      }
+    } catch (_) {}
+  }
+}
