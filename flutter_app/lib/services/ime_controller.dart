@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../api/api_service.dart';
 import 'preference_manager.dart';
@@ -135,7 +136,10 @@ class ImeController extends ChangeNotifier {
         int r = Random().nextInt(34) + 1;
         final player = _audioPlayers[_currentPlayerIndex];
         _currentPlayerIndex = (_currentPlayerIndex + 1) % _audioPlayers.length;
-        player.play(AssetSource('audio/key_$r.mp3'), mode: PlayerMode.lowLatency);
+        
+        SchedulerBinding.instance.scheduleTask(() {
+          player.play(AssetSource('audio/key_$r.mp3'), mode: PlayerMode.lowLatency);
+        }, Priority.animation);
       } else if (soundType == 'system') {
         myBeep(700, 50);
       }
