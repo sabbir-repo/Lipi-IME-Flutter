@@ -3,6 +3,7 @@ import 'package:ffi/ffi.dart';
 import 'win32_ffi.dart';
 import 'win32_caret.dart' as caret_lib;
 import 'ime_controller.dart';
+import 'win32_hook.dart';
 
 // --- Windows API Constants ---
 const int EVENT_SYSTEM_FOREGROUND = 0x0003;
@@ -80,38 +81,47 @@ class FocusTracker {
   }
 
   static void _updateActiveProcess(int hwnd) {
+    Pointer<Uint32>? pPid;
+    Pointer<Uint16>? buffer;
+    Pointer<Uint32>? size;
+    int hProcess = 0;
+
     try {
-      final pPid = calloc<Uint32>();
+      pPid = calloc<Uint32>();
       caret_lib.myGetWindowThreadProcessId(hwnd, pPid);
       final pidVal = pPid.value;
-      calloc.free(pPid);
 
       if (pidVal == 0) return;
 
-      int hProcess = myOpenProcess(0x1000, 0, pidVal); // PROCESS_QUERY_LIMITED_INFORMATION
+      hProcess = myOpenProcess(0x1000, 0, pidVal); // PROCESS_QUERY_LIMITED_INFORMATION
       if (hProcess == 0) {
         hProcess = myOpenProcess(0x0400, 0, pidVal); // PROCESS_QUERY_INFORMATION
       }
 
       String processName = "";
       if (hProcess != 0) {
-        final buffer = calloc<Uint16>(512);
-        final size = calloc<Uint32>()..value = 512;
+        buffer = calloc<Uint16>(512);
+        size = calloc<Uint32>()..value = 512;
         final ok = myQueryFullProcessImageName(hProcess, 0, buffer.cast<Utf16>(), size);
         if (ok != 0) {
           final path = buffer.cast<Utf16>().toDartString();
           processName = path.split('\\').last.toLowerCase();
         }
-        calloc.free(buffer);
-        calloc.free(size);
-        myCloseHandle(hProcess);
       }
 
       if (processName.isNotEmpty && ImeController().currentActiveExe != processName) {
         ImeController().currentActiveExe = processName;
-        // 🟢 UI ক্র্যাশ রোধ করে নিরাপদে স্টেট আপডেট
         Future.microtask(() => ImeController().notifyListeners());
       }
-    } catch (_) {}
+      
+      Win32Hook.isBrowserFocused = Win32Hook.checkIsCompositionInWebsite(hwnd);
+
+    } catch (_) {
+    } finally {
+      if (pPid != null) calloc.free(pPid);
+      if (buffer != null) calloc.free(buffer);
+      if (size != null) calloc.free(size);
+      if (hProcess != 0) myCloseHandle(hProcess);
+    }
   }
 }

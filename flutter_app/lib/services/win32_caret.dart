@@ -78,51 +78,55 @@ class CaretPosition {
 
 class Win32Caret {
   static CaretPosition? getCaretScreenPos() {
-    final hwndActive = myGetForegroundWindow();
-    if (hwndActive == 0) return null;
+    Pointer<Uint32>? pPid;
+    Pointer<GUITHREADINFO>? info;
+    Pointer<POINT>? ptTop;
+    Pointer<POINT>? ptBottom;
+    Pointer<POINT>? pt;
 
-    final pPid = calloc<Uint32>();
-    final threadId = myGetWindowThreadProcessId(hwndActive, pPid);
-    calloc.free(pPid);
+    try {
+      final hwndActive = myGetForegroundWindow();
+      if (hwndActive == 0) return null;
 
-    final info = calloc<GUITHREADINFO>();
-    info.ref.cbSize = sizeOf<GUITHREADINFO>();
-
-    if (myGetGUIThreadInfo(threadId, info) != 0) {
-      final hwndCaret = info.ref.hwndCaret != 0 
-          ? info.ref.hwndCaret 
-          : (info.ref.hwndFocus != 0 ? info.ref.hwndFocus : hwndActive);
-          
-      final rect = info.ref.rcCaret;
+      pPid = calloc<Uint32>();
+      final threadId = myGetWindowThreadProcessId(hwndActive, pPid);
       
-      if (rect.left != 0 || rect.top != 0 || rect.bottom != 0) {
-        final ptTop = calloc<POINT>()..ref.x = rect.left..ref.y = rect.top;
-        final ptBottom = calloc<POINT>()..ref.x = rect.left..ref.y = rect.bottom;
+      info = calloc<GUITHREADINFO>();
+      info.ref.cbSize = sizeOf<GUITHREADINFO>();
+
+      if (myGetGUIThreadInfo(threadId, info) != 0) {
+        final hwndCaret = info.ref.hwndCaret != 0 
+            ? info.ref.hwndCaret 
+            : (info.ref.hwndFocus != 0 ? info.ref.hwndFocus : hwndActive);
+            
+        final rect = info.ref.rcCaret;
         
-        myClientToScreen(hwndCaret, ptTop);
-        myClientToScreen(hwndCaret, ptBottom);
-        
-        final pos = CaretPosition(ptBottom.ref.x, ptTop.ref.y, ptBottom.ref.y);
-        
-        calloc.free(ptTop);
-        calloc.free(ptBottom);
-        calloc.free(info);
-        
-        return pos;
+        if (rect.left != 0 || rect.top != 0 || rect.bottom != 0) {
+          ptTop = calloc<POINT>()..ref.x = rect.left..ref.y = rect.top;
+          ptBottom = calloc<POINT>()..ref.x = rect.left..ref.y = rect.bottom;
+          
+          myClientToScreen(hwndCaret, ptTop);
+          myClientToScreen(hwndCaret, ptBottom);
+          
+          return CaretPosition(ptBottom.ref.x, ptTop.ref.y, ptBottom.ref.y);
+        }
       }
+      
+      // Fallback to mouse position
+      pt = calloc<POINT>();
+      if (myGetCursorPos(pt) != 0) {
+        return CaretPosition(pt.ref.x, pt.ref.y, pt.ref.y + 16, isMouseFallback: true);
+      }
+      
+      return null;
+    } catch (_) {
+      return null;
+    } finally {
+      if (pPid != null) calloc.free(pPid);
+      if (info != null) calloc.free(info);
+      if (ptTop != null) calloc.free(ptTop);
+      if (ptBottom != null) calloc.free(ptBottom);
+      if (pt != null) calloc.free(pt);
     }
-    
-    calloc.free(info);
-    
-    // Fallback to mouse position
-    final pt = calloc<POINT>();
-    if (myGetCursorPos(pt) != 0) {
-      final pos = CaretPosition(pt.ref.x, pt.ref.y, pt.ref.y + 16, isMouseFallback: true);
-      calloc.free(pt);
-      return pos;
-    }
-    calloc.free(pt);
-    
-    return null;
   }
 }
