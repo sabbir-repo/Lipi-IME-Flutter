@@ -281,7 +281,7 @@ class ImeController extends ChangeNotifier {
   void appendBuffer(String char) {
     buffer += char;
     _requestSuggestions();
-    notifyListeners();
+    Future.microtask(() => notifyListeners());
   }
 
   void popBuffer() {
@@ -292,7 +292,7 @@ class ImeController extends ChangeNotifier {
       } else {
         clearBuffer();
       }
-      notifyListeners();
+      Future.microtask(() => notifyListeners());
     }
   }
 
@@ -302,20 +302,20 @@ class ImeController extends ChangeNotifier {
     suggestions.clear();
     highlightedIndex = 0;
     _debounceTimer?.cancel();
-    notifyListeners();
+    Future.microtask(() => notifyListeners());
   }
 
   void selectNext() {
     if (suggestions.isNotEmpty) {
       highlightedIndex = (highlightedIndex + 1) % suggestions.length;
-      notifyListeners();
+      Future.microtask(() => notifyListeners());
     }
   }
 
   void selectPrevious() {
     if (suggestions.isNotEmpty) {
       highlightedIndex = (highlightedIndex - 1 + suggestions.length) % suggestions.length;
-      notifyListeners();
+      Future.microtask(() => notifyListeners());
     }
   }
 

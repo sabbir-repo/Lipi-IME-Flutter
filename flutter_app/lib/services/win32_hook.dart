@@ -13,7 +13,6 @@ class Win32Hook {
   Win32Hook._internal();
 
   int _hHook = 0;
-  bool _isInjecting = false;
   int _lipiHwnd = 0;
   NativeCallable<IntPtr Function(Int32, IntPtr, IntPtr)>? _callback;
 
@@ -92,7 +91,7 @@ class Win32Hook {
     if (nCode >= 0) {
       final kbdStruct = Pointer<KBDLLHOOKSTRUCT>.fromAddress(lParam).ref;
       
-      if ((kbdStruct.flags & LLKHF_INJECTED) != 0 || Win32Hook()._isInjecting) {
+      if ((kbdStruct.flags & LLKHF_INJECTED) != 0) {
         return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
       }
 
@@ -495,8 +494,6 @@ class Win32Hook {
   }
 
   void injectString(String text) {
-    _isInjecting = true;
-    
     final pInputs = calloc<INPUT_KBD>(text.length);
     for (int i = 0; i < text.length; i++) {
       pInputs[i].type = INPUT_KEYBOARD;
@@ -523,10 +520,6 @@ class Win32Hook {
     
     calloc.free(pInputs);
     calloc.free(pInputsUp);
-    
-    Future.delayed(const Duration(milliseconds: 10), () {
-      _isInjecting = false;
-    });
   }
 
   void injectTranslatedOrEscape(String mappedChar, int vkCode, bool isShift) {
