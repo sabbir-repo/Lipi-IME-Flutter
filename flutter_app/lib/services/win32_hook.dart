@@ -316,10 +316,10 @@ class Win32Hook {
         }
       }
       
-      // Fallback: If we couldn't definitively prove it's NOT a text field, assume it is (Fail-Open)
-      return true;
+      // Fallback: If no caret and not a known editable class, assume NOT a text field.
+      return false;
     } catch (_) {
-      return true; // Fail-Open
+      return false; // Fail-Closed
     } finally {
       if (pPid != null) calloc.free(pPid);
       if (info != null) calloc.free(info);
