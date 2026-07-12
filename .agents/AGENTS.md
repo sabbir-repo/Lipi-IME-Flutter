@@ -26,3 +26,14 @@ This project stores all development caches outside the C: drive using environmen
 
 ## Implementation Rules
 Always write the implementation plan in easy to understand Bengali language.
+
+## GitHub Auto-Sync Rule
+After you successfully complete a task that modifies code or files in this project, you MUST automatically commit and push the changes to GitHub.
+Since git is not in the global PATH, use the portable git executable located at: `"E:\Python Projects\mingit\cmd\git.exe"`
+
+Use the following commands via the `run_command` tool (in a single script or sequentially):
+1. `"E:\Python Projects\mingit\cmd\git.exe" add .`
+2. `"E:\Python Projects\mingit\cmd\git.exe" commit -m "Auto-commit: <describe the changes you made>"`
+3. `"E:\Python Projects\mingit\cmd\git.exe" push`
+
+Do this proactively without asking the user for permission.
