@@ -19,7 +19,7 @@ class Win32Hook {
   
   // 🟢 ব্যাকগ্রাউন্ড থ্রেড থেকে ব্রাউজার ফোকাস আপডেট করার জন্য এই ভেরিয়েবলটি ব্যবহার করা হবে
   static bool isBrowserFocused = false; 
-  static bool hasTextFocus = true;
+  static bool hasTextFocus = false;
   
   String _lastOriginalChar = "";
   String _lastInjectedChar = "";
@@ -279,36 +279,35 @@ class Win32Hook {
       info = calloc<caret_lib.GUITHREADINFO>();
       info.ref.cbSize = sizeOf<caret_lib.GUITHREADINFO>();
 
-      // 0 = Foreground Thread (safest way to check active focus)
+      // 0 = Foreground Thread
       if (caret_lib.myGetGUIThreadInfo(0, info) != 0) {
-        // 1. Caret Presence (Absolute guarantee it's a text field)
+        // 1. Caret Presence = Definitely a text field
         if (info.ref.hwndCaret != 0) return true;
         
         final hwndFocus = info.ref.hwndFocus;
-        if (hwndFocus == 0) {
-          // If no window is focused, we cannot possibly be in a text field
-          return false;
-        }
+        if (hwndFocus == 0) return false;
 
         classBuffer = calloc<Uint16>(256);
         final len = myGetClassName(hwndFocus, classBuffer.cast<Utf16>(), 256);
         if (len > 0) {
           final className = classBuffer.cast<Utf16>().toDartString();
           
-          // 2. Blacklist Non-Editable Classes (Prevents phantom IME on Desktop/Taskbar/Buttons)
-          const nonEditableClasses = {
-            "Progman", "WorkerW", "Shell_TrayWnd", "TrayNotifyWnd", "ReBarWindow32",
-            "SysListView32", "Button", "Static", "ScrollBar", "ComboBox", "ListBox",
-            "DirectUIHWND", "CtrlNotifySink", "ApplicationManager_DesktopWindow"
+          // 2. Whitelist Known Editable Classes
+          const editableClasses = {
+            "Edit", "RichEdit", "RichEdit20W", "RichEdit50W", "RICHEDIT60W",
+            "Chrome_RenderWidgetHostHWND", "MozillaWindowClass", "MozillaContentWindowClass",
+            "Scintilla", "TextBox", "_WwG", "Windows.UI.Core.CoreWindow"
           };
-          if (nonEditableClasses.contains(className)) return false;
+          for (final c in editableClasses) {
+            if (className.contains(c)) return true;
+          }
         }
       }
       
-      // Fallback: If no caret but not explicitly blacklisted (or API failed), assume it's a text field (Fail-Open)
-      return true;
+      // Fallback: Unknown, fail-closed to prevent phantom typing
+      return false;
     } catch (_) {
-      return true; // Fail-Open
+      return false; // Fail-Closed
     } finally {
       if (info != null) calloc.free(info);
       if (classBuffer != null) calloc.free(classBuffer);
