@@ -13,7 +13,6 @@ class Win32Hook {
   Win32Hook._internal();
 
   int _hHook = 0;
-  int _lipiHwnd = 0;
   NativeCallable<IntPtr Function(Int32, IntPtr, IntPtr)>? _callback;
 
   static int _lastActiveHwnd = 0;
@@ -25,13 +24,7 @@ class Win32Hook {
   String _lastInjectedChar = "";
   int _lastInjectTime = 0;
 
-  void updateLipiHwnd() {
-    try {
-      final titlePtr = "Lipi IME".toNativeUtf16();
-      _lipiHwnd = myFindWindow(nullptr, titlePtr);
-      calloc.free(titlePtr);
-    } catch (_) {}
-  }
+
 
   void _cleanupPreviousHook() {
     try {
@@ -115,8 +108,14 @@ class Win32Hook {
       }
 
       final hwndActive = caret_lib.myGetForegroundWindow();
-      if (hwndActive != 0 && hwndActive == Win32Hook()._lipiHwnd) {
-        return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
+      if (hwndActive != 0) {
+        final pPid = calloc<Uint32>();
+        caret_lib.myGetWindowThreadProcessId(hwndActive, pPid);
+        final activePid = pPid.value;
+        calloc.free(pPid);
+        if (activePid == pid) {
+          return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
+        }
       }
 
       // If any helper/modifier shortcut is pressed (Ctrl, Win, or Alt), bypass IME
@@ -273,45 +272,47 @@ class Win32Hook {
 
   // 🟢 মেথডটিকে পাবলিক (Public) করা হয়েছে, যাতে FocusTracker একে কল করতে পারে
   static bool checkIsCompositionInWebsite(int hwndActive) {
+    Pointer<Uint32>? pPid;
+    Pointer<Uint16>? buffer;
+    Pointer<Uint32>? size;
+    Pointer<caret_lib.GUITHREADINFO>? info;
+    Pointer<Uint16>? classBuffer;
+    Pointer<caret_lib.RECT>? winRect;
+    int hProcess = 0;
+
     try {
       final ime = ImeController();
       if (ime.allowWebsites) return false;
 
-      final pPid = calloc<Uint32>();
+      pPid = calloc<Uint32>();
       final threadId = caret_lib.myGetWindowThreadProcessId(hwndActive, pPid);
       final pidVal = pPid.value;
-      calloc.free(pPid);
 
       if (pidVal == 0) return false;
 
       // 1. Get process name
-      int hProcess = myOpenProcess(0x1000, 0, pidVal); // PROCESS_QUERY_LIMITED_INFORMATION
+      hProcess = myOpenProcess(0x1000, 0, pidVal); // PROCESS_QUERY_LIMITED_INFORMATION
       if (hProcess == 0) {
         hProcess = myOpenProcess(0x0400, 0, pidVal); // PROCESS_QUERY_INFORMATION fallback
       }
 
       String processName = "";
       if (hProcess != 0) {
-        final buffer = calloc<Uint16>(512);
-        final size = calloc<Uint32>()..value = 512;
+        buffer = calloc<Uint16>(512);
+        size = calloc<Uint32>()..value = 512;
         final ok = myQueryFullProcessImageName(hProcess, 0, buffer.cast<Utf16>(), size);
         if (ok != 0) {
           final path = buffer.cast<Utf16>().toDartString();
           processName = path.split('\\').last.toLowerCase();
         }
-        calloc.free(buffer);
-        calloc.free(size);
-        myCloseHandle(hProcess);
       }
 
       // Update current active executable
       if (processName.isNotEmpty && ime.currentActiveExe != processName) {
         ime.currentActiveExe = processName;
-        // Don't call notifyListeners() here directly from a background loop to avoid rebuild spam
-        // But dashboard will read it when opened.
       }
 
-      // 🟢 Premium Feature: App Blacklist Bypass
+      // Premium Feature: App Blacklist Bypass
       if (processName.isNotEmpty && ime.appBlacklist.contains(processName)) {
         return true;
       }
@@ -324,20 +325,18 @@ class Win32Hook {
       // 2. Check window class name of focused element
       String className = "";
       if (threadId != 0) {
-        final info = calloc<caret_lib.GUITHREADINFO>();
+        info = calloc<caret_lib.GUITHREADINFO>();
         info.ref.cbSize = sizeOf<caret_lib.GUITHREADINFO>();
         if (caret_lib.myGetGUIThreadInfo(threadId, info) != 0) {
           final hwndFocus = info.ref.hwndFocus;
           if (hwndFocus != 0) {
-            final classBuffer = calloc<Uint16>(256);
+            classBuffer = calloc<Uint16>(256);
             final len = myGetClassName(hwndFocus, classBuffer.cast<Utf16>(), 256);
             if (len > 0) {
               className = classBuffer.cast<Utf16>().toDartString();
             }
-            calloc.free(classBuffer);
           }
         }
-        calloc.free(info);
       }
 
       const webContentClasses = {
@@ -352,65 +351,29 @@ class Win32Hook {
       // 3. Geometric fallback (Caret/Mouse Y relative to active window top)
       final caretPos = caret_lib.Win32Caret.getCaretScreenPos();
       if (caretPos != null) {
-        final winRect = calloc<caret_lib.RECT>();
+        winRect = calloc<caret_lib.RECT>();
         if (caret_lib.myGetWindowRect(hwndActive, winRect) != 0) {
           final diff = caretPos.bottom - winRect.ref.top;
-          calloc.free(winRect);
           if (diff > 100) {
             return true;
           }
-        } else {
-          calloc.free(winRect);
         }
       }
-    } catch (_) {}
-    return false;
-  }
-
-  /// Returns true only if an edit control (text box) has keyboard focus in the foreground window.
-  static bool _hasTextInputFocus() {
-    try {
-      final hwndFg = caret_lib.myGetForegroundWindow();
-      if (hwndFg == 0) return false;
-
-      final hwndShell = myGetShellWindow();
-      if (hwndFg == hwndShell) return false;
-
-      final classBuffer = calloc<Uint16>(256);
-      final len = myGetClassName(hwndFg, classBuffer.cast<Utf16>(), 256);
-      String className = "";
-      if (len > 0) {
-        className = classBuffer.cast<Utf16>().toDartString();
-      }
-      calloc.free(classBuffer);
-
-      if (className == "Progman" || className == "WorkerW" || className == "Shell_TrayWnd" || className == "Shell_SecondaryTrayWnd") {
-        return false;
-      }
-
-      final pPid = calloc<Uint32>();
-      final threadId = caret_lib.myGetWindowThreadProcessId(hwndFg, pPid);
-      calloc.free(pPid);
-
-      final info = calloc<caret_lib.GUITHREADINFO>();
-      info.ref.cbSize = sizeOf<caret_lib.GUITHREADINFO>();
-
-      final ok = caret_lib.myGetGUIThreadInfo(threadId, info);
-      final hwndCaret = info.ref.hwndCaret;
-      final rect = info.ref.rcCaret;
-      calloc.free(info);
-
-      if (className == "CabinetWClass" && ok != 0) {
-        if (hwndCaret == 0 && rect.left == 0 && rect.top == 0 && rect.bottom == 0) {
-          return false;
-        }
-      }
-
-      return true;
+      return false;
     } catch (_) {
-      return true;
+      return false;
+    } finally {
+      if (pPid != null) calloc.free(pPid);
+      if (buffer != null) calloc.free(buffer);
+      if (size != null) calloc.free(size);
+      if (info != null) calloc.free(info);
+      if (classBuffer != null) calloc.free(classBuffer);
+      if (winRect != null) calloc.free(winRect);
+      if (hProcess != 0) myCloseHandle(hProcess);
     }
   }
+
+
 
   Future<void> commitCurrentWithCaptured(
     String capturedBuffer,

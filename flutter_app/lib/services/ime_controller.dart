@@ -43,7 +43,8 @@ class ImeController extends ChangeNotifier {
   String currentActiveExe = "";
 
   Timer? _debounceTimer;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final List<AudioPlayer> _audioPlayers = List.generate(4, (_) => AudioPlayer());
+  int _currentPlayerIndex = 0;
 
   void loadSettings() {
     try {
@@ -132,7 +133,9 @@ class ImeController extends ChangeNotifier {
     try {
       if (soundType == 'mechanical') {
         int r = Random().nextInt(34) + 1;
-        _audioPlayer.play(AssetSource('audio/key_$r.mp3'), mode: PlayerMode.lowLatency);
+        final player = _audioPlayers[_currentPlayerIndex];
+        _currentPlayerIndex = (_currentPlayerIndex + 1) % _audioPlayers.length;
+        player.play(AssetSource('audio/key_$r.mp3'), mode: PlayerMode.lowLatency);
       } else if (soundType == 'system') {
         myBeep(700, 50);
       }

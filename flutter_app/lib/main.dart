@@ -37,7 +37,7 @@ void main() async {
     await windowManager.focus();
     
     // Resolve and cache Lipi IME window handle
-    Win32Hook().updateLipiHwnd();
+
     
     // Default to Dashboard mode initially
     setAsDashboardWindow();
