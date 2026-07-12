@@ -285,24 +285,27 @@ class Win32Hook {
         if (info.ref.hwndCaret != 0) return true;
         
         final hwndFocus = info.ref.hwndFocus;
-        if (hwndFocus != 0) {
-          classBuffer = calloc<Uint16>(256);
-          final len = myGetClassName(hwndFocus, classBuffer.cast<Utf16>(), 256);
-          if (len > 0) {
-            final className = classBuffer.cast<Utf16>().toDartString();
-            
-            // 2. Blacklist Non-Editable Classes (Prevents phantom IME on Desktop/Taskbar)
-            const nonEditableClasses = {
-              "Progman", "WorkerW", "Shell_TrayWnd", "TrayNotifyWnd", "ReBarWindow32",
-              "SysListView32", "Button", "Static", "ScrollBar", "ComboBox", "ListBox",
-              "Windows.UI.Core.CoreWindow" // Top-level frame for UWP, actual text fields are children
-            };
-            if (nonEditableClasses.contains(className)) return false;
-          }
+        if (hwndFocus == 0) {
+          // If no window is focused, we cannot possibly be in a text field
+          return false;
+        }
+
+        classBuffer = calloc<Uint16>(256);
+        final len = myGetClassName(hwndFocus, classBuffer.cast<Utf16>(), 256);
+        if (len > 0) {
+          final className = classBuffer.cast<Utf16>().toDartString();
+          
+          // 2. Blacklist Non-Editable Classes (Prevents phantom IME on Desktop/Taskbar/Buttons)
+          const nonEditableClasses = {
+            "Progman", "WorkerW", "Shell_TrayWnd", "TrayNotifyWnd", "ReBarWindow32",
+            "SysListView32", "Button", "Static", "ScrollBar", "ComboBox", "ListBox",
+            "DirectUIHWND", "CtrlNotifySink", "ApplicationManager_DesktopWindow"
+          };
+          if (nonEditableClasses.contains(className)) return false;
         }
       }
       
-      // Fallback: If no caret but not explicitly blacklisted, assume it's a text field (Fail-Open)
+      // Fallback: If no caret but not explicitly blacklisted (or API failed), assume it's a text field (Fail-Open)
       return true;
     } catch (_) {
       return true; // Fail-Open
