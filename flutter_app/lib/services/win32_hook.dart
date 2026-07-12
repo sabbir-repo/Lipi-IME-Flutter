@@ -271,22 +271,17 @@ class Win32Hook {
     return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
   }
 
-  static bool checkTextFocus(int hwndActive) {
-    if (hwndActive == 0) return true;
-
-    Pointer<Uint32>? pPid;
+  static bool checkTextFocus() {
     Pointer<caret_lib.GUITHREADINFO>? info;
     Pointer<Uint16>? classBuffer;
 
     try {
-      pPid = calloc<Uint32>();
-      final threadId = caret_lib.myGetWindowThreadProcessId(hwndActive, pPid);
-      
       info = calloc<caret_lib.GUITHREADINFO>();
       info.ref.cbSize = sizeOf<caret_lib.GUITHREADINFO>();
 
-      if (caret_lib.myGetGUIThreadInfo(threadId, info) != 0) {
-        // 1. Caret Presence
+      // 0 = Foreground Thread (safest way to check active focus)
+      if (caret_lib.myGetGUIThreadInfo(0, info) != 0) {
+        // 1. Caret Presence (Absolute guarantee it's a text field)
         if (info.ref.hwndCaret != 0) return true;
         
         final hwndFocus = info.ref.hwndFocus;
@@ -296,32 +291,22 @@ class Win32Hook {
           if (len > 0) {
             final className = classBuffer.cast<Utf16>().toDartString();
             
-            // 2. Blacklist Non-Editable Classes
+            // 2. Blacklist Non-Editable Classes (Prevents phantom IME on Desktop/Taskbar)
             const nonEditableClasses = {
-              "Progman", "WorkerW", "Shell_TrayWnd", 
-              "SysListView32", "Button", "Static"
+              "Progman", "WorkerW", "Shell_TrayWnd", "TrayNotifyWnd", "ReBarWindow32",
+              "SysListView32", "Button", "Static", "ScrollBar", "ComboBox", "ListBox",
+              "Windows.UI.Core.CoreWindow" // Top-level frame for UWP, actual text fields are children
             };
             if (nonEditableClasses.contains(className)) return false;
-
-            // 3. Whitelist Known Editable Classes (Browsers, UWP)
-            const editableClasses = {
-              "Chrome_RenderWidgetHostHWND",
-              "MozillaContentWindowClass",
-              "Internet Explorer_Server",
-              "Windows.UI.Core.CoreWindow",
-              "Edit", "RichEdit20W", "RichEdit50W"
-            };
-            if (editableClasses.contains(className)) return true;
           }
         }
       }
       
-      // Fallback: If no caret and not a known editable class, assume NOT a text field.
-      return false;
+      // Fallback: If no caret but not explicitly blacklisted, assume it's a text field (Fail-Open)
+      return true;
     } catch (_) {
-      return false; // Fail-Closed
+      return true; // Fail-Open
     } finally {
-      if (pPid != null) calloc.free(pPid);
       if (info != null) calloc.free(info);
       if (classBuffer != null) calloc.free(classBuffer);
     }
