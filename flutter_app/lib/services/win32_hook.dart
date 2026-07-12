@@ -19,6 +19,7 @@ class Win32Hook {
   
   // 🟢 ব্যাকগ্রাউন্ড থ্রেড থেকে ব্রাউজার ফোকাস আপডেট করার জন্য এই ভেরিয়েবলটি ব্যবহার করা হবে
   static bool isBrowserFocused = false; 
+  static bool hasTextFocus = true;
   
   String _lastOriginalChar = "";
   String _lastInjectedChar = "";
@@ -151,7 +152,7 @@ class Win32Hook {
       }
 
       // 🟢 বাগ ফিক্স: কোনো উইন্ডোজ API কল ছাড়াই শুধু ক্যাশ করা ভেরিয়েবল চেক করা হচ্ছে
-      if (Win32Hook.isBrowserFocused) {
+      if (Win32Hook.isBrowserFocused || !Win32Hook.hasTextFocus) {
         if (ime.buffer.isNotEmpty) {
           ime.clearBuffer();
         }
@@ -268,6 +269,62 @@ class Win32Hook {
       }
     }
     return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
+  }
+
+  static bool checkTextFocus(int hwndActive) {
+    if (hwndActive == 0) return true;
+
+    Pointer<Uint32>? pPid;
+    Pointer<caret_lib.GUITHREADINFO>? info;
+    Pointer<Uint16>? classBuffer;
+
+    try {
+      pPid = calloc<Uint32>();
+      final threadId = caret_lib.myGetWindowThreadProcessId(hwndActive, pPid);
+      
+      info = calloc<caret_lib.GUITHREADINFO>();
+      info.ref.cbSize = sizeOf<caret_lib.GUITHREADINFO>();
+
+      if (caret_lib.myGetGUIThreadInfo(threadId, info) != 0) {
+        // 1. Caret Presence
+        if (info.ref.hwndCaret != 0) return true;
+        
+        final hwndFocus = info.ref.hwndFocus;
+        if (hwndFocus != 0) {
+          classBuffer = calloc<Uint16>(256);
+          final len = myGetClassName(hwndFocus, classBuffer.cast<Utf16>(), 256);
+          if (len > 0) {
+            final className = classBuffer.cast<Utf16>().toDartString();
+            
+            // 2. Blacklist Non-Editable Classes
+            const nonEditableClasses = {
+              "Progman", "WorkerW", "Shell_TrayWnd", 
+              "SysListView32", "Button", "Static"
+            };
+            if (nonEditableClasses.contains(className)) return false;
+
+            // 3. Whitelist Known Editable Classes (Browsers, UWP)
+            const editableClasses = {
+              "Chrome_RenderWidgetHostHWND",
+              "MozillaContentWindowClass",
+              "Internet Explorer_Server",
+              "Windows.UI.Core.CoreWindow",
+              "Edit", "RichEdit20W", "RichEdit50W"
+            };
+            if (editableClasses.contains(className)) return true;
+          }
+        }
+      }
+      
+      // Fallback: If we couldn't definitively prove it's NOT a text field, assume it is (Fail-Open)
+      return true;
+    } catch (_) {
+      return true; // Fail-Open
+    } finally {
+      if (pPid != null) calloc.free(pPid);
+      if (info != null) calloc.free(info);
+      if (classBuffer != null) calloc.free(classBuffer);
+    }
   }
 
   // 🟢 মেথডটিকে পাবলিক (Public) করা হয়েছে, যাতে FocusTracker একে কল করতে পারে

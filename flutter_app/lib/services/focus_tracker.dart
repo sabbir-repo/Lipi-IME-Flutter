@@ -7,6 +7,7 @@ import 'win32_hook.dart';
 
 // --- Windows API Constants ---
 const int EVENT_SYSTEM_FOREGROUND = 0x0003;
+const int EVENT_OBJECT_FOCUS = 0x8005;
 const int WINEVENT_OUTOFCONTEXT = 0x0000;
 const int WINEVENT_SKIPOWNPROCESS = 0x0002;
 
@@ -43,6 +44,7 @@ class FocusTracker {
   FocusTracker._internal();
 
   int _hWinEventHook = 0;
+  int _hWinEventHookFocus = 0;
   NativeCallable<Void Function(IntPtr, Uint32, IntPtr, Int32, Int32, Uint32, Uint32)>? _winEventCallback;
 
   void start() {
@@ -63,20 +65,41 @@ class FocusTracker {
       0,
       WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS
     );
+
+    _hWinEventHookFocus = mySetWinEventHook(
+      EVENT_OBJECT_FOCUS,
+      EVENT_OBJECT_FOCUS,
+      0,
+      _winEventCallback!.nativeFunction,
+      0,
+      0,
+      WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS
+    );
   }
 
   void stop() {
     if (_hWinEventHook != 0) {
       myUnhookWinEvent(_hWinEventHook);
       _hWinEventHook = 0;
+    }
+    if (_hWinEventHookFocus != 0) {
+      myUnhookWinEvent(_hWinEventHookFocus);
+      _hWinEventHookFocus = 0;
+    }
+    if (_winEventCallback != null) {
       _winEventCallback?.close();
       _winEventCallback = null;
     }
   }
 
   static void _winEventProc(int hWinEventHook, int event, int hwnd, int idObject, int idChild, int idEventThread, int dwmsEventTime) {
-    if (event == EVENT_SYSTEM_FOREGROUND && hwnd != 0) {
-      _updateActiveProcess(hwnd);
+    if (hwnd != 0) {
+      if (event == EVENT_SYSTEM_FOREGROUND) {
+        _updateActiveProcess(hwnd);
+      }
+      if (event == EVENT_SYSTEM_FOREGROUND || event == EVENT_OBJECT_FOCUS) {
+        Win32Hook.hasTextFocus = Win32Hook.checkTextFocus(hwnd);
+      }
     }
   }
 
