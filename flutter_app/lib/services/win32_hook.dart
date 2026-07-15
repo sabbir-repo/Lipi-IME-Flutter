@@ -146,16 +146,16 @@ class Win32Hook {
         return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
       }
 
-      // 🟢 উইন্ডোজকে ফাস্ট রেসপন্স দেওয়ার জন্য KeyDown আগেই চেক করে নেওয়া হলো
-      if (!isKeyDown) {
+      // 🟢 সরাসরি Blacklist চেক: blocked app-এ IME কাজ করবে না
+      if (ime.appBlacklist.isNotEmpty &&
+          ime.currentActiveExe.isNotEmpty &&
+          ime.appBlacklist.contains(ime.currentActiveExe)) {
+        if (ime.buffer.isNotEmpty) ime.clearBuffer();
         return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
       }
 
-      // 🟢 বাগ ফিক্স: কোনো উইন্ডোজ API কল ছাড়াই শুধু ক্যাশ করা ভেরিয়েবল চেক করা হচ্ছে
-      if (Win32Hook.isBrowserFocused || !Win32Hook.hasTextFocus) {
-        if (ime.buffer.isNotEmpty) {
-          ime.clearBuffer();
-        }
+      // 🟢 KeyDown আগেই চেক করে নেওয়া হলো
+      if (!isKeyDown) {
         return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
       }
 
