@@ -98,7 +98,7 @@ class FocusTracker {
         _updateActiveProcess(hwnd);
       }
       if (event == EVENT_SYSTEM_FOREGROUND || event == EVENT_OBJECT_FOCUS) {
-        Win32Hook.hasTextFocus = Win32Hook.checkTextFocus();
+        Win32Hook.hasTextFocus = Win32Hook.checkTextFocus(hwnd);
       }
     }
   }

@@ -271,46 +271,57 @@ class Win32Hook {
     return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
   }
 
-  static bool checkTextFocus() {
-    Pointer<caret_lib.GUITHREADINFO>? info;
+  // চেক করা হয় ক্লাস নাম editable কিনা (whitelist-based)
+  static bool _isEditableClass(int hwnd) {
+    if (hwnd == 0) return false;
     Pointer<Uint16>? classBuffer;
+    try {
+      classBuffer = calloc<Uint16>(256);
+      final len = myGetClassName(hwnd, classBuffer.cast<Utf16>(), 256);
+      if (len > 0) {
+        final className = classBuffer.cast<Utf16>().toDartString();
+        // substring match করা হয় কারণ কিছু ক্লাস নামে version suffix থাকে
+        const editableSubstrings = [
+          "Edit", "RichEdit", "Scintilla", "_WwG",
+          "Chrome_RenderWidgetHostHWND",
+          "MozillaWindowClass", "MozillaContentWindowClass",
+          "TextBox", "TMemo", "TEdit",
+        ];
+        for (final sub in editableSubstrings) {
+          if (className.contains(sub)) return true;
+        }
+      }
+      return false;
+    } finally {
+      if (classBuffer != null) calloc.free(classBuffer);
+    }
+  }
+
+  // focusedHwnd = EVENT_OBJECT_FOCUS ইভেন্টের hwnd প্যারামিটার
+  static bool checkTextFocus(int focusedHwnd) {
+    Pointer<caret_lib.GUITHREADINFO>? info;
 
     try {
       info = calloc<caret_lib.GUITHREADINFO>();
       info.ref.cbSize = sizeOf<caret_lib.GUITHREADINFO>();
 
-      // 0 = Foreground Thread
       if (caret_lib.myGetGUIThreadInfo(0, info) != 0) {
-        // 1. Caret Presence = Definitely a text field
+        // 1. Caret আছে = নিশ্চিত টেক্সট ফিল্ড
         if (info.ref.hwndCaret != 0) return true;
-        
-        final hwndFocus = info.ref.hwndFocus;
-        if (hwndFocus == 0) return false;
 
-        classBuffer = calloc<Uint16>(256);
-        final len = myGetClassName(hwndFocus, classBuffer.cast<Utf16>(), 256);
-        if (len > 0) {
-          final className = classBuffer.cast<Utf16>().toDartString();
-          
-          // 2. Whitelist Known Editable Classes
-          const editableClasses = {
-            "Edit", "RichEdit", "RichEdit20W", "RichEdit50W", "RICHEDIT60W",
-            "Chrome_RenderWidgetHostHWND", "MozillaWindowClass", "MozillaContentWindowClass",
-            "Scintilla", "TextBox", "_WwG", "Windows.UI.Core.CoreWindow"
-          };
-          for (final c in editableClasses) {
-            if (className.contains(c)) return true;
-          }
-        }
+        // 2. hwndFocus = কীবোর্ড ফোকাস যেই child-এ আছে সেটার class চেক
+        if (_isEditableClass(info.ref.hwndFocus)) return true;
       }
-      
-      // Fallback: Unknown, fail-closed to prevent phantom typing
+
+      // 3. ইভেন্টের hwnd নিজেও editable কিনা চেক (Chrome, Electron ইত্যাদির জন্য)
+      if (_isEditableClass(focusedHwnd)) return true;
+
+      // 4. কিছু match না হলে fail-closed
       return false;
     } catch (_) {
-      return false; // Fail-Closed
+      return false;
     } finally {
       if (info != null) calloc.free(info);
-      if (classBuffer != null) calloc.free(classBuffer);
     }
   }
 
