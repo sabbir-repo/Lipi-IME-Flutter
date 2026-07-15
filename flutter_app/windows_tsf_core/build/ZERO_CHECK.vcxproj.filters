@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="E:\Python Projects\Google Input Tools to Flutter desktop\flutter_app\windows_tsf_core\build\CMakeFiles\f6134ba257792b2f407d850fc0f0eb4e\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{DE17EE66-A060-365B-A181-442A3A872FCB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

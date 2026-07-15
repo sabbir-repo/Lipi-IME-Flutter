@@ -1,5 +1,6 @@
 #pragma once
 #include "Globals.h"
+#include "IpcClient.h"
 
 class CLipiTSF : public ITfTextInputProcessor
 {
@@ -20,4 +21,5 @@ private:
     LONG _cRef;
     ITfThreadMgr *_ptim;
     TfClientId _tid;
+    IpcClient _ipc;
 };

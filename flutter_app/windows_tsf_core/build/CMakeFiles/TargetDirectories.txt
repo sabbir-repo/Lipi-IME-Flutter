@@ -1,0 +1,3 @@
+E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/LipiTSF.dir
+E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/ALL_BUILD.dir
+E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/ZERO_CHECK.dir

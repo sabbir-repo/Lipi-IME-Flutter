@@ -50,6 +50,7 @@ STDMETHODIMP CLipiTSF::Activate(ITfThreadMgr *ptim, TfClientId tid)
     _tid = tid;
 
     // TODO: Init event sinks, set up named pipe client here
+    _ipc.Connect();
 
     return S_OK;
 }
@@ -57,6 +58,7 @@ STDMETHODIMP CLipiTSF::Activate(ITfThreadMgr *ptim, TfClientId tid)
 STDMETHODIMP CLipiTSF::Deactivate()
 {
     // TODO: Cleanup event sinks, disconnect named pipe
+    _ipc.Disconnect();
 
     if (_ptim)
     {

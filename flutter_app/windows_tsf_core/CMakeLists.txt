@@ -8,6 +8,7 @@ add_library(LipiTSF SHARED
     src/Register.cpp
     src/ClassFactory.cpp
     src/LipiTSF.cpp
+    src/IpcClient.cpp
     LipiTSF.def
 )
 

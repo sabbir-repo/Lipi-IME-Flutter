@@ -1,0 +1,10 @@
+^E:\PYTHON PROJECTS\GOOGLE INPUT TOOLS TO FLUTTER DESKTOP\FLUTTER_APP\WINDOWS_TSF_CORE\BUILD\CMAKEFILES\F6134BA257792B2F407D850FC0F0EB4E\GENERATE.STAMP.RULE
+setlocal
+D:\PortableDev\VSBuildTools\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe "-SE:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core" "-BE:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/LipiTSF.slnx"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
