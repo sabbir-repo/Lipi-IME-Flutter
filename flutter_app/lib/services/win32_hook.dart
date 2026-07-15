@@ -19,7 +19,7 @@ class Win32Hook {
   
   // 🟢 ব্যাকগ্রাউন্ড থ্রেড থেকে ব্রাউজার ফোকাস আপডেট করার জন্য এই ভেরিয়েবলটি ব্যবহার করা হবে
   static bool isBrowserFocused = false; 
-  static bool hasTextFocus = true; // ডিফল্ট true: browser ছাড়া সব জায়গায় কাজ করবে
+  static bool hasTextFocus = false; // Fail-closed: text focus confirmed না হলে IME টাইপিং ধরবে না
   
   String _lastOriginalChar = "";
   String _lastInjectedChar = "";
@@ -143,6 +143,14 @@ class Win32Hook {
       }
 
       if (!ime.isEnabled) {
+        return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
+      }
+
+      // Input field/editor focus না থাকলে raw key pass-through করো।
+      // এতে Desktop, browser content area, button/list/sidebar ইত্যাদিতে টাইপ করলেও
+      // phonetic buffer তৈরি হবে না এবং floating suggestion window দেখাবে না।
+      if (!Win32Hook._canProcessTextInput(hwndActive)) {
+        if (ime.buffer.isNotEmpty) ime.clearBuffer();
         return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
       }
 
@@ -297,15 +305,22 @@ class Win32Hook {
     }
   }
 
-  // focusedHwnd = EVENT_OBJECT_FOCUS ইভেন্টের hwnd প্যারামিটার
+  // focusedHwnd = EVENT_OBJECT_FOCUS অথবা foreground window handle
   static bool checkTextFocus(int focusedHwnd) {
+    Pointer<Uint32>? pPid;
     Pointer<caret_lib.GUITHREADINFO>? info;
 
     try {
+      if (focusedHwnd == 0) return false;
+
+      pPid = calloc<Uint32>();
+      final threadId = caret_lib.myGetWindowThreadProcessId(focusedHwnd, pPid);
+      if (threadId == 0) return false;
+
       info = calloc<caret_lib.GUITHREADINFO>();
       info.ref.cbSize = sizeOf<caret_lib.GUITHREADINFO>();
 
-      if (caret_lib.myGetGUIThreadInfo(0, info) != 0) {
+      if (caret_lib.myGetGUIThreadInfo(threadId, info) != 0) {
         // 1. Caret আছে = নিশ্চিত টেক্সট ফিল্ড
         if (info.ref.hwndCaret != 0) return true;
 
@@ -313,7 +328,7 @@ class Win32Hook {
         if (_isEditableClass(info.ref.hwndFocus)) return true;
       }
 
-      // 3. ইভেন্টের hwnd নিজেও editable কিনা চেক (Chrome, Electron ইত্যাদির জন্য)
+      // 3. ইভেন্ট/foreground hwnd নিজেও editable কিনা চেক (Chrome, Electron ইত্যাদির জন্য)
       if (_isEditableClass(focusedHwnd)) return true;
 
       // 4. কিছু match না হলে fail-closed
@@ -321,8 +336,21 @@ class Win32Hook {
     } catch (_) {
       return false;
     } finally {
+      if (pPid != null) calloc.free(pPid);
       if (info != null) calloc.free(info);
     }
+  }
+
+  static bool _canProcessTextInput(int hwndActive) {
+    if (hwndActive == 0) {
+      hasTextFocus = false;
+      isBrowserFocused = false;
+      return false;
+    }
+
+    hasTextFocus = checkTextFocus(hwndActive);
+    isBrowserFocused = checkIsCompositionInWebsite(hwndActive);
+    return hasTextFocus && !isBrowserFocused;
   }
 
   // 🟢 মেথডটিকে পাবলিক (Public) করা হয়েছে, যাতে FocusTracker একে কল করতে পারে
