@@ -16,6 +16,9 @@
     <ClCompile Include="E:\Python Projects\Google Input Tools to Flutter desktop\flutter_app\windows_tsf_core\src\LipiTSF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="E:\Python Projects\Google Input Tools to Flutter desktop\flutter_app\windows_tsf_core\src\IpcClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\Python Projects\Google Input Tools to Flutter desktop\flutter_app\windows_tsf_core\CMakeLists.txt" />
