@@ -45,7 +45,7 @@ class IpcServer {
     while (true) {
       // 1. Create the named pipe
       final hPipe = CreateNamedPipe(
-        pipeNamePtr.cast(),
+        pipeNamePtr.cast<Utf16>(),
         PIPE_ACCESS_DUPLEX,
         PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
         PIPE_UNLIMITED_INSTANCES,
