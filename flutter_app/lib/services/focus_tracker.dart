@@ -99,6 +99,13 @@ class FocusTracker {
       }
       if (event == EVENT_SYSTEM_FOREGROUND || event == EVENT_OBJECT_FOCUS) {
         Win32Hook.hasTextFocus = Win32Hook.checkTextFocus(hwnd);
+        
+        // Focus পরিবর্তনের সময় (যেমন address bar → web page বা vice versa)
+        // isBrowserFocused পুনরায় চেক করতে হবে, নইলে address bar block হয়ে যাবে
+        final hwndFg = caret_lib.myGetForegroundWindow();
+        if (hwndFg != 0) {
+          Win32Hook.isBrowserFocused = Win32Hook.checkIsCompositionInWebsite(hwndFg);
+        }
       }
     }
   }
