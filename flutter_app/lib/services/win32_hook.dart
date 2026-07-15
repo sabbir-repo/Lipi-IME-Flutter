@@ -19,7 +19,7 @@ class Win32Hook {
   
   // 🟢 ব্যাকগ্রাউন্ড থ্রেড থেকে ব্রাউজার ফোকাস আপডেট করার জন্য এই ভেরিয়েবলটি ব্যবহার করা হবে
   static bool isBrowserFocused = false; 
-  static bool hasTextFocus = false;
+  static bool hasTextFocus = true; // ডিফল্ট true: browser ছাড়া সব জায়গায় কাজ করবে
   
   String _lastOriginalChar = "";
   String _lastInjectedChar = "";

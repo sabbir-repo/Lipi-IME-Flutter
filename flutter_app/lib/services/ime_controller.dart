@@ -53,6 +53,11 @@ class ImeController extends ChangeNotifier {
       _ipcServer.start();
       _ipcServer.onMessage.listen((msg) {
         print("IPC MSG: $msg");
+        // TSF DLL থেকে KEY:A ফরম্যাটে মেসেজ আসে
+        if (msg.startsWith("KEY:") && msg.length == 5) {
+          final char = msg.substring(4).toLowerCase();
+          appendBuffer(char);
+        }
       });
       final prefs = PreferenceManager();
       isEnabled = prefs.getSetting("enabled", true);
