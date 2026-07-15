@@ -40,12 +40,12 @@ class IpcServer {
 
   // Runs in a background isolate to perform blocking Named Pipe operations
   static void _pipeServerLoop(SendPort sendPort) {
-    final pipeNamePtr = pipeName.toNativeUtf16();
+    final pipeNamePtr = TEXT(pipeName);
 
     while (true) {
       // 1. Create the named pipe
       final hPipe = CreateNamedPipe(
-        pipeNamePtr.cast<Uint16>(),
+        pipeNamePtr,
         PIPE_ACCESS_DUPLEX,
         PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
         PIPE_UNLIMITED_INSTANCES,
