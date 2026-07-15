@@ -6,6 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 import '../api/api_service.dart';
 import 'preference_manager.dart';
 import 'win32_ffi.dart';
+import 'ipc_server.dart';
 
 class ImeController extends ChangeNotifier {
   static final ImeController _instance = ImeController._internal();
@@ -45,9 +46,14 @@ class ImeController extends ChangeNotifier {
   Timer? _debounceTimer;
   final List<AudioPlayer> _audioPlayers = List.generate(4, (_) => AudioPlayer());
   int _currentPlayerIndex = 0;
+  final IpcServer _ipcServer = IpcServer();
 
   void loadSettings() {
     try {
+      _ipcServer.start();
+      _ipcServer.onMessage.listen((msg) {
+        print("IPC MSG: $msg");
+      });
       final prefs = PreferenceManager();
       isEnabled = prefs.getSetting("enabled", true);
       langCode = prefs.getSetting("lang_code", "bn-t-i0-und");
