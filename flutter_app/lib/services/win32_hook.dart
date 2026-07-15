@@ -19,7 +19,7 @@ class Win32Hook {
   
   // 🟢 ব্যাকগ্রাউন্ড থ্রেড থেকে ব্রাউজার ফোকাস আপডেট করার জন্য এই ভেরিয়েবলটি ব্যবহার করা হবে
   static bool isBrowserFocused = false; 
-  static bool hasTextFocus = true; // ডিফল্ট true: browser ছাড়া সব জায়গায় কাজ করবে
+  static bool hasTextFocus = false; // Fail-closed: text focus confirmed না হলে IME টাইপিং ধরবে না
   
   String _lastOriginalChar = "";
   String _lastInjectedChar = "";
@@ -143,6 +143,14 @@ class Win32Hook {
       }
 
       if (!ime.isEnabled) {
+        return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
+      }
+
+      // Input field/editor focus না থাকলে raw key pass-through করো।
+      // এতে Desktop, browser content area, button/list/sidebar ইত্যাদিতে টাইপ করলেও
+      // phonetic buffer তৈরি হবে না এবং floating suggestion window দেখাবে না।
+      if (!Win32Hook._canProcessTextInput(hwndActive)) {
+        if (ime.buffer.isNotEmpty) ime.clearBuffer();
         return myCallNextHookEx(Win32Hook()._hHook, nCode, wParam, lParam);
       }
 
@@ -323,6 +331,18 @@ class Win32Hook {
     } finally {
       if (info != null) calloc.free(info);
     }
+  }
+
+  static bool _canProcessTextInput(int hwndActive) {
+    if (hwndActive == 0) {
+      hasTextFocus = false;
+      isBrowserFocused = false;
+      return false;
+    }
+
+    hasTextFocus = checkTextFocus(hwndActive);
+    isBrowserFocused = checkIsCompositionInWebsite(hwndActive);
+    return hasTextFocus && !isBrowserFocused;
   }
 
   // 🟢 মেথডটিকে পাবলিক (Public) করা হয়েছে, যাতে FocusTracker একে কল করতে পারে
