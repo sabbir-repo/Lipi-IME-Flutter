@@ -135,13 +135,15 @@ class IpcServer {
           }
         }
 
-        free(buffer);
-        free(bytesRead);
+        calloc.free(buffer);
+        calloc.free(bytesRead);
       }
 
       // 4. Client disconnected, close the pipe handle and recreate it to accept the next connection
       disconnectNamedPipe(hPipe);
       closeHandle(hPipe);
     }
+    
+    // calloc.free(pipeNamePtr); // If loop exits
   }
 }
