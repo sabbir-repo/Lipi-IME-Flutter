@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:isolate';
 import 'package:ffi/ffi.dart';
 import 'package:win32/win32.dart';
@@ -44,7 +45,7 @@ class IpcServer {
     while (true) {
       // 1. Create the named pipe
       final hPipe = CreateNamedPipe(
-        pipeNamePtr,
+        pipeNamePtr.cast(),
         PIPE_ACCESS_DUPLEX,
         PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
         PIPE_UNLIMITED_INSTANCES,
