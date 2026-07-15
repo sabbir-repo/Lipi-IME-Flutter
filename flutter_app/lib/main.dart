@@ -9,6 +9,7 @@ import 'services/focus_tracker.dart';
 import 'services/preference_manager.dart';
 import 'ui/dashboard.dart';
 import 'ui/suggestion_window.dart';
+import 'dart:async';
 import 'dart:io';
 
 void main() async {
@@ -62,6 +63,7 @@ class _LipiAppState extends State<LipiApp> {
   bool? _lastEnabled;
   String? _lastLang;
   String? _lastExe;
+  Timer? _hideWindowTimer;
 
   @override
   void initState() {
@@ -113,7 +115,10 @@ class _LipiAppState extends State<LipiApp> {
 
     // ড্যাশবোর্ড বন্ধ থাকলে রেগুলার সাজেশন উইন্ডোর লজিক
     if (ime.buffer.isNotEmpty || ime.notificationText.isNotEmpty) {
-      // Switch to suggestion window mode if not already in it
+      // নতুন কন্টেন্ট এলে pending hide timer বাতিল করো
+      _hideWindowTimer?.cancel();
+      _hideWindowTimer = null;
+      
       if (!_inSuggestionMode) {
         _inSuggestionMode = true;
         setAsSuggestionWindow();
@@ -121,10 +126,14 @@ class _LipiAppState extends State<LipiApp> {
       showWindowInactive();
       setState(() {});
     } else {
-      // Hide suggestion window when buffer and notifications are both empty
-      _inSuggestionMode = false;
-      hideWindow();
-      setState(() {});
+      // সামান্য delay দিয়ে hide করো, যাতে notification শেষ হওয়ার পর glitch না হয়
+      _hideWindowTimer?.cancel();
+      _hideWindowTimer = Timer(const Duration(milliseconds: 150), () {
+        if (mounted && ime.buffer.isEmpty && ime.notificationText.isEmpty) {
+          setState(() => _inSuggestionMode = false);
+          hideWindow();
+        }
+      });
     }
   }
 

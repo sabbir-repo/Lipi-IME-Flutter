@@ -400,7 +400,13 @@ class Win32Hook {
         "Internet Explorer_Server"
       };
       if (webContentClasses.contains(className)) {
-        return true;
+        return true; // ওয়েব পেজের কন্টেন্ট এরিয়া
+      }
+      
+      // className পাওয়া গেছে কিন্তু webContent না = native UI (address bar, toolbar)
+      // এই ক্ষেত্রে block করা যাবে না, search bar-এ কাজ করতে হবে
+      if (className.isNotEmpty) {
+        return false;
       }
 
       // 3. Geometric fallback (Caret/Mouse Y relative to active window top)

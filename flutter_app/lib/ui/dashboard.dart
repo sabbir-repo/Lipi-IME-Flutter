@@ -527,7 +527,10 @@ class _DashboardState extends State<Dashboard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(description, style: TextStyle(color: Colors.white70)),
+          Expanded(
+            child: Text(description, style: TextStyle(color: Colors.white70), overflow: TextOverflow.ellipsis),
+          ),
+          const SizedBox(width: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
