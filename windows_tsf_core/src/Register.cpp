@@ -45,19 +45,77 @@ BOOL UnregisterServer()
     return TRUE;
 }
 
+BOOL RegisterCategories()
+{
+    ITfCategoryMgr *pCategoryMgr;
+    HRESULT hr = CoCreateInstance(CLSID_TF_CategoryMgr, NULL, CLSCTX_INPROC_SERVER, IID_ITfCategoryMgr, (void**)&pCategoryMgr);
+    if (FAILED(hr)) return FALSE;
+
+    hr = pCategoryMgr->RegisterCategory(CLSID_LipiTSF, GUID_TFCAT_TIP_KEYBOARD, CLSID_LipiTSF);
+    
+    pCategoryMgr->Release();
+    return SUCCEEDED(hr);
+}
+
+BOOL UnregisterCategories()
+{
+    ITfCategoryMgr *pCategoryMgr;
+    HRESULT hr = CoCreateInstance(CLSID_TF_CategoryMgr, NULL, CLSCTX_INPROC_SERVER, IID_ITfCategoryMgr, (void**)&pCategoryMgr);
+    if (FAILED(hr)) return FALSE;
+
+    hr = pCategoryMgr->UnregisterCategory(CLSID_LipiTSF, GUID_TFCAT_TIP_KEYBOARD, CLSID_LipiTSF);
+    
+    pCategoryMgr->Release();
+    return SUCCEEDED(hr);
+}
+
+BOOL RegisterProfiles()
+{
+    ITfInputProcessorProfileMgr *pProfileMgr;
+    HRESULT hr = CoCreateInstance(CLSID_TF_InputProcessorProfiles, NULL, CLSCTX_INPROC_SERVER, IID_ITfInputProcessorProfileMgr, (void**)&pProfileMgr);
+    if (FAILED(hr)) return FALSE;
+
+    const WCHAR c_szProfileName[] = L"Lipi IME (Bengali)";
+    
+    hr = pProfileMgr->RegisterProfile(
+        CLSID_LipiTSF,
+        MAKELANGID(LANG_BENGALI, SUBLANG_BENGALI_BANGLADESH),
+        GUID_PROFILE_LipiTSF,
+        c_szProfileName,
+        (ULONG)wcslen(c_szProfileName),
+        L"", // icon file
+        0, // icon length
+        0, 0, 0, 1, 0);
+
+    pProfileMgr->Release();
+    return SUCCEEDED(hr);
+}
+
+BOOL UnregisterProfiles()
+{
+    ITfInputProcessorProfileMgr *pProfileMgr;
+    HRESULT hr = CoCreateInstance(CLSID_TF_InputProcessorProfiles, NULL, CLSCTX_INPROC_SERVER, IID_ITfInputProcessorProfileMgr, (void**)&pProfileMgr);
+    if (FAILED(hr)) return FALSE;
+
+    hr = pProfileMgr->UnregisterProfile(CLSID_LipiTSF, MAKELANGID(LANG_BENGALI, SUBLANG_BENGALI_BANGLADESH), GUID_PROFILE_LipiTSF, 0);
+
+    pProfileMgr->Release();
+    return SUCCEEDED(hr);
+}
+
 STDAPI DllRegisterServer(void)
 {
     if (!RegisterServer()) return E_FAIL;
-    
-    // TODO: Register with ITfInputProcessorProfiles to add it to Language Bar
+    if (!RegisterCategories()) return E_FAIL;
+    if (!RegisterProfiles()) return E_FAIL;
 
     return S_OK;
 }
 
 STDAPI DllUnregisterServer(void)
 {
-    // TODO: Unregister from ITfInputProcessorProfiles
-    
+    UnregisterProfiles();
+    UnregisterCategories();
     if (!UnregisterServer()) return E_FAIL;
     return S_OK;
 }
