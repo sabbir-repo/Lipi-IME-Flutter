@@ -51,3 +51,11 @@ local.properties
 
 # Portable env caches
 /flutter_app/windows/flutter/ephemeral/
+
+# Visual Studio / C#
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates

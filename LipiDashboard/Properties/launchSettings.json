@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LipiDashboard (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LipiDashboard (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
