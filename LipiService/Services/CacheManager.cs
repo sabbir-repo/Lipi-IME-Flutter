@@ -52,6 +52,15 @@ namespace LipiService.Services
         {
             try
             {
+                var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                var oldCachePath = Path.Combine(home, ".lipi_ime_offline_cache.json");
+
+                // Migrate old Python cache if the new one doesn't exist yet
+                if (!File.Exists(_cacheFilePath) && File.Exists(oldCachePath))
+                {
+                    File.Copy(oldCachePath, _cacheFilePath);
+                }
+
                 if (File.Exists(_cacheFilePath))
                 {
                     var content = File.ReadAllText(_cacheFilePath);
