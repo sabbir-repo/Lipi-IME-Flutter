@@ -232,9 +232,10 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
                 pRange->SetText(ec, 0, L"", 0);
                 pRange->Release();
             }
-            _pComposition->EndComposition(ec);
-            _pComposition->Release();
+            ITfComposition *pComp = _pComposition;
             _pComposition = NULL;
+            pComp->EndComposition(ec);
+            pComp->Release();
         }
         return S_OK;
     }
@@ -285,9 +286,10 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
 
     if (wParam == VK_SPACE || wParam == VK_RETURN) {
         if (_pComposition) {
-            _pComposition->EndComposition(ec);
-            _pComposition->Release();
+            ITfComposition *pComp = _pComposition;
             _pComposition = NULL;
+            pComp->EndComposition(ec);
+            pComp->Release();
         }
         _currentWord.clear();
     }
