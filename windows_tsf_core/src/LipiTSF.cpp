@@ -1,6 +1,6 @@
 #include "LipiTSF.h"
 
-CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL)
+CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pCurrentRange(NULL)
 {
     DllAddRef();
 }
@@ -102,9 +102,8 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
 {
     if (pfEaten == NULL) return E_INVALIDARG;
     
-    // Test if we should eat this key. 
-    // We only care about A-Z for typing Bengali. Let's eat A-Z for now.
-    if (wParam >= 'A' && wParam <= 'Z')
+    bool isLetter = (wParam >= 'A' && wParam <= 'Z');
+    if (isLetter || (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN)))
     {
         *pfEaten = TRUE;
         return S_OK;
@@ -118,15 +117,11 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
 {
     if (pfEaten == NULL) return E_INVALIDARG;
 
-    if (wParam >= 'A' && wParam <= 'Z')
+    bool isLetter = (wParam >= 'A' && wParam <= 'Z');
+    if (isLetter || (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN)))
     {
         *pfEaten = TRUE;
-        
-        // Send key to Flutter
-        std::wstring msg = L"KEY:";
-        msg += (wchar_t)wParam;
-        _ipc.SendMessage(msg);
-
+        _HandleKeystroke(pic, wParam);
         return S_OK;
     }
 
@@ -152,5 +147,116 @@ STDMETHODIMP CLipiTSF::OnPreservedKey(ITfContext *pic, REFGUID rguid, BOOL *pfEa
 {
     if (pfEaten == NULL) return E_INVALIDARG;
     *pfEaten = FALSE;
+    return S_OK;
+}
+
+class CLipiEditSession : public ITfEditSession {
+public:
+    CLipiEditSession(CLipiTSF *pTsf, ITfContext *pic, WPARAM wParam) 
+        : _cRef(1), _pTsf(pTsf), _pic(pic), _wParam(wParam) {
+        _pic->AddRef();
+        _pTsf->AddRef();
+    }
+    ~CLipiEditSession() {
+        _pic->Release();
+        _pTsf->Release();
+    }
+
+    STDMETHODIMP QueryInterface(REFIID riid, void **ppvObj) {
+        if (ppvObj == NULL) return E_INVALIDARG;
+        *ppvObj = NULL;
+        if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_ITfEditSession)) {
+            *ppvObj = (ITfEditSession *)this;
+        } else {
+            return E_NOINTERFACE;
+        }
+        AddRef();
+        return S_OK;
+    }
+    STDMETHODIMP_(ULONG) AddRef(void) { return InterlockedIncrement(&_cRef); }
+    STDMETHODIMP_(ULONG) Release(void) {
+        ULONG cRef = InterlockedDecrement(&_cRef);
+        if (0 == cRef) delete this;
+        return cRef;
+    }
+
+    STDMETHODIMP DoEditSession(TfEditCookie ec) {
+        return _pTsf->_DoEditSession(ec, _pic, _wParam);
+    }
+private:
+    LONG _cRef;
+    CLipiTSF *_pTsf;
+    ITfContext *_pic;
+    WPARAM _wParam;
+};
+
+void CLipiTSF::_HandleKeystroke(ITfContext *pic, WPARAM wParam) {
+    CLipiEditSession *pEditSession = new CLipiEditSession(this, pic, wParam);
+    HRESULT hrSession;
+    pic->RequestEditSession(_tid, pEditSession, TF_ES_SYNC | TF_ES_READWRITE, &hrSession);
+    pEditSession->Release();
+}
+
+HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam) {
+    if (wParam == VK_BACK) {
+        if (!_currentWord.empty()) _currentWord.pop_back();
+    } else if (wParam != VK_SPACE && wParam != VK_RETURN) {
+        BYTE kbd[256];
+        GetKeyboardState(kbd);
+        wchar_t ch[2] = {0};
+        ToUnicode(wParam, MapVirtualKey(wParam, MAPVK_VK_TO_VSC), kbd, ch, 2, 0);
+        if (ch[0] != 0) _currentWord += ch[0];
+    }
+
+    std::wstring textToInsert;
+
+    if (_currentWord.empty()) {
+        if (_pCurrentRange) {
+            _pCurrentRange->SetText(ec, 0, L"", 0);
+            _pCurrentRange->Release();
+            _pCurrentRange = NULL;
+        }
+        return S_OK;
+    }
+
+    std::wstring request = L"bn-t-i0-und|" + _currentWord;
+    std::wstring response;
+    
+    if (_ipc.SendMessage(request) && _ipc.ReceiveMessage(response)) {
+        size_t firstQuote = response.find(L"\"");
+        if (firstQuote != std::wstring::npos) {
+            size_t secondQuote = response.find(L"\"", firstQuote + 1);
+            if (secondQuote != std::wstring::npos) {
+                textToInsert = response.substr(firstQuote + 1, secondQuote - firstQuote - 1);
+            }
+        }
+    }
+
+    if (textToInsert.empty()) {
+        textToInsert = _currentWord; // fallback
+    }
+
+    if (wParam == VK_SPACE) textToInsert += L" ";
+    else if (wParam == VK_RETURN) textToInsert += L"\n";
+
+    if (_pCurrentRange == NULL) {
+        ITfInsertAtSelection *pInsert = NULL;
+        if (SUCCEEDED(pic->QueryInterface(IID_ITfInsertAtSelection, (void **)&pInsert))) {
+            pInsert->InsertTextAtSelection(ec, TF_IAS_NOQUERY, textToInsert.c_str(), textToInsert.length(), &_pCurrentRange);
+            pInsert->Release();
+        }
+    } else {
+        _pCurrentRange->SetText(ec, 0, textToInsert.c_str(), textToInsert.length());
+    }
+
+    if (wParam == VK_SPACE || wParam == VK_RETURN) {
+        if (_pCurrentRange) {
+            _pCurrentRange->Collapse(ec, TF_ANCHOR_END);
+            _pCurrentRange->Release();
+            _pCurrentRange = NULL;
+        }
+        _currentWord.clear();
+    }
+
     return S_OK;
 }

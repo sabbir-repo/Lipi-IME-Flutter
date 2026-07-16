@@ -35,17 +35,7 @@ events:
     found: "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-4.3/Modules/CMakeCCompilerId.c.in"
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -56,21 +46,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
-      ENV{INCLUDE}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\include"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Auxiliary\\VS\\include"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.26100.0\\ucrt"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\um"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\shared"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\winrt"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\cppwinrt"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
   -
     kind: "message-v1"
     backtrace:
@@ -86,10 +66,10 @@ events:
       
       The output was:
       0
-      MSBuild version 18.7.8+1ac568fee for .NET Framework
-      Build started 7/15/2026 4:54:50 PM.
+      MSBuild version 18.9.1+a81b43525 for .NET Framework
+      Build started 7/16/2026 11:28:19 AM.
       
-      Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
+      Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
       PrepareForBuild:
         Creating directory "Debug\\".
         Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
@@ -98,25 +78,25 @@ events:
         Creating "Debug\\CompilerIdC.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         Touching "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
       ClCompile:
-        D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc145.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
+        D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc145.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
         CMakeCCompilerId.c
       Link:
-        D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
-        CompilerIdC.vcxproj -> E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdC\\CompilerIdC.exe
+        D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
+        CompilerIdC.vcxproj -> E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdC\\CompilerIdC.exe
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
         :VCEnd
-        CMAKE_C_COMPILER=D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe
+        CMAKE_C_COMPILER=D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe
       FinalizeBuildStatus:
         Deleting file "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
         Touching "Debug\\CompilerIdC.tlog\\CompilerIdC.lastbuildstate".
-      Done Building Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdC\\CompilerIdC.vcxproj" (default targets).
+      Done Building Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdC\\CompilerIdC.vcxproj" (default targets).
       
       Build succeeded.
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:02.83
+      Time Elapsed 00:00:05.50
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -124,7 +104,7 @@ events:
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
       
       The C compiler identification is MSVC, found in:
-        E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/4.3.1-msvc1/CompilerIdC/CompilerIdC.exe
+        E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/4.3.1-msvc1/CompilerIdC/CompilerIdC.exe
       
   -
     kind: "find-v1"
@@ -148,17 +128,8 @@ events:
     names:
       - "link"
     candidate_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/"
       - "C:/Program Files/Python313/Scripts/"
       - "C:/Program Files/Python313/"
@@ -169,29 +140,17 @@ events:
       - "C:/Windows/SysWOW64/OpenSSH/"
       - "D:/Download/platform-tools/"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/"
+      - "C:/Program Files/dotnet/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/"
       - "E:/Installed Software/Antigravity IDE/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/"
     searched_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.com"
-    found: "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.exe"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.com"
+    found: "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.exe"
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -202,13 +161,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -231,17 +188,8 @@ events:
     names:
       - "lld-link"
     candidate_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/"
       - "C:/Program Files/Python313/Scripts/"
       - "C:/Program Files/Python313/"
@@ -252,47 +200,18 @@ events:
       - "C:/Windows/SysWOW64/OpenSSH/"
       - "D:/Download/platform-tools/"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/"
+      - "C:/Program Files/dotnet/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/"
       - "E:/Installed Software/Antigravity IDE/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/"
     searched_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/lld-link"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/lld-link.com"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/lld-link.exe"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/lld-link"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/lld-link.com"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/lld-link.exe"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/lld-link"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/lld-link.com"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/lld-link.exe"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/lld-link"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link.com"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link.exe"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link.com"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link.exe"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/lld-link.com"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/lld-link.exe"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/lld-link"
@@ -323,6 +242,9 @@ events:
       - "D:/Download/Softwares/Mobile in PC/scrcpy/lld-link.com"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/lld-link.exe"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/lld-link"
+      - "C:/Program Files/dotnet/lld-link.com"
+      - "C:/Program Files/dotnet/lld-link.exe"
+      - "C:/Program Files/dotnet/lld-link"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/lld-link.com"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/lld-link.exe"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/lld-link"
@@ -332,32 +254,13 @@ events:
       - "E:/Installed Software/Antigravity IDE/bin/lld-link.com"
       - "E:/Installed Software/Antigravity IDE/bin/lld-link.exe"
       - "E:/Installed Software/Antigravity IDE/bin/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/lld-link"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/lld-link.com"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/lld-link.exe"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/lld-link"
     found: false
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -368,13 +271,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -395,17 +296,8 @@ events:
     names:
       - "link"
     candidate_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/"
       - "C:/Program Files/Python313/Scripts/"
       - "C:/Program Files/Python313/"
@@ -416,29 +308,17 @@ events:
       - "C:/Windows/SysWOW64/OpenSSH/"
       - "D:/Download/platform-tools/"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/"
+      - "C:/Program Files/dotnet/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/"
       - "E:/Installed Software/Antigravity IDE/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/"
     searched_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.com"
-    found: "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.exe"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.com"
+    found: "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/link.exe"
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -449,13 +329,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -476,17 +354,8 @@ events:
     names:
       - "mt"
     candidate_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/"
       - "C:/Program Files/Python313/Scripts/"
       - "C:/Program Files/Python313/"
@@ -497,44 +366,67 @@ events:
       - "C:/Windows/SysWOW64/OpenSSH/"
       - "D:/Download/platform-tools/"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/"
+      - "C:/Program Files/dotnet/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/"
       - "E:/Installed Software/Antigravity IDE/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/"
     searched_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/mt.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/mt.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/mt"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/mt.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/mt.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/mt"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/mt.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/mt.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/mt"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/mt.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/mt.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/mt"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/mt.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/mt.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/mt"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/mt.com"
-    found: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/mt.exe"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/mt.com"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/mt.exe"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/mt"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/mt.com"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/mt.exe"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/mt"
+      - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/mt.com"
+      - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/mt.exe"
+      - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/mt"
+      - "C:/Program Files/Python313/Scripts/mt.com"
+      - "C:/Program Files/Python313/Scripts/mt.exe"
+      - "C:/Program Files/Python313/Scripts/mt"
+      - "C:/Program Files/Python313/mt.com"
+      - "C:/Program Files/Python313/mt.exe"
+      - "C:/Program Files/Python313/mt"
+      - "C:/Windows/SysWOW64/mt.com"
+      - "C:/Windows/SysWOW64/mt.exe"
+      - "C:/Windows/SysWOW64/mt"
+      - "C:/Windows/mt.com"
+      - "C:/Windows/mt.exe"
+      - "C:/Windows/mt"
+      - "C:/Windows/SysWOW64/wbem/mt.com"
+      - "C:/Windows/SysWOW64/wbem/mt.exe"
+      - "C:/Windows/SysWOW64/wbem/mt"
+      - "C:/Windows/SysWOW64/WindowsPowerShell/v1.0/mt.com"
+      - "C:/Windows/SysWOW64/WindowsPowerShell/v1.0/mt.exe"
+      - "C:/Windows/SysWOW64/WindowsPowerShell/v1.0/mt"
+      - "C:/Windows/SysWOW64/OpenSSH/mt.com"
+      - "C:/Windows/SysWOW64/OpenSSH/mt.exe"
+      - "C:/Windows/SysWOW64/OpenSSH/mt"
+      - "D:/Download/platform-tools/mt.com"
+      - "D:/Download/platform-tools/mt.exe"
+      - "D:/Download/platform-tools/mt"
+      - "D:/Download/Softwares/Mobile in PC/scrcpy/mt.com"
+      - "D:/Download/Softwares/Mobile in PC/scrcpy/mt.exe"
+      - "D:/Download/Softwares/Mobile in PC/scrcpy/mt"
+      - "C:/Program Files/dotnet/mt.com"
+      - "C:/Program Files/dotnet/mt.exe"
+      - "C:/Program Files/dotnet/mt"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/mt.com"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/mt.exe"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/mt"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/mt.com"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/mt.exe"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/mt"
+      - "E:/Installed Software/Antigravity IDE/bin/mt.com"
+      - "E:/Installed Software/Antigravity IDE/bin/mt.exe"
+      - "E:/Installed Software/Antigravity IDE/bin/mt"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/mt.com"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/mt.exe"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/mt"
+    found: false
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -545,13 +437,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -572,17 +462,8 @@ events:
     names:
       - "lib"
     candidate_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/"
       - "C:/Program Files/Python313/Scripts/"
       - "C:/Program Files/Python313/"
@@ -593,29 +474,17 @@ events:
       - "C:/Windows/SysWOW64/OpenSSH/"
       - "D:/Download/platform-tools/"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/"
+      - "C:/Program Files/dotnet/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/"
       - "E:/Installed Software/Antigravity IDE/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/"
     searched_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lib.com"
-    found: "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lib.exe"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lib.com"
+    found: "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lib.exe"
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -626,13 +495,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -660,17 +527,7 @@ events:
     found: "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-4.3/Modules/CMakeCXXCompilerId.cpp.in"
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -681,21 +538,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
-      ENV{INCLUDE}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\include"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Auxiliary\\VS\\include"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.26100.0\\ucrt"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\um"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\shared"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\winrt"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\\\include\\10.0.26100.0\\\\cppwinrt"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
   -
     kind: "message-v1"
     backtrace:
@@ -711,10 +558,10 @@ events:
       
       The output was:
       0
-      MSBuild version 18.7.8+1ac568fee for .NET Framework
-      Build started 7/15/2026 4:54:53 PM.
+      MSBuild version 18.9.1+a81b43525 for .NET Framework
+      Build started 7/16/2026 11:28:25 AM.
       
-      Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
+      Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
         Creating directory "Debug\\".
         Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
@@ -723,25 +570,25 @@ events:
         Creating "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         Touching "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
       ClCompile:
-        D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc145.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+        D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc145.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
         CMakeCXXCompilerId.cpp
       Link:
-        D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
-        CompilerIdCXX.vcxproj -> E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdCXX\\CompilerIdCXX.exe
+        D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
+        CompilerIdCXX.vcxproj -> E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdCXX\\CompilerIdCXX.exe
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
         :VCEnd
-        CMAKE_CXX_COMPILER=D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe
+        CMAKE_CXX_COMPILER=D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe
       FinalizeBuildStatus:
         Deleting file "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
         Touching "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.lastbuildstate".
-      Done Building Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (default targets).
+      Done Building Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\4.3.1-msvc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (default targets).
       
       Build succeeded.
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:01.16
+      Time Elapsed 00:00:03.14
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -749,7 +596,7 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
       
       The CXX compiler identification is MSVC, found in:
-        E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/4.3.1-msvc1/CompilerIdCXX/CompilerIdCXX.exe
+        E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/4.3.1-msvc1/CompilerIdCXX/CompilerIdCXX.exe
       
   -
     kind: "find-v1"
@@ -773,17 +620,8 @@ events:
     names:
       - "lld-link"
     candidate_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/"
       - "C:/Program Files/Python313/Scripts/"
       - "C:/Program Files/Python313/"
@@ -794,47 +632,18 @@ events:
       - "C:/Windows/SysWOW64/OpenSSH/"
       - "D:/Download/platform-tools/"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/"
+      - "C:/Program Files/dotnet/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/"
       - "E:/Installed Software/Antigravity IDE/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/"
     searched_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/lld-link"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/lld-link.com"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/lld-link.exe"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/lld-link"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/lld-link.com"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/lld-link.exe"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/lld-link"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/lld-link.com"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/lld-link.exe"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/lld-link"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link.com"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link.exe"
+      - "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lld-link"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link.com"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link.exe"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/lld-link.com"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/lld-link.exe"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/lld-link"
@@ -865,6 +674,9 @@ events:
       - "D:/Download/Softwares/Mobile in PC/scrcpy/lld-link.com"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/lld-link.exe"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/lld-link"
+      - "C:/Program Files/dotnet/lld-link.com"
+      - "C:/Program Files/dotnet/lld-link.exe"
+      - "C:/Program Files/dotnet/lld-link"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/lld-link.com"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/lld-link.exe"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/lld-link"
@@ -874,32 +686,13 @@ events:
       - "E:/Installed Software/Antigravity IDE/bin/lld-link.com"
       - "E:/Installed Software/Antigravity IDE/bin/lld-link.exe"
       - "E:/Installed Software/Antigravity IDE/bin/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/lld-link"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/lld-link.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/lld-link.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/lld-link"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/lld-link.com"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/lld-link.exe"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/lld-link"
     found: false
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -910,13 +703,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -940,17 +731,7 @@ events:
     names:
       - "rc"
     candidate_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/x64/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/"
-      - "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/Tools/"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
       - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/"
       - "C:/Program Files/Python313/Scripts/"
       - "C:/Program Files/Python313/"
@@ -961,13 +742,11 @@ events:
       - "C:/Windows/SysWOW64/OpenSSH/"
       - "D:/Download/platform-tools/"
       - "D:/Download/Softwares/Mobile in PC/scrcpy/"
+      - "C:/Program Files/dotnet/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/"
       - "E:/Installed Software/Antigravity IDE/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/Linux/bin/ConnectionManagerExe/"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/vcpkg/"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/"
       - "C:/Program Files/bin/"
       - "C:/Program Files/sbin/"
       - "C:/Program Files/"
@@ -981,36 +760,94 @@ events:
       - "C:/Program Files (x86)/LipiTSF/sbin/"
       - "C:/Program Files (x86)/LipiTSF/"
     searched_directories:
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/rc.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/rc.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/rc"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/rc.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/rc.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/VC/vcpackages/rc"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/rc.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/rc.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/TestWindow/rc"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/rc.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/rc.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/Roslyn/rc"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/rc.com"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/rc.exe"
-      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/rc"
-      - "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/rc.com"
-    found: "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/rc.exe"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/rc.com"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/rc.exe"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/rc"
+      - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/rc.com"
+      - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/rc.exe"
+      - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin/rc"
+      - "C:/Program Files/Python313/Scripts/rc.com"
+      - "C:/Program Files/Python313/Scripts/rc.exe"
+      - "C:/Program Files/Python313/Scripts/rc"
+      - "C:/Program Files/Python313/rc.com"
+      - "C:/Program Files/Python313/rc.exe"
+      - "C:/Program Files/Python313/rc"
+      - "C:/Windows/SysWOW64/rc.com"
+      - "C:/Windows/SysWOW64/rc.exe"
+      - "C:/Windows/SysWOW64/rc"
+      - "C:/Windows/rc.com"
+      - "C:/Windows/rc.exe"
+      - "C:/Windows/rc"
+      - "C:/Windows/SysWOW64/wbem/rc.com"
+      - "C:/Windows/SysWOW64/wbem/rc.exe"
+      - "C:/Windows/SysWOW64/wbem/rc"
+      - "C:/Windows/SysWOW64/WindowsPowerShell/v1.0/rc.com"
+      - "C:/Windows/SysWOW64/WindowsPowerShell/v1.0/rc.exe"
+      - "C:/Windows/SysWOW64/WindowsPowerShell/v1.0/rc"
+      - "C:/Windows/SysWOW64/OpenSSH/rc.com"
+      - "C:/Windows/SysWOW64/OpenSSH/rc.exe"
+      - "C:/Windows/SysWOW64/OpenSSH/rc"
+      - "D:/Download/platform-tools/rc.com"
+      - "D:/Download/platform-tools/rc.exe"
+      - "D:/Download/platform-tools/rc"
+      - "D:/Download/Softwares/Mobile in PC/scrcpy/rc.com"
+      - "D:/Download/Softwares/Mobile in PC/scrcpy/rc.exe"
+      - "D:/Download/Softwares/Mobile in PC/scrcpy/rc"
+      - "C:/Program Files/dotnet/rc.com"
+      - "C:/Program Files/dotnet/rc.exe"
+      - "C:/Program Files/dotnet/rc"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/rc.com"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/rc.exe"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Microsoft/WindowsApps/rc"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/rc.com"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/rc.exe"
+      - "C:/Users/Sabbir Ahmmed/AppData/Local/Programs/Antigravity IDE/bin/rc"
+      - "E:/Installed Software/Antigravity IDE/bin/rc.com"
+      - "E:/Installed Software/Antigravity IDE/bin/rc.exe"
+      - "E:/Installed Software/Antigravity IDE/bin/rc"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/rc.com"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/rc.exe"
+      - "C:/Users/Sabbir Ahmmed/.dotnet/tools/rc"
+      - "C:/Program Files/bin/rc.com"
+      - "C:/Program Files/bin/rc.exe"
+      - "C:/Program Files/bin/rc"
+      - "C:/Program Files/sbin/rc.com"
+      - "C:/Program Files/sbin/rc.exe"
+      - "C:/Program Files/sbin/rc"
+      - "C:/Program Files/rc.com"
+      - "C:/Program Files/rc.exe"
+      - "C:/Program Files/rc"
+      - "C:/Program Files (x86)/bin/rc.com"
+      - "C:/Program Files (x86)/bin/rc.exe"
+      - "C:/Program Files (x86)/bin/rc"
+      - "C:/Program Files (x86)/sbin/rc.com"
+      - "C:/Program Files (x86)/sbin/rc.exe"
+      - "C:/Program Files (x86)/sbin/rc"
+      - "C:/Program Files (x86)/rc.com"
+      - "C:/Program Files (x86)/rc.exe"
+      - "C:/Program Files (x86)/rc"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/rc.com"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/rc.exe"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/rc"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/sbin/rc.com"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/sbin/rc.exe"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/sbin/rc"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/rc.com"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/rc.exe"
+      - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/rc"
+      - "C:/Program Files (x86)/LipiTSF/bin/rc.com"
+      - "C:/Program Files (x86)/LipiTSF/bin/rc.exe"
+      - "C:/Program Files (x86)/LipiTSF/bin/rc"
+      - "C:/Program Files (x86)/LipiTSF/sbin/rc.com"
+      - "C:/Program Files (x86)/LipiTSF/sbin/rc.exe"
+      - "C:/Program Files (x86)/LipiTSF/sbin/rc"
+      - "C:/Program Files (x86)/LipiTSF/rc.com"
+      - "C:/Program Files (x86)/LipiTSF/rc.exe"
+      - "C:/Program Files (x86)/LipiTSF/rc"
+    found: false
     search_context:
       ENV{PATH}:
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\VCPackages"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\MSBuild\\Current\\bin\\Roslyn"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\Extensions\\Microsoft\\CodeCoverage.Console"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.26100.0\\\\x64"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\\\MSBuild\\Current\\Bin\\amd64"
-        - "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\Tools\\"
+        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
         - "C:/Users/Sabbir Ahmmed/.gemini/antigravity-ide/bin"
         - "C:\\Program Files\\Python313\\Scripts\\"
         - "C:\\Program Files\\Python313\\"
@@ -1021,13 +858,11 @@ events:
         - "C:\\WINDOWS\\System32\\OpenSSH\\"
         - "D:\\Download\\platform-tools\\"
         - "D:\\Download\\Softwares\\Mobile in PC\\scrcpy"
+        - "C:\\Program Files\\dotnet\\"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\Sabbir Ahmmed\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
         - "E:\\Installed Software\\Antigravity IDE\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe"
-        - "D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\vcpkg"
+        - "C:\\Users\\Sabbir Ahmmed\\.dotnet\\tools"
       CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/LipiTSF"
       CMAKE_SYSTEM_PREFIX_PATH:
         - "C:/Program Files"
@@ -1043,8 +878,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-5grvez"
-      binary: "E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-5grvez"
+      source: "E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-zivdzk"
+      binary: "E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-zivdzk"
     cmakeVariables:
       CMAKE_CXX_STDLIB_MODULES_JSON: ""
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
@@ -1054,39 +889,39 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-5grvez'
+        Change Dir: 'E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-zivdzk'
         
-        Run Build Command(s): D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_a968d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=18.0 /v:n
-        MSBuild version 18.7.8+1ac568fee for .NET Framework
-        Build started 7/15/2026 4:54:55 PM.
+        Run Build Command(s): "D:/PortableDev/MS Visual Studio/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_65f0f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=18.0 /v:n
+        MSBuild version 18.9.1+a81b43525 for .NET Framework
+        Build started 7/16/2026 11:28:29 AM.
         
-        Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-5grvez\\cmTC_a968d.vcxproj" on node 1 (default targets).
+        Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zivdzk\\cmTC_65f0f.vcxproj" on node 1 (default targets).
         PrepareForBuild:
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-5grvez\\Debug\\".
-          Creating directory "cmTC_a968d.dir\\Debug\\cmTC_a968d.tlog\\".
+          Creating directory "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zivdzk\\Debug\\".
+          Creating directory "cmTC_65f0f.dir\\Debug\\cmTC_65f0f.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_a968d.dir\\Debug\\cmTC_a968d.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_a968d.dir\\Debug\\cmTC_a968d.tlog\\unsuccessfulbuild".
+          Creating "cmTC_65f0f.dir\\Debug\\cmTC_65f0f.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_65f0f.dir\\Debug\\cmTC_65f0f.tlog\\unsuccessfulbuild".
         ClCompile:
-          D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_a968d.dir\\Debug\\\\" /Fd"cmTC_a968d.dir\\Debug\\vc145.pdb" /external:W3 /TC /errorReport:queue "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
-          Microsoft (R) C/C++ Optimizing Compiler Version 19.51.36248 for x64
+          D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_65f0f.dir\\Debug\\\\" /Fd"cmTC_65f0f.dir\\Debug\\vc145.pdb" /external:W3 /TC /errorReport:queue "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+          Microsoft (R) C/C++ Optimizing Compiler Version 19.51.36251 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_a968d.dir\\Debug\\\\" /Fd"cmTC_a968d.dir\\Debug\\vc145.pdb" /external:W3 /TC /errorReport:queue "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_65f0f.dir\\Debug\\\\" /Fd"cmTC_65f0f.dir\\Debug\\vc145.pdb" /external:W3 /TC /errorReport:queue "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\link.exe /OUT:"E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-5grvez\\Debug\\cmTC_a968d.exe" /INCREMENTAL /ILK:"cmTC_a968d.dir\\Debug\\cmTC_a968d.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-5grvez/Debug/cmTC_a968d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-5grvez/Debug/cmTC_a968d.lib" /MACHINE:X64  /machine:x64 cmTC_a968d.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_a968d.vcxproj -> E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-5grvez\\Debug\\cmTC_a968d.exe
+          D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\link.exe /OUT:"E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zivdzk\\Debug\\cmTC_65f0f.exe" /INCREMENTAL /ILK:"cmTC_65f0f.dir\\Debug\\cmTC_65f0f.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-zivdzk/Debug/cmTC_65f0f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-zivdzk/Debug/cmTC_65f0f.lib" /MACHINE:X64  /machine:x64 cmTC_65f0f.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_65f0f.vcxproj -> E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zivdzk\\Debug\\cmTC_65f0f.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_a968d.dir\\Debug\\cmTC_a968d.tlog\\unsuccessfulbuild".
-          Touching "cmTC_a968d.dir\\Debug\\cmTC_a968d.tlog\\cmTC_a968d.lastbuildstate".
-        Done Building Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-5grvez\\cmTC_a968d.vcxproj" (default targets).
+          Deleting file "cmTC_65f0f.dir\\Debug\\cmTC_65f0f.tlog\\unsuccessfulbuild".
+          Touching "cmTC_65f0f.dir\\Debug\\cmTC_65f0f.tlog\\cmTC_65f0f.lastbuildstate".
+        Done Building Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zivdzk\\cmTC_65f0f.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:01.35
+        Time Elapsed 00:00:01.42
         
       exitCode: 0
   -
@@ -1099,7 +934,7 @@ events:
       Parsed C implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
-        linker tool for 'C': D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/HostX64/x64/link.exe
+        linker tool for 'C': D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/HostX64/x64/link.exe
         implicit libs: []
         implicit objs: []
         implicit dirs: []
@@ -1114,8 +949,8 @@ events:
       - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
-      Running the C compiler's linker: "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/HostX64/x64/link.exe" "-v"
-      Microsoft (R) Incremental Linker Version 14.51.36248.0
+      Running the C compiler's linker: "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/HostX64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.51.36251.0
       Copyright (C) Microsoft Corporation.  All rights reserved.
   -
     kind: "try_compile-v1"
@@ -1126,8 +961,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-76wrek"
-      binary: "E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-76wrek"
+      source: "E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-o49hzu"
+      binary: "E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-o49hzu"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -1138,39 +973,39 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-76wrek'
+        Change Dir: 'E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-o49hzu'
         
-        Run Build Command(s): D:/PortableDev/VSBuildTools/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_98d6a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=18.0 /v:n
-        MSBuild version 18.7.8+1ac568fee for .NET Framework
-        Build started 7/15/2026 4:54:58 PM.
+        Run Build Command(s): "D:/PortableDev/MS Visual Studio/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_e782f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=18.0 /v:n
+        MSBuild version 18.9.1+a81b43525 for .NET Framework
+        Build started 7/16/2026 11:28:32 AM.
         
-        Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-76wrek\\cmTC_98d6a.vcxproj" on node 1 (default targets).
+        Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-o49hzu\\cmTC_e782f.vcxproj" on node 1 (default targets).
         PrepareForBuild:
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-76wrek\\Debug\\".
-          Creating directory "cmTC_98d6a.dir\\Debug\\cmTC_98d6a.tlog\\".
+          Creating directory "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-o49hzu\\Debug\\".
+          Creating directory "cmTC_e782f.dir\\Debug\\cmTC_e782f.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_98d6a.dir\\Debug\\cmTC_98d6a.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_98d6a.dir\\Debug\\cmTC_98d6a.tlog\\unsuccessfulbuild".
+          Creating "cmTC_e782f.dir\\Debug\\cmTC_e782f.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_e782f.dir\\Debug\\cmTC_e782f.tlog\\unsuccessfulbuild".
         ClCompile:
-          D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_98d6a.dir\\Debug\\\\" /Fd"cmTC_98d6a.dir\\Debug\\vc145.pdb" /external:W3 /TP /errorReport:queue "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"
-          Microsoft (R) C/C++ Optimizing Compiler Version 19.51.36248 for x64
+          D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_e782f.dir\\Debug\\\\" /Fd"cmTC_e782f.dir\\Debug\\vc145.pdb" /external:W3 /TP /errorReport:queue "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"
+          Microsoft (R) C/C++ Optimizing Compiler Version 19.51.36251 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_98d6a.dir\\Debug\\\\" /Fd"cmTC_98d6a.dir\\Debug\\vc145.pdb" /external:W3 /TP /errorReport:queue "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_e782f.dir\\Debug\\\\" /Fd"cmTC_e782f.dir\\Debug\\vc145.pdb" /external:W3 /TP /errorReport:queue "D:\\PortableDev\\VSBuildTools\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          D:\\PortableDev\\VSBuildTools\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\link.exe /OUT:"E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-76wrek\\Debug\\cmTC_98d6a.exe" /INCREMENTAL /ILK:"cmTC_98d6a.dir\\Debug\\cmTC_98d6a.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-76wrek/Debug/cmTC_98d6a.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-76wrek/Debug/cmTC_98d6a.lib" /MACHINE:X64  /machine:x64 cmTC_98d6a.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_98d6a.vcxproj -> E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-76wrek\\Debug\\cmTC_98d6a.exe
+          D:\\PortableDev\\MS Visual Studio\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\link.exe /OUT:"E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-o49hzu\\Debug\\cmTC_e782f.exe" /INCREMENTAL /ILK:"cmTC_e782f.dir\\Debug\\cmTC_e782f.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-o49hzu/Debug/cmTC_e782f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/CMakeFiles/CMakeScratch/TryCompile-o49hzu/Debug/cmTC_e782f.lib" /MACHINE:X64  /machine:x64 cmTC_e782f.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_e782f.vcxproj -> E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-o49hzu\\Debug\\cmTC_e782f.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_98d6a.dir\\Debug\\cmTC_98d6a.tlog\\unsuccessfulbuild".
-          Touching "cmTC_98d6a.dir\\Debug\\cmTC_98d6a.tlog\\cmTC_98d6a.lastbuildstate".
-        Done Building Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\flutter_app\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-76wrek\\cmTC_98d6a.vcxproj" (default targets).
+          Deleting file "cmTC_e782f.dir\\Debug\\cmTC_e782f.tlog\\unsuccessfulbuild".
+          Touching "cmTC_e782f.dir\\Debug\\cmTC_e782f.tlog\\cmTC_e782f.lastbuildstate".
+        Done Building Project "E:\\Python Projects\\Google Input Tools to Flutter desktop\\windows_tsf_core\\build\\CMakeFiles\\CMakeScratch\\TryCompile-o49hzu\\cmTC_e782f.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:01.31
+        Time Elapsed 00:00:01.32
         
       exitCode: 0
   -
@@ -1183,7 +1018,7 @@ events:
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
-        linker tool for 'CXX': D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/HostX64/x64/link.exe
+        linker tool for 'CXX': D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/HostX64/x64/link.exe
         implicit libs: []
         implicit objs: []
         implicit dirs: []
@@ -1198,7 +1033,7 @@ events:
       - "D:/PortableDev/VSBuildTools/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
-      Running the CXX compiler's linker: "D:/PortableDev/VSBuildTools/BuildTools/VC/Tools/MSVC/14.51.36231/bin/HostX64/x64/link.exe" "-v"
-      Microsoft (R) Incremental Linker Version 14.51.36248.0
+      Running the CXX compiler's linker: "D:/PortableDev/MS Visual Studio/VC/Tools/MSVC/14.51.36231/bin/HostX64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.51.36251.0
       Copyright (C) Microsoft Corporation.  All rights reserved.
 ...

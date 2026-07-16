@@ -1,6 +1,7 @@
 #include "IpcClient.h"
+#include <vector>
 
-const std::wstring IpcClient::PIPE_NAME = L"\\\\.\\pipe\\LipiImeIpcPipe";
+const std::wstring IpcClient::PIPE_NAME = L"\\\\.\\pipe\\LipiImePipe";
 
 IpcClient::IpcClient() : _hPipe(INVALID_HANDLE_VALUE)
 {
@@ -15,11 +16,9 @@ bool IpcClient::Connect()
 {
     if (IsConnected()) return true;
 
-    // Try to connect to the named pipe
-    // We use WaitNamedPipe to wait for the server (Flutter app) to create the pipe
     if (!WaitNamedPipe(PIPE_NAME.c_str(), 100)) 
     {
-        return false; // Pipe is not available
+        return false;
     }
 
     _hPipe = CreateFile(
@@ -35,6 +34,10 @@ bool IpcClient::Connect()
     {
         return false;
     }
+
+    // Since server is in Message mode, we can optionally set client to Message mode
+    DWORD dwMode = PIPE_READMODE_MESSAGE;
+    SetNamedPipeHandleState(_hPipe, &dwMode, NULL, NULL);
 
     return true;
 }
@@ -55,21 +58,30 @@ bool IpcClient::SendMessage(const std::wstring& msg)
         if (!Connect()) return false;
     }
 
-    DWORD cbWritten = 0;
-    // We send the size of the string in bytes first, then the string itself
-    // However, to keep it simple, we can just send null-terminated string.
-    DWORD sizeInBytes = (DWORD)((msg.length() + 1) * sizeof(wchar_t));
+    // Convert UTF-16 to UTF-8
+    int utf8Size = WideCharToMultiByte(CP_UTF8, 0, msg.c_str(), -1, NULL, 0, NULL, NULL);
+    if (utf8Size <= 0) return false;
 
+    std::string utf8Msg(utf8Size, 0);
+    WideCharToMultiByte(CP_UTF8, 0, msg.c_str(), -1, &utf8Msg[0], utf8Size, NULL, NULL);
+    
+    // Remove the null terminator added by WideCharToMultiByte, we don't send it.
+    if (utf8Msg.back() == '\0') utf8Msg.pop_back();
+
+    // Append newline for C# StreamReader.ReadLineAsync()
+    utf8Msg += "\n";
+
+    DWORD cbWritten = 0;
     BOOL bSuccess = WriteFile(
         _hPipe,
-        msg.c_str(),
-        sizeInBytes,
+        utf8Msg.c_str(),
+        (DWORD)utf8Msg.length(),
         &cbWritten,
         NULL);
 
-    if (!bSuccess || sizeInBytes != cbWritten)
+    if (!bSuccess || cbWritten != utf8Msg.length())
     {
-        Disconnect(); // Disconnect on error
+        Disconnect();
         return false;
     }
 
@@ -80,13 +92,13 @@ bool IpcClient::ReceiveMessage(std::wstring& outMsg)
 {
     if (!IsConnected()) return false;
 
-    wchar_t buffer[1024];
+    char buffer[4096];
     DWORD cbRead = 0;
 
     BOOL bSuccess = ReadFile(
         _hPipe,
         buffer,
-        sizeof(buffer) - sizeof(wchar_t),
+        sizeof(buffer) - 1,
         &cbRead,
         NULL);
 
@@ -96,9 +108,22 @@ bool IpcClient::ReceiveMessage(std::wstring& outMsg)
         return false;
     }
 
-    // Ensure null termination just in case
-    buffer[cbRead / sizeof(wchar_t)] = L'\0';
-    outMsg = buffer;
+    buffer[cbRead] = '\0';
 
+    // Convert UTF-8 back to UTF-16
+    int utf16Size = MultiByteToWideChar(CP_UTF8, 0, buffer, -1, NULL, 0);
+    if (utf16Size <= 0) return false;
+
+    std::wstring utf16Msg(utf16Size, 0);
+    MultiByteToWideChar(CP_UTF8, 0, buffer, -1, &utf16Msg[0], utf16Size);
+
+    // Remove the null terminator
+    if (utf16Msg.back() == L'\0') utf16Msg.pop_back();
+    
+    // Trim potential trailing newline from C# WriteLineAsync
+    if (!utf16Msg.empty() && utf16Msg.back() == L'\n') utf16Msg.pop_back();
+    if (!utf16Msg.empty() && utf16Msg.back() == L'\r') utf16Msg.pop_back();
+
+    outMsg = utf16Msg;
     return true;
 }

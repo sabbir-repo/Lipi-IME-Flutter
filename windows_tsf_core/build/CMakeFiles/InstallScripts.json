@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"E:/Python Projects/Google Input Tools to Flutter desktop/flutter_app/windows_tsf_core/build/cmake_install.cmake"
+		"E:/Python Projects/Google Input Tools to Flutter desktop/windows_tsf_core/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

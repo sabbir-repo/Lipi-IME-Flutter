@@ -29,8 +29,17 @@ public:
 private:
     void _InitKeyEventSink();
     void _UninitKeyEventSink();
+    void _HandleKeystroke(ITfContext *pic, WPARAM wParam);
+    
+public:
+    HRESULT _DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam);
+    
+private:
     LONG _cRef;
     ITfThreadMgr *_ptim;
     TfClientId _tid;
     IpcClient _ipc;
+
+    std::wstring _currentWord;
+    ITfRange* _pCurrentRange;
 };
