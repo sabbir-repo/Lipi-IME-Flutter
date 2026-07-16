@@ -14,6 +14,50 @@
     </Window.SystemBackdrop>
 
     <Grid>
+        <NavigationView x:Name="NavView" PaneDisplayMode="Left" IsBackButtonVisible="Collapsed" SelectionChanged="NavView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Setting" Content="General" Tag="General" />
+                <NavigationViewItem Icon="Help" Content="About" Tag="About" />
+            </NavigationView.MenuItems>
 
+            <Frame x:Name="ContentFrame" Padding="24">
+                <Frame.Content>
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="General Settings" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,20"/>
+                        
+                        <!-- Online Mode -->
+                        <StackPanel Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="16" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Online Suggestions (Google API)" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                                    <TextBlock Text="Fetch transliteration suggestions from Google Input Tools API" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="OnlineModeSwitch" Grid.Column="1" Toggled="OnlineModeSwitch_Toggled" />
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Offline Mode -->
+                        <StackPanel Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="16" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Offline Cache" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                                    <TextBlock Text="Save suggestions locally and fallback to offline mode when API is unavailable" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="OfflineModeSwitch" Grid.Column="1" Toggled="OfflineModeSwitch_Toggled" />
+                            </Grid>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Frame.Content>
+            </Frame>
+        </NavigationView>
     </Grid>
 </Window>

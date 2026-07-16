@@ -23,9 +23,46 @@ namespace LipiDashboard
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        private SettingsManager _settingsManager;
+        private bool _isLoaded = false;
+
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            this.ExtendsContentIntoTitleBar = true; // Modern Win11 look
+            
+            _settingsManager = new SettingsManager();
+            LoadSettingsIntoUI();
+            
+            NavView.SelectedItem = NavView.MenuItems.First();
+        }
+
+        private void LoadSettingsIntoUI()
+        {
+            _isLoaded = false;
+            OnlineModeSwitch.IsOn = _settingsManager.CurrentSettings.OnlineMode;
+            OfflineModeSwitch.IsOn = _settingsManager.CurrentSettings.OfflineMode;
+            _isLoaded = true;
+        }
+
+        private void OnlineModeSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isLoaded) return;
+            _settingsManager.CurrentSettings.OnlineMode = OnlineModeSwitch.IsOn;
+            _settingsManager.SaveSettings();
+        }
+
+        private void OfflineModeSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isLoaded) return;
+            _settingsManager.CurrentSettings.OfflineMode = OfflineModeSwitch.IsOn;
+            _settingsManager.SaveSettings();
+        }
+
+        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            // For now, we only have the General page which is inline.
+            // If we added more pages, we'd navigate the ContentFrame here.
         }
     }
 }

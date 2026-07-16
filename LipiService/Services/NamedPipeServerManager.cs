@@ -86,6 +86,7 @@ namespace LipiService.Services
                         await writer.WriteLineAsync("[]");
                     }
                 }
+                } // Close using (pipeServer) block
             }
             catch (Exception ex)
             {

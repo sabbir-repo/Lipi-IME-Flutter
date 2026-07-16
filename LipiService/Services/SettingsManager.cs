@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 
 namespace LipiService.Services
 {
@@ -14,19 +15,48 @@ namespace LipiService.Services
     public class SettingsManager
     {
         private readonly string _settingsFilePath;
+        private readonly string _lipiDir;
+        private FileSystemWatcher? _watcher;
         public Settings CurrentSettings { get; private set; } = new Settings();
 
         public SettingsManager()
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var lipiDir = Path.Combine(home, ".lipi_ime");
-            if (!Directory.Exists(lipiDir))
+            _lipiDir = Path.Combine(home, ".lipi_ime");
+            if (!Directory.Exists(_lipiDir))
             {
-                Directory.CreateDirectory(lipiDir);
+                Directory.CreateDirectory(_lipiDir);
             }
             
-            _settingsFilePath = Path.Combine(lipiDir, "settings.json");
+            _settingsFilePath = Path.Combine(_lipiDir, "settings.json");
             LoadSettings();
+            InitializeWatcher();
+        }
+
+        private void InitializeWatcher()
+        {
+            try
+            {
+                _watcher = new FileSystemWatcher(_lipiDir, "settings.json")
+                {
+                    NotifyFilter = NotifyFilters.LastWrite,
+                    EnableRaisingEvents = true
+                };
+                
+                _watcher.Changed += OnSettingsChanged;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to initialize FileSystemWatcher: {ex.Message}");
+            }
+        }
+
+        private void OnSettingsChanged(object sender, FileSystemEventArgs e)
+        {
+            // Add a small delay to avoid reading while the file is still being written to by the Dashboard
+            Thread.Sleep(100);
+            LoadSettings();
+            Console.WriteLine("Settings reloaded automatically.");
         }
 
         public void LoadSettings()
@@ -55,6 +85,7 @@ namespace LipiService.Services
         {
             try
             {
+                if (_watcher != null) _watcher.EnableRaisingEvents = false; // Prevent circular trigger
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 var json = JsonSerializer.Serialize(CurrentSettings, options);
                 File.WriteAllText(_settingsFilePath, json);
@@ -62,6 +93,10 @@ namespace LipiService.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to save settings: {ex.Message}");
+            }
+            finally
+            {
+                if (_watcher != null) _watcher.EnableRaisingEvents = true;
             }
         }
     }
