@@ -14,7 +14,7 @@ namespace LipiService.Services
     public class SettingsManager
     {
         private readonly string _settingsFilePath;
-        public Settings CurrentSettings { get; private set; }
+        public Settings CurrentSettings { get; private set; } = new Settings();
 
         public SettingsManager()
         {

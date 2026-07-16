@@ -1,3 +1,7 @@
 <Solution>
+  <Project Path="LipiDashboard/LipiDashboard.csproj" Id="68a144de-3ba6-4efd-b432-5c054da58fde">
+    <Platform Project="x64" />
+    <Deploy />
+  </Project>
   <Project Path="LipiService/LipiService.csproj" />
 </Solution>

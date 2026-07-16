@@ -1,6 +1,6 @@
 #include "LipiTSF.h"
 
-CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pCurrentRange(NULL)
+CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL)
 {
     DllAddRef();
 }
@@ -22,6 +22,10 @@ STDMETHODIMP CLipiTSF::QueryInterface(REFIID riid, void **ppvObj)
     else if (IsEqualIID(riid, IID_ITfKeyEventSink))
     {
         *ppvObj = (ITfKeyEventSink *)this;
+    }
+    else if (IsEqualIID(riid, IID_ITfCompositionSink))
+    {
+        *ppvObj = (ITfCompositionSink *)this;
     }
     else
     {
@@ -150,6 +154,17 @@ STDMETHODIMP CLipiTSF::OnPreservedKey(ITfContext *pic, REFGUID rguid, BOOL *pfEa
     return S_OK;
 }
 
+STDMETHODIMP CLipiTSF::OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition *pComposition)
+{
+    if (_pComposition == pComposition)
+    {
+        _pComposition->Release();
+        _pComposition = NULL;
+    }
+    _currentWord.clear();
+    return S_OK;
+}
+
 class CLipiEditSession : public ITfEditSession {
 public:
     CLipiEditSession(CLipiTSF *pTsf, ITfContext *pic, WPARAM wParam) 
@@ -211,10 +226,15 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
     std::wstring textToInsert;
 
     if (_currentWord.empty()) {
-        if (_pCurrentRange) {
-            _pCurrentRange->SetText(ec, 0, L"", 0);
-            _pCurrentRange->Release();
-            _pCurrentRange = NULL;
+        if (_pComposition) {
+            ITfRange *pRange = NULL;
+            if (SUCCEEDED(_pComposition->GetRange(&pRange))) {
+                pRange->SetText(ec, 0, L"", 0);
+                pRange->Release();
+            }
+            _pComposition->EndComposition(ec);
+            _pComposition->Release();
+            _pComposition = NULL;
         }
         return S_OK;
     }
@@ -239,21 +259,35 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
     if (wParam == VK_SPACE) textToInsert += L" ";
     else if (wParam == VK_RETURN) textToInsert += L"\n";
 
-    if (_pCurrentRange == NULL) {
+    if (_pComposition == NULL) {
         ITfInsertAtSelection *pInsert = NULL;
         if (SUCCEEDED(pic->QueryInterface(IID_ITfInsertAtSelection, (void **)&pInsert))) {
-            pInsert->InsertTextAtSelection(ec, TF_IAS_NOQUERY, textToInsert.c_str(), textToInsert.length(), &_pCurrentRange);
+            ITfRange *pRangeInsert = NULL;
+            pInsert->InsertTextAtSelection(ec, TF_IAS_NOQUERY, textToInsert.c_str(), textToInsert.length(), &pRangeInsert);
+            
+            if (pRangeInsert) {
+                ITfContextComposition *pContextComp = NULL;
+                if (SUCCEEDED(pic->QueryInterface(IID_ITfContextComposition, (void **)&pContextComp))) {
+                    pContextComp->StartComposition(ec, pRangeInsert, this, &_pComposition);
+                    pContextComp->Release();
+                }
+                pRangeInsert->Release();
+            }
             pInsert->Release();
         }
     } else {
-        _pCurrentRange->SetText(ec, 0, textToInsert.c_str(), textToInsert.length());
+        ITfRange *pRange = NULL;
+        if (SUCCEEDED(_pComposition->GetRange(&pRange))) {
+            pRange->SetText(ec, 0, textToInsert.c_str(), textToInsert.length());
+            pRange->Release();
+        }
     }
 
     if (wParam == VK_SPACE || wParam == VK_RETURN) {
-        if (_pCurrentRange) {
-            _pCurrentRange->Collapse(ec, TF_ANCHOR_END);
-            _pCurrentRange->Release();
-            _pCurrentRange = NULL;
+        if (_pComposition) {
+            _pComposition->EndComposition(ec);
+            _pComposition->Release();
+            _pComposition = NULL;
         }
         _currentWord.clear();
     }

@@ -3,7 +3,8 @@
 #include "IpcClient.h"
 
 class CLipiTSF : public ITfTextInputProcessor,
-                 public ITfKeyEventSink
+                 public ITfKeyEventSink,
+                 public ITfCompositionSink
 {
 public:
     CLipiTSF();
@@ -26,6 +27,9 @@ public:
     STDMETHODIMP OnKeyUp(ITfContext *pic, WPARAM wParam, LPARAM lParam, BOOL *pfEaten);
     STDMETHODIMP OnPreservedKey(ITfContext *pic, REFGUID rguid, BOOL *pfEaten);
 
+    // ITfCompositionSink methods
+    STDMETHODIMP OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition *pComposition);
+
 private:
     void _InitKeyEventSink();
     void _UninitKeyEventSink();
@@ -41,5 +45,5 @@ private:
     IpcClient _ipc;
 
     std::wstring _currentWord;
-    ITfRange* _pCurrentRange;
+    ITfComposition* _pComposition;
 };

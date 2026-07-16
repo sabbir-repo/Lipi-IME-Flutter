@@ -9,6 +9,7 @@ namespace LipiService.Services
     {
         private readonly string _cacheFilePath;
         private Dictionary<string, Dictionary<string, List<string>>> _offlineCache = new();
+        private readonly object _cacheLock = new object();
         
         // Basic fallback dictionary
         private readonly Dictionary<string, Dictionary<string, List<string>>> _basicOfflineDict = new()
@@ -54,8 +55,11 @@ namespace LipiService.Services
                 if (File.Exists(_cacheFilePath))
                 {
                     var content = File.ReadAllText(_cacheFilePath);
-                    _offlineCache = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(content) 
-                                    ?? new Dictionary<string, Dictionary<string, List<string>>>();
+                    var deserialized = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(content);
+                    lock (_cacheLock)
+                    {
+                        _offlineCache = deserialized ?? new Dictionary<string, Dictionary<string, List<string>>>();
+                    }
                 }
             }
             catch (Exception ex)
@@ -82,12 +86,15 @@ namespace LipiService.Services
         {
             if (string.IsNullOrWhiteSpace(word) || suggestions == null || suggestions.Count == 0) return;
             
-            if (!_offlineCache.ContainsKey(langCode))
+            lock (_cacheLock)
             {
-                _offlineCache[langCode] = new Dictionary<string, List<string>>();
+                if (!_offlineCache.ContainsKey(langCode))
+                {
+                    _offlineCache[langCode] = new Dictionary<string, List<string>>();
+                }
+                
+                _offlineCache[langCode][word] = suggestions;
             }
-            
-            _offlineCache[langCode][word] = suggestions;
             SaveCache();
         }
 
@@ -95,10 +102,13 @@ namespace LipiService.Services
         {
             var textLower = text.ToLower().Trim();
             
-            if (_offlineCache.TryGetValue(langCode, out var langCache))
+            lock (_cacheLock)
             {
-                if (langCache.TryGetValue(text, out var suggestions)) return suggestions;
-                if (langCache.TryGetValue(textLower, out var suggestionsLower)) return suggestionsLower;
+                if (_offlineCache.TryGetValue(langCode, out var langCache))
+                {
+                    if (langCache.TryGetValue(text, out var suggestions)) return suggestions;
+                    if (langCache.TryGetValue(textLower, out var suggestionsLower)) return suggestionsLower;
+                }
             }
             
             if (_basicOfflineDict.TryGetValue(langCode, out var basicDict))

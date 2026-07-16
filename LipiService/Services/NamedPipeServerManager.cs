@@ -29,7 +29,7 @@ namespace LipiService.Services
                 {
                     try
                     {
-                        using var pipeServer = new NamedPipeServerStream(
+                        var pipeServer = new NamedPipeServerStream(
                             PipeName, PipeDirection.InOut, 
                             NamedPipeServerStream.MaxAllowedServerInstances, 
                             PipeTransmissionMode.Message, 
@@ -39,11 +39,8 @@ namespace LipiService.Services
                         await pipeServer.WaitForConnectionAsync();
                         Console.WriteLine("Client connected!");
 
-                        // Process the client in a separate task so the server can loop and accept more connections
-                        // (Actually, a single NamedPipeServerStream instance only handles one connection. 
-                        // To handle multiple, we'd need multiple instances or just loop. We'll wait synchronously 
-                        // for now if only one client connects, but it's better to await the HandleClientAsync.)
-                        await HandleClientAsync(pipeServer);
+                        // Process the client concurrently so the server can accept more connections
+                        _ = HandleClientAsync(pipeServer);
                     }
                     catch (Exception ex)
                     {
@@ -57,8 +54,10 @@ namespace LipiService.Services
         {
             try
             {
-                using var reader = new StreamReader(pipeServer, Encoding.UTF8);
-                using var writer = new StreamWriter(pipeServer, Encoding.UTF8) { AutoFlush = true };
+                using (pipeServer) // Ensure pipeServer is disposed when done
+                {
+                    using var reader = new StreamReader(pipeServer, Encoding.UTF8);
+                    using var writer = new StreamWriter(pipeServer, Encoding.UTF8) { AutoFlush = true };
 
                 while (pipeServer.IsConnected)
                 {
