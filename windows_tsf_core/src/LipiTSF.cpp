@@ -219,7 +219,11 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         BYTE kbd[256];
         GetKeyboardState(kbd);
         wchar_t ch[2] = {0};
-        ToUnicode(wParam, MapVirtualKey(wParam, MAPVK_VK_TO_VSC), kbd, ch, 2, 0);
+        
+        // Force US English keyboard layout (0409) for phonetic mapping
+        HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
+        ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
+        
         if (ch[0] != 0) _currentWord += ch[0];
     }
 
