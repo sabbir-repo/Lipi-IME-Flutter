@@ -106,8 +106,19 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
 {
     if (pfEaten == NULL) return E_INVALIDARG;
     
-    bool isLetter = (wParam >= 'A' && wParam <= 'Z');
-    if (isLetter || (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN)))
+    BYTE kbd[256];
+    GetKeyboardState(kbd);
+    wchar_t ch[2] = {0};
+    HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
+    ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
+    
+    wchar_t c = ch[0];
+    bool isLetter = (c >= L'a' && c <= L'z') || (c >= L'A' && c <= L'Z');
+    bool isNumber = (c >= L'0' && c <= L'9');
+    bool isPunctuation = (c != 0 && !isLetter && !isNumber && wParam != VK_BACK && wParam != VK_SPACE && wParam != VK_RETURN);
+    
+    if (isLetter || isNumber || 
+        (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN || isPunctuation)))
     {
         *pfEaten = TRUE;
         return S_OK;
@@ -121,8 +132,19 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
 {
     if (pfEaten == NULL) return E_INVALIDARG;
 
-    bool isLetter = (wParam >= 'A' && wParam <= 'Z');
-    if (isLetter || (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN)))
+    BYTE kbd[256];
+    GetKeyboardState(kbd);
+    wchar_t ch[2] = {0};
+    HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
+    ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
+    
+    wchar_t c = ch[0];
+    bool isLetter = (c >= L'a' && c <= L'z') || (c >= L'A' && c <= L'Z');
+    bool isNumber = (c >= L'0' && c <= L'9');
+    bool isPunctuation = (c != 0 && !isLetter && !isNumber && wParam != VK_BACK && wParam != VK_SPACE && wParam != VK_RETURN);
+
+    if (isLetter || isNumber || 
+        (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN || isPunctuation)))
     {
         *pfEaten = TRUE;
         _HandleKeystroke(pic, wParam);
@@ -213,18 +235,27 @@ void CLipiTSF::_HandleKeystroke(ITfContext *pic, WPARAM wParam) {
 }
 
 HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam) {
+    BYTE kbd[256];
+    GetKeyboardState(kbd);
+    wchar_t ch[2] = {0};
+    HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
+    ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
+    
+    wchar_t c = ch[0];
+    bool isLetter = (c >= L'a' && c <= L'z') || (c >= L'A' && c <= L'Z');
+    bool isNumber = (c >= L'0' && c <= L'9');
+    bool isPunctuation = (c != 0 && !isLetter && !isNumber && wParam != VK_BACK && wParam != VK_SPACE && wParam != VK_RETURN);
+    bool isTerminator = (wParam == VK_SPACE || wParam == VK_RETURN || isPunctuation);
+
+    wchar_t termChar = 0;
+    if (wParam == VK_SPACE) termChar = L' ';
+    else if (wParam == VK_RETURN) termChar = L'\n';
+    else if (isPunctuation) termChar = c;
+
     if (wParam == VK_BACK) {
         if (!_currentWord.empty()) _currentWord.pop_back();
-    } else if (wParam != VK_SPACE && wParam != VK_RETURN) {
-        BYTE kbd[256];
-        GetKeyboardState(kbd);
-        wchar_t ch[2] = {0};
-        
-        // Force US English keyboard layout (0409) for phonetic mapping
-        HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
-        ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
-        
-        if (ch[0] != 0) _currentWord += ch[0];
+    } else if (!isTerminator) {
+        if (c != 0) _currentWord += c;
     }
 
     std::wstring textToInsert;
@@ -261,8 +292,9 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         textToInsert = _currentWord; // fallback
     }
 
-    if (wParam == VK_SPACE) textToInsert += L" ";
-    else if (wParam == VK_RETURN) textToInsert += L"\n";
+    if (termChar != 0) {
+        textToInsert += termChar;
+    }
 
     if (_pComposition == NULL) {
         ITfInsertAtSelection *pInsert = NULL;
@@ -312,7 +344,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         }
     }
 
-    if (wParam == VK_SPACE || wParam == VK_RETURN) {
+    if (isTerminator) {
         if (_pComposition) {
             ITfComposition *pComp = _pComposition;
             _pComposition = NULL;
