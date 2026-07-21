@@ -276,6 +276,18 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
                     pContextComp->StartComposition(ec, pRangeInsert, this, &_pComposition);
                     pContextComp->Release();
                 }
+
+                ITfRange *pSelectionRange = NULL;
+                if (SUCCEEDED(pRangeInsert->Clone(&pSelectionRange))) {
+                    pSelectionRange->Collapse(ec, TF_ANCHOR_END);
+                    TF_SELECTION tfSelection;
+                    tfSelection.range = pSelectionRange;
+                    tfSelection.style.ase = TF_AE_NONE;
+                    tfSelection.style.fInterimChar = FALSE;
+                    pic->SetSelection(ec, 1, &tfSelection);
+                    pSelectionRange->Release();
+                }
+
                 pRangeInsert->Release();
             }
             pInsert->Release();
@@ -284,6 +296,18 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         ITfRange *pRange = NULL;
         if (SUCCEEDED(_pComposition->GetRange(&pRange))) {
             pRange->SetText(ec, 0, textToInsert.c_str(), textToInsert.length());
+            
+            ITfRange *pSelectionRange = NULL;
+            if (SUCCEEDED(pRange->Clone(&pSelectionRange))) {
+                pSelectionRange->Collapse(ec, TF_ANCHOR_END);
+                TF_SELECTION tfSelection;
+                tfSelection.range = pSelectionRange;
+                tfSelection.style.ase = TF_AE_NONE;
+                tfSelection.style.fInterimChar = FALSE;
+                pic->SetSelection(ec, 1, &tfSelection);
+                pSelectionRange->Release();
+            }
+
             pRange->Release();
         }
     }

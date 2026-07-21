@@ -83,7 +83,11 @@ namespace LipiService.Services
                         bool online = _settingsManager.CurrentSettings.OnlineMode;
                         
                         var suggestions = await _apiService.FetchSuggestionsAsync(text, langCode, offline, online);
-                        var responseJson = JsonSerializer.Serialize(suggestions);
+                        var options = new JsonSerializerOptions
+                        {
+                            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                        };
+                        var responseJson = JsonSerializer.Serialize(suggestions, options);
                         
                         byte[] responseBytes = Encoding.UTF8.GetBytes(responseJson + "\n");
                         await pipeServer.WriteAsync(responseBytes, 0, responseBytes.Length);
