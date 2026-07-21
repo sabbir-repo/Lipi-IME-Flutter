@@ -64,6 +64,11 @@ namespace LipiService.Services
                                 suggestions.Add(element.GetString());
                             }
                             
+                            if (!suggestions.Contains(text))
+                            {
+                                suggestions.Add(text);
+                            }
+                            
                             // Cache the result for future offline use
                             _cacheManager.CacheWord(langCode, text, suggestions);
                             
