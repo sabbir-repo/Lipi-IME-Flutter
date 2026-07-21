@@ -32,7 +32,7 @@ namespace LipiService.Services
                         var pipeServer = new NamedPipeServerStream(
                             PipeName, PipeDirection.InOut, 
                             NamedPipeServerStream.MaxAllowedServerInstances, 
-                            PipeTransmissionMode.Message, 
+                            PipeTransmissionMode.Byte, 
                             PipeOptions.Asynchronous);
 
                         Console.WriteLine("Named Pipe Server started. Waiting for TSF client connection...");

@@ -35,9 +35,8 @@ bool IpcClient::Connect()
         return false;
     }
 
-    // Since server is in Message mode, we can optionally set client to Message mode
-    DWORD dwMode = PIPE_READMODE_MESSAGE;
-    SetNamedPipeHandleState(_hPipe, &dwMode, NULL, NULL);
+    // Pipe is in Byte mode
+
 
     return true;
 }
