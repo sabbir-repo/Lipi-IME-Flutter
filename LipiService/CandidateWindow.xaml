@@ -1,7 +1,7 @@
 <Window x:Class="LipiService.CandidateWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Lipi Candidate Window" Height="250" Width="220"
+        Title="Lipi Candidate Window" SizeToContent="WidthAndHeight" MinWidth="150"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" ShowActivated="False" Focusable="False" ShowInTaskbar="False">
     <Grid Margin="10">

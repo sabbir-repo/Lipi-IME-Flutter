@@ -17,6 +17,23 @@ namespace LipiService
 
     public partial class CandidateWindow : Window
     {
+        private const int WS_EX_NOACTIVATE = 0x08000000;
+        private const int WS_EX_TOOLWINDOW = 0x00000080;
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            var helper = new System.Windows.Interop.WindowInteropHelper(this);
+            int exStyle = GetWindowLong(helper.Handle, GWL_EXSTYLE);
+            SetWindowLong(helper.Handle, GWL_EXSTYLE, exStyle | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW);
+        }
+
+        private const int GWL_EXSTYLE = -20;
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hwnd, int index);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
         public ObservableCollection<CandidateItem> Suggestions { get; set; }
 
         public CandidateWindow()
