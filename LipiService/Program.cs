@@ -7,7 +7,9 @@ namespace LipiService
     class Program
     {
         static Mutex? _mutex;
+        public static CandidateWindow? CandidateUI { get; private set; }
 
+        [STAThread]
         static void Main(string[] args)
         {
             const string appName = "Global\\LipiServiceMutex";
@@ -30,13 +32,15 @@ namespace LipiService
             var apiService = new ApiService(cacheManager);
             var pipeServer = new NamedPipeServerManager(apiService, settingsManager);
             
+            var app = new System.Windows.Application();
+            CandidateUI = new CandidateWindow();
+            // Don't show it yet, just initialize it.
+            
             pipeServer.Start();
             
             Console.WriteLine("Service is running in background...");
             
-            // Keep the application running without relying on standard input 
-            // since we will launch it without a console window.
-            Thread.Sleep(Timeout.Infinite);
+            app.Run();
         }
     }
 }

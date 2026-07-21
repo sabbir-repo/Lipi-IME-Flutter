@@ -1,6 +1,6 @@
 #include "LipiTSF.h"
 
-CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL), _isActive(true)
+CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL), _isActive(true), _selectedIndex(0)
 {
     DllAddRef();
 }
@@ -124,6 +124,11 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
         return S_OK;
     }
 
+    if (!_suggestions.empty() && (wParam == VK_UP || wParam == VK_DOWN)) {
+        *pfEaten = TRUE;
+        return S_OK;
+    }
+
     wchar_t ch[2] = {0};
     HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
     ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
@@ -156,6 +161,8 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
         _isActive = !_isActive;
         if (!_isActive && !_currentWord.empty()) {
             _currentWord.clear(); // just clear internal state to avoid ghost chars
+            _suggestions.clear();
+            _ipc.SendMessage(L"HIDE");
         }
         return S_OK;
     }
@@ -167,6 +174,17 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
     
     if (!_isActive) {
         *pfEaten = FALSE;
+        return S_OK;
+    }
+
+    if (!_suggestions.empty() && (wParam == VK_UP || wParam == VK_DOWN)) {
+        *pfEaten = TRUE;
+        if (wParam == VK_DOWN) {
+            _selectedIndex = (_selectedIndex + 1) % _suggestions.size();
+        } else {
+            _selectedIndex = (_selectedIndex - 1 + _suggestions.size()) % _suggestions.size();
+        }
+        _HandleKeystroke(pic, 0); // Special token to update selection
         return S_OK;
     }
 
@@ -271,30 +289,34 @@ void CLipiTSF::_HandleKeystroke(ITfContext *pic, WPARAM wParam) {
 }
 
 HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam) {
-    BYTE kbd[256];
-    GetKeyboardState(kbd);
-    wchar_t ch[2] = {0};
-    HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
-    ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
-    
-    wchar_t c = ch[0];
-    bool isLetter = (c >= L'a' && c <= L'z') || (c >= L'A' && c <= L'Z');
-    bool isNumber = (c >= L'0' && c <= L'9');
-    bool isPunctuation = (c != 0 && !isLetter && !isNumber && wParam != VK_BACK && wParam != VK_SPACE && wParam != VK_RETURN);
-    bool isTerminator = (wParam == VK_SPACE || wParam == VK_RETURN || isPunctuation);
-
+    bool isTerminator = false;
     wchar_t termChar = 0;
-    if (wParam == VK_SPACE) termChar = L' ';
-    else if (wParam == VK_RETURN) termChar = L'\n';
-    else if (isPunctuation) {
-        termChar = c;
-        if (termChar == L'.') termChar = L'\x0964'; // Convert dot to Dari
-    }
+    
+    if (wParam != 0) {
+        BYTE kbd[256];
+        GetKeyboardState(kbd);
+        wchar_t ch[2] = {0};
+        HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
+        ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
+        
+        wchar_t c = ch[0];
+        bool isLetter = (c >= L'a' && c <= L'z') || (c >= L'A' && c <= L'Z');
+        bool isNumber = (c >= L'0' && c <= L'9');
+        bool isPunctuation = (c != 0 && !isLetter && !isNumber && wParam != VK_BACK && wParam != VK_SPACE && wParam != VK_RETURN);
+        isTerminator = (wParam == VK_SPACE || wParam == VK_RETURN || isPunctuation);
 
-    if (wParam == VK_BACK) {
-        if (!_currentWord.empty()) _currentWord.pop_back();
-    } else if (!isTerminator) {
-        if (c != 0) _currentWord += c;
+        if (wParam == VK_SPACE) termChar = L' ';
+        else if (wParam == VK_RETURN) termChar = L'\n';
+        else if (isPunctuation) {
+            termChar = c;
+            if (termChar == L'.') termChar = L'\x0964'; // Convert dot to Dari
+        }
+
+        if (wParam == VK_BACK) {
+            if (!_currentWord.empty()) _currentWord.pop_back();
+        } else if (!isTerminator) {
+            if (c != 0) _currentWord += c;
+        }
     }
 
     std::wstring textToInsert;
@@ -312,7 +334,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
             pComp->Release();
         }
 
-        if (isPunctuation && termChar != 0) {
+        if (wParam != 0 && termChar != 0 && termChar != L' ' && termChar != L'\n') {
             std::wstring punctStr(1, termChar);
             ITfInsertAtSelection *pInsert = NULL;
             if (SUCCEEDED(pic->QueryInterface(IID_ITfInsertAtSelection, (void **)&pInsert))) {
@@ -334,36 +356,48 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
                 pInsert->Release();
             }
         }
+        
+        _suggestions.clear();
+        _selectedIndex = 0;
+        _ipc.SendMessage(L"HIDE");
         return S_OK;
     }
 
-    std::wstring request = L"bn-t-i0-und|" + _currentWord;
-    std::wstring response;
-    
-    if (_ipc.SendMessage(request) && _ipc.ReceiveMessage(response)) {
-        size_t firstQuote = response.find(L"\"");
-        if (firstQuote != std::wstring::npos) {
-            size_t secondQuote = response.find(L"\"", firstQuote + 1);
-            if (secondQuote != std::wstring::npos) {
-                textToInsert = response.substr(firstQuote + 1, secondQuote - firstQuote - 1);
+    if (wParam != 0 && !isTerminator) {
+        std::wstring request = L"bn-t-i0-und|" + _currentWord;
+        std::wstring response;
+        
+        _suggestions.clear();
+        _selectedIndex = 0;
+        
+        if (_ipc.SendMessage(request) && _ipc.ReceiveMessage(response)) {
+            size_t pos = 0;
+            while ((pos = response.find(L"|")) != std::wstring::npos) {
+                std::wstring token = response.substr(0, pos);
+                if (!token.empty()) _suggestions.push_back(token);
+                response.erase(0, pos + 1);
             }
+            if (!response.empty()) _suggestions.push_back(response);
         }
     }
 
-    if (textToInsert.empty()) {
-        textToInsert = _currentWord; // fallback
+    if (!_suggestions.empty()) {
+        if (_selectedIndex < 0 || _selectedIndex >= (int)_suggestions.size()) _selectedIndex = 0;
+        textToInsert = _suggestions[_selectedIndex];
+    } else {
+        textToInsert = _currentWord;
     }
 
     if (termChar != 0) {
         textToInsert += termChar;
     }
 
+    ITfRange *pFinalRange = NULL;
     if (_pComposition == NULL) {
         ITfInsertAtSelection *pInsert = NULL;
         if (SUCCEEDED(pic->QueryInterface(IID_ITfInsertAtSelection, (void **)&pInsert))) {
             ITfRange *pRangeInsert = NULL;
             pInsert->InsertTextAtSelection(ec, 0, textToInsert.c_str(), textToInsert.length(), &pRangeInsert);
-            
             if (pRangeInsert) {
                 ITfContextComposition *pContextComp = NULL;
                 if (SUCCEEDED(pic->QueryInterface(IID_ITfContextComposition, (void **)&pContextComp))) {
@@ -382,7 +416,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
                     pSelectionRange->Release();
                 }
 
-                pRangeInsert->Release();
+                pFinalRange = pRangeInsert;
             }
             pInsert->Release();
         }
@@ -402,7 +436,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
                 pSelectionRange->Release();
             }
 
-            pRange->Release();
+            pFinalRange = pRange;
         }
     }
 
@@ -414,6 +448,36 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
             pComp->Release();
         }
         _currentWord.clear();
+        _suggestions.clear();
+        _selectedIndex = 0;
+        _ipc.SendMessage(L"HIDE");
+    } else if (!_suggestions.empty() && pFinalRange) {
+        // Calculate caret position and show UI
+        int x = 0, y = 0;
+        ITfContextView *pView = NULL;
+        if (SUCCEEDED(pic->GetActiveView(&pView))) {
+            RECT rc;
+            BOOL fClipped;
+            if (SUCCEEDED(pView->GetTextExt(ec, pFinalRange, &rc, &fClipped))) {
+                x = rc.left;
+                y = rc.bottom;
+            }
+            pView->Release();
+        }
+
+        std::wstring showReq = L"SHOW|" + std::to_wstring(x) + L"|" + std::to_wstring(y) + L"|" + std::to_wstring(_selectedIndex);
+        for (const auto& s : _suggestions) {
+            showReq += L"|" + s;
+        }
+        std::wstring showResp;
+        _ipc.SendMessage(showReq);
+        _ipc.ReceiveMessage(showResp);
+    }
+    
+    if (pFinalRange) {
+        if (_pComposition == NULL) { // only release if we didn't get it from GetRange
+            pFinalRange->Release();
+        }
     }
 
     return S_OK;

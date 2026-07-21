@@ -72,29 +72,61 @@ namespace LipiService.Services
 
                     Console.WriteLine($"Received request: {request}");
 
-                    // Format expected from C++ TSF Core: "bn-t-i0-und|text"
-                    var parts = request.Split('|');
-                    if (parts.Length == 2)
+                    if (request.StartsWith("SHOW|"))
                     {
-                        var langCode = parts[0];
-                        var text = parts[1];
+                        var parts = request.Split('|');
+                        if (parts.Length >= 4)
+                        {
+                            if (double.TryParse(parts[1], out double x) && double.TryParse(parts[2], out double y) && int.TryParse(parts[3], out int selectedIndex))
+                            {
+                                string[] words = new string[parts.Length - 4];
+                                Array.Copy(parts, 4, words, 0, words.Length);
+                                
+                                System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                                    if (Program.CandidateUI != null) {
+                                        Program.CandidateUI.Left = x;
+                                        Program.CandidateUI.Top = y + 25;
+                                        Program.CandidateUI.UpdateSuggestions(words, selectedIndex);
+                                        Program.CandidateUI.Show();
+                                    }
+                                });
+                            }
+                        }
+                        byte[] resp = Encoding.UTF8.GetBytes("OK\n");
+                        await pipeServer.WriteAsync(resp, 0, resp.Length);
+                        continue;
+                    }
+                    else if (request == "HIDE")
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                            if (Program.CandidateUI != null) {
+                                Program.CandidateUI.Hide();
+                            }
+                        });
+                        byte[] resp = Encoding.UTF8.GetBytes("OK\n");
+                        await pipeServer.WriteAsync(resp, 0, resp.Length);
+                        continue;
+                    }
+
+                    // Format expected from C++ TSF Core: "bn-t-i0-und|text"
+                    var reqParts = request.Split('|');
+                    if (reqParts.Length == 2)
+                    {
+                        var langCode = reqParts[0];
+                        var text = reqParts[1];
                         
                         bool offline = _settingsManager.CurrentSettings.OfflineMode;
                         bool online = _settingsManager.CurrentSettings.OnlineMode;
                         
                         var suggestions = await _apiService.FetchSuggestionsAsync(text, langCode, offline, online);
-                        var options = new JsonSerializerOptions
-                        {
-                            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-                        };
-                        var responseJson = JsonSerializer.Serialize(suggestions, options);
+                        string responseStr = string.Join("|", suggestions);
                         
-                        byte[] responseBytes = Encoding.UTF8.GetBytes(responseJson + "\n");
+                        byte[] responseBytes = Encoding.UTF8.GetBytes(responseStr + "\n");
                         await pipeServer.WriteAsync(responseBytes, 0, responseBytes.Length);
                     }
                     else
                     {
-                        byte[] responseBytes = Encoding.UTF8.GetBytes("[]\n");
+                        byte[] responseBytes = Encoding.UTF8.GetBytes("\n");
                         await pipeServer.WriteAsync(responseBytes, 0, responseBytes.Length);
                     }
                 }

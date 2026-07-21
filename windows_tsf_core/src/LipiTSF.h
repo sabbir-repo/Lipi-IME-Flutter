@@ -1,6 +1,7 @@
 #pragma once
 #include "Globals.h"
 #include "IpcClient.h"
+#include <vector>
 
 class CLipiTSF : public ITfTextInputProcessor,
                  public ITfKeyEventSink,
@@ -47,4 +48,7 @@ private:
     std::wstring _currentWord;
     ITfComposition* _pComposition;
     bool _isActive;
+    
+    std::vector<std::wstring> _suggestions;
+    int _selectedIndex;
 };
