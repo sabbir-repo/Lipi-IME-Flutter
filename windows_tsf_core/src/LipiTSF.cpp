@@ -117,8 +117,8 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
     bool isNumber = (c >= L'0' && c <= L'9');
     bool isPunctuation = (c != 0 && !isLetter && !isNumber && wParam != VK_BACK && wParam != VK_SPACE && wParam != VK_RETURN);
     
-    if (isLetter || isNumber || 
-        (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN || isPunctuation)))
+    if (isLetter || isNumber || isPunctuation ||
+        (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN)))
     {
         *pfEaten = TRUE;
         return S_OK;
@@ -143,8 +143,8 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
     bool isNumber = (c >= L'0' && c <= L'9');
     bool isPunctuation = (c != 0 && !isLetter && !isNumber && wParam != VK_BACK && wParam != VK_SPACE && wParam != VK_RETURN);
 
-    if (isLetter || isNumber || 
-        (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN || isPunctuation)))
+    if (isLetter || isNumber || isPunctuation ||
+        (!_currentWord.empty() && (wParam == VK_BACK || wParam == VK_SPACE || wParam == VK_RETURN)))
     {
         *pfEaten = TRUE;
         _HandleKeystroke(pic, wParam);
@@ -271,6 +271,29 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
             _pComposition = NULL;
             pComp->EndComposition(ec);
             pComp->Release();
+        }
+
+        if (isPunctuation && termChar != 0) {
+            std::wstring punctStr(1, termChar);
+            ITfInsertAtSelection *pInsert = NULL;
+            if (SUCCEEDED(pic->QueryInterface(IID_ITfInsertAtSelection, (void **)&pInsert))) {
+                ITfRange *pRangeInsert = NULL;
+                pInsert->InsertTextAtSelection(ec, 0, punctStr.c_str(), punctStr.length(), &pRangeInsert);
+                if (pRangeInsert) {
+                    ITfRange *pSelectionRange = NULL;
+                    if (SUCCEEDED(pRangeInsert->Clone(&pSelectionRange))) {
+                        pSelectionRange->Collapse(ec, TF_ANCHOR_END);
+                        TF_SELECTION tfSelection;
+                        tfSelection.range = pSelectionRange;
+                        tfSelection.style.ase = TF_AE_NONE;
+                        tfSelection.style.fInterimChar = FALSE;
+                        pic->SetSelection(ec, 1, &tfSelection);
+                        pSelectionRange->Release();
+                    }
+                    pRangeInsert->Release();
+                }
+                pInsert->Release();
+            }
         }
         return S_OK;
     }
