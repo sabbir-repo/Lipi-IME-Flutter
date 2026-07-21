@@ -33,6 +33,7 @@ namespace LipiService
             var pipeServer = new NamedPipeServerManager(apiService, settingsManager);
             
             var app = new System.Windows.Application();
+            app.ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown;
             CandidateUI = new CandidateWindow();
             // Don't show it yet, just initialize it.
             
