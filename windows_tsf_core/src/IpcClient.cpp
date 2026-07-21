@@ -28,7 +28,7 @@ bool IpcClient::Connect()
         STARTUPINFOW si = { sizeof(si) };
         PROCESS_INFORMATION pi = { 0 };
         // Hardcoded development path to LipiService executable
-        std::wstring servicePath = L"E:\\Python Projects\\Google Input Tools to Flutter desktop\\LipiService\\bin\\Release\\net10.0\\LipiService.exe";
+        std::wstring servicePath = L"E:\\Python Projects\\Google Input Tools to Flutter desktop\\LipiService\\bin\\Debug\\net10.0-windows\\LipiService.exe";
         
         if (CreateProcessW(
             servicePath.c_str(),
