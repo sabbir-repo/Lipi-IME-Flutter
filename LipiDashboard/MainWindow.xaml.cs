@@ -31,6 +31,19 @@ namespace LipiDashboard
             this.InitializeComponent();
             this.ExtendsContentIntoTitleBar = true; // Modern Win11 look
             
+            // Set fixed window size
+            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+            Microsoft.UI.Windowing.AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+            
+            appWindow.Resize(new Windows.Graphics.SizeInt32(945, 600));
+
+            if (appWindow.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter)
+            {
+                presenter.IsResizable = false;
+                presenter.IsMaximizable = false;
+            }
+            
             _settingsManager = new SettingsManager();
             LoadSettingsIntoUI();
             
