@@ -250,7 +250,10 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
     wchar_t termChar = 0;
     if (wParam == VK_SPACE) termChar = L' ';
     else if (wParam == VK_RETURN) termChar = L'\n';
-    else if (isPunctuation) termChar = c;
+    else if (isPunctuation) {
+        termChar = c;
+        if (termChar == L'.') termChar = L'\x0964'; // Convert dot to Dari
+    }
 
     if (wParam == VK_BACK) {
         if (!_currentWord.empty()) _currentWord.pop_back();
