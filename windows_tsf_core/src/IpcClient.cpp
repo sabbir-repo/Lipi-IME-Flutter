@@ -1,5 +1,11 @@
 #include "IpcClient.h"
 #include <vector>
+#include <fstream>
+
+void LogDebug(const std::string& msg) {
+    std::ofstream log("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
+    log << msg << "\n";
+}
 
 const std::wstring IpcClient::PIPE_NAME = L"\\\\.\\pipe\\LipiImePipe";
 
@@ -70,6 +76,7 @@ bool IpcClient::SendMessage(const std::wstring& msg)
     // Append newline for C# StreamReader.ReadLineAsync()
     utf8Msg += "\n";
 
+    LogDebug("Sending message...");
     DWORD cbWritten = 0;
     BOOL bSuccess = WriteFile(
         _hPipe,
@@ -78,12 +85,16 @@ bool IpcClient::SendMessage(const std::wstring& msg)
         &cbWritten,
         NULL);
 
+    LogDebug("WriteFile returned. bSuccess: " + std::to_string(bSuccess) + " cbWritten: " + std::to_string(cbWritten));
+
     if (!bSuccess || cbWritten != utf8Msg.length())
     {
+        LogDebug("WriteFile failed, disconnecting.");
         Disconnect();
         return false;
     }
 
+    LogDebug("SendMessage complete.");
     return true;
 }
 
@@ -94,12 +105,15 @@ bool IpcClient::ReceiveMessage(std::wstring& outMsg)
     char buffer[4096];
     DWORD cbRead = 0;
 
+    LogDebug("Calling ReadFile...");
     BOOL bSuccess = ReadFile(
         _hPipe,
         buffer,
         sizeof(buffer) - 1,
         &cbRead,
         NULL);
+
+    LogDebug("ReadFile returned. bSuccess: " + std::to_string(bSuccess) + " cbRead: " + std::to_string(cbRead));
 
     if (!bSuccess || cbRead == 0)
     {

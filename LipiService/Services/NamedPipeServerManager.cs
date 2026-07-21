@@ -33,7 +33,8 @@ namespace LipiService.Services
                             PipeName, PipeDirection.InOut, 
                             NamedPipeServerStream.MaxAllowedServerInstances, 
                             PipeTransmissionMode.Byte, 
-                            PipeOptions.Asynchronous);
+                            PipeOptions.Asynchronous,
+                            8192, 8192);
 
                         Console.WriteLine("Named Pipe Server started. Waiting for TSF client connection...");
                         await pipeServer.WaitForConnectionAsync();
@@ -56,12 +57,14 @@ namespace LipiService.Services
             {
                 using (pipeServer) // Ensure pipeServer is disposed when done
                 {
-                    using var writer = new StreamWriter(pipeServer, Encoding.UTF8) { AutoFlush = true };
                     byte[] buffer = new byte[8192];
 
+                Console.WriteLine("Entering while loop...");
                 while (pipeServer.IsConnected)
                 {
+                    Console.WriteLine("Calling ReadAsync...");
                     int bytesRead = await pipeServer.ReadAsync(buffer, 0, buffer.Length);
+                    Console.WriteLine($"ReadAsync returned {bytesRead}");
                     if (bytesRead == 0) break;
 
                     string request = Encoding.UTF8.GetString(buffer, 0, bytesRead).TrimEnd('\r', '\n', '\0');
@@ -82,11 +85,13 @@ namespace LipiService.Services
                         var suggestions = await _apiService.FetchSuggestionsAsync(text, langCode, offline, online);
                         var responseJson = JsonSerializer.Serialize(suggestions);
                         
-                        await writer.WriteLineAsync(responseJson);
+                        byte[] responseBytes = Encoding.UTF8.GetBytes(responseJson + "\n");
+                        await pipeServer.WriteAsync(responseBytes, 0, responseBytes.Length);
                     }
                     else
                     {
-                        await writer.WriteLineAsync("[]");
+                        byte[] responseBytes = Encoding.UTF8.GetBytes("[]\n");
+                        await pipeServer.WriteAsync(responseBytes, 0, responseBytes.Length);
                     }
                 }
                 } // Close using (pipeServer) block
