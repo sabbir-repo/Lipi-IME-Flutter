@@ -24,7 +24,40 @@ bool IpcClient::Connect()
 
     if (!WaitNamedPipe(PIPE_NAME.c_str(), 100)) 
     {
-        return false;
+        LogDebug("Named pipe not found, attempting to start LipiService.exe...");
+        STARTUPINFOW si = { sizeof(si) };
+        PROCESS_INFORMATION pi = { 0 };
+        // Hardcoded development path to LipiService executable
+        std::wstring servicePath = L"E:\\Python Projects\\Google Input Tools to Flutter desktop\\LipiService\\bin\\Release\\net10.0\\LipiService.exe";
+        
+        if (CreateProcessW(
+            servicePath.c_str(),
+            NULL,
+            NULL,
+            NULL,
+            FALSE,
+            CREATE_NO_WINDOW,
+            NULL,
+            NULL,
+            &si,
+            &pi
+        )) {
+            LogDebug("CreateProcessW succeeded, waiting for service to initialize.");
+            CloseHandle(pi.hProcess);
+            CloseHandle(pi.hThread);
+            
+            // Wait for the C# service to start and create the named pipe
+            Sleep(800);
+            
+            // Try waiting again for up to 2 seconds
+            if (!WaitNamedPipe(PIPE_NAME.c_str(), 2000)) {
+                LogDebug("WaitNamedPipe failed after launching service.");
+                return false;
+            }
+        } else {
+            LogDebug("CreateProcessW failed. Error: " + std::to_string(GetLastError()));
+            return false;
+        }
     }
 
     _hPipe = CreateFile(
