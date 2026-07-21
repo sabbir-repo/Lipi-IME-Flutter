@@ -56,13 +56,16 @@ namespace LipiService.Services
             {
                 using (pipeServer) // Ensure pipeServer is disposed when done
                 {
-                    using var reader = new StreamReader(pipeServer, Encoding.UTF8);
                     using var writer = new StreamWriter(pipeServer, Encoding.UTF8) { AutoFlush = true };
+                    byte[] buffer = new byte[8192];
 
                 while (pipeServer.IsConnected)
                 {
-                    var request = await reader.ReadLineAsync();
-                    if (request == null) break;
+                    int bytesRead = await pipeServer.ReadAsync(buffer, 0, buffer.Length);
+                    if (bytesRead == 0) break;
+
+                    string request = Encoding.UTF8.GetString(buffer, 0, bytesRead).TrimEnd('\r', '\n', '\0');
+                    if (string.IsNullOrEmpty(request)) continue;
 
                     Console.WriteLine($"Received request: {request}");
 
