@@ -264,7 +264,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         ITfInsertAtSelection *pInsert = NULL;
         if (SUCCEEDED(pic->QueryInterface(IID_ITfInsertAtSelection, (void **)&pInsert))) {
             ITfRange *pRangeInsert = NULL;
-            pInsert->InsertTextAtSelection(ec, TF_IAS_NOQUERY, textToInsert.c_str(), textToInsert.length(), &pRangeInsert);
+            pInsert->InsertTextAtSelection(ec, 0, textToInsert.c_str(), textToInsert.length(), &pRangeInsert);
             
             if (pRangeInsert) {
                 ITfContextComposition *pContextComp = NULL;
