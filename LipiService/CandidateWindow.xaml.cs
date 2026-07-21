@@ -43,8 +43,18 @@ namespace LipiService
             SuggestionsList.ItemsSource = Suggestions;
         }
 
-        public void UpdateSuggestions(string[] words, int selectedIndex)
+        public void UpdateSuggestions(string[] words, int selectedIndex, string bufferText = "")
         {
+            if (string.IsNullOrEmpty(bufferText))
+            {
+                BufferContainer.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                BufferContainer.Visibility = Visibility.Visible;
+                BufferTextBlock.Text = " " + bufferText.ToUpper() + " ";
+            }
+            
             Suggestions.Clear();
             for (int i = 0; i < words.Length; i++)
             {

@@ -381,7 +381,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         }
     }
 
-    if (!_suggestions.empty()) {
+    if (isTerminator && !_suggestions.empty()) {
         if (_selectedIndex < 0 || _selectedIndex >= (int)_suggestions.size()) _selectedIndex = 0;
         textToInsert = _suggestions[_selectedIndex];
     } else {
@@ -465,7 +465,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
             pView->Release();
         }
 
-        std::wstring showReq = L"SHOW|" + std::to_wstring(x) + L"|" + std::to_wstring(y) + L"|" + std::to_wstring(_selectedIndex);
+        std::wstring showReq = L"SHOW|" + std::to_wstring(x) + L"|" + std::to_wstring(y) + L"|" + std::to_wstring(_selectedIndex) + L"|" + _currentWord;
         for (const auto& s : _suggestions) {
             showReq += L"|" + s;
         }

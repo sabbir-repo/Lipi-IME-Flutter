@@ -75,18 +75,19 @@ namespace LipiService.Services
                     if (request.StartsWith("SHOW|"))
                     {
                         var parts = request.Split('|');
-                        if (parts.Length >= 4)
+                        if (parts.Length >= 5)
                         {
                             if (double.TryParse(parts[1], out double x) && double.TryParse(parts[2], out double y) && int.TryParse(parts[3], out int selectedIndex))
                             {
-                                string[] words = new string[parts.Length - 4];
-                                Array.Copy(parts, 4, words, 0, words.Length);
+                                string bufferText = parts[4];
+                                string[] words = new string[parts.Length - 5];
+                                Array.Copy(parts, 5, words, 0, words.Length);
                                 
                                 System.Windows.Application.Current.Dispatcher.Invoke(() => {
                                     if (Program.CandidateUI != null) {
                                         Program.CandidateUI.Left = x;
                                         Program.CandidateUI.Top = y + 25;
-                                        Program.CandidateUI.UpdateSuggestions(words, selectedIndex);
+                                        Program.CandidateUI.UpdateSuggestions(words, selectedIndex, bufferText);
                                         Program.CandidateUI.Show();
                                     }
                                 });

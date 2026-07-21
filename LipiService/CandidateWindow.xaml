@@ -5,23 +5,27 @@
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" ShowActivated="False" Focusable="False" ShowInTaskbar="False">
     <Grid Margin="10">
-        <Border Background="#202020" CornerRadius="8" BorderBrush="#3A3A3A" BorderThickness="1">
+        <Border Background="#111113" CornerRadius="8" BorderBrush="#2c2c36" BorderThickness="1">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="12" ShadowDepth="4" Opacity="0.6"/>
             </Border.Effect>
-            
-            <ItemsControl x:Name="SuggestionsList" Margin="0,5,0,5">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Padding="15,8" Background="{Binding BackgroundBrush}" CornerRadius="4" Margin="5,2">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding IndexText}" Foreground="#AAAAAA" FontSize="14" FontFamily="Segoe UI" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding Word}" Foreground="{Binding ForegroundBrush}" FontSize="18" FontFamily="Segoe UI" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <StackPanel Margin="0,5,0,5">
+                <Border x:Name="BufferContainer" Background="#1a1a24" CornerRadius="4" Margin="12,5,12,5" HorizontalAlignment="Left" Padding="8,3">
+                    <TextBlock x:Name="BufferTextBlock" Foreground="#ff4ec2" FontSize="10" FontWeight="Bold" FontFamily="Segoe UI" />
+                </Border>
+                <ItemsControl x:Name="SuggestionsList" Margin="0,0,0,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="15,8" Background="{Binding BackgroundBrush}" CornerRadius="4" Margin="5,2">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding IndexText}" Foreground="#6c6c7c" FontSize="14" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Word}" Foreground="{Binding ForegroundBrush}" FontSize="18" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </Border>
     </Grid>
 </Window>
