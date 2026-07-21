@@ -1,6 +1,6 @@
 #include "LipiTSF.h"
 
-CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL)
+CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL), _isActive(true)
 {
     DllAddRef();
 }
@@ -109,7 +109,17 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
     BYTE kbd[256];
     GetKeyboardState(kbd);
 
+    if ((kbd[VK_MENU] & 0x80) && wParam == 0x54) { // Alt+T
+        *pfEaten = TRUE;
+        return S_OK;
+    }
+
     if ((kbd[VK_CONTROL] & 0x80) || (kbd[VK_MENU] & 0x80) || (kbd[VK_LWIN] & 0x80) || (kbd[VK_RWIN] & 0x80)) {
+        *pfEaten = FALSE;
+        return S_OK;
+    }
+    
+    if (!_isActive) {
         *pfEaten = FALSE;
         return S_OK;
     }
@@ -141,7 +151,21 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
     BYTE kbd[256];
     GetKeyboardState(kbd);
 
+    if ((kbd[VK_MENU] & 0x80) && wParam == 0x54) { // Alt+T
+        *pfEaten = TRUE;
+        _isActive = !_isActive;
+        if (!_isActive && !_currentWord.empty()) {
+            _currentWord.clear(); // just clear internal state to avoid ghost chars
+        }
+        return S_OK;
+    }
+
     if ((kbd[VK_CONTROL] & 0x80) || (kbd[VK_MENU] & 0x80) || (kbd[VK_LWIN] & 0x80) || (kbd[VK_RWIN] & 0x80)) {
+        *pfEaten = FALSE;
+        return S_OK;
+    }
+    
+    if (!_isActive) {
         *pfEaten = FALSE;
         return S_OK;
     }

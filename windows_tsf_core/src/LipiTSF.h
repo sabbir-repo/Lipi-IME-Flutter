@@ -46,4 +46,5 @@ private:
 
     std::wstring _currentWord;
     ITfComposition* _pComposition;
+    bool _isActive;
 };
