@@ -108,6 +108,12 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
     
     BYTE kbd[256];
     GetKeyboardState(kbd);
+
+    if ((kbd[VK_CONTROL] & 0x80) || (kbd[VK_MENU] & 0x80) || (kbd[VK_LWIN] & 0x80) || (kbd[VK_RWIN] & 0x80)) {
+        *pfEaten = FALSE;
+        return S_OK;
+    }
+
     wchar_t ch[2] = {0};
     HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
     ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
@@ -134,6 +140,12 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
 
     BYTE kbd[256];
     GetKeyboardState(kbd);
+
+    if ((kbd[VK_CONTROL] & 0x80) || (kbd[VK_MENU] & 0x80) || (kbd[VK_LWIN] & 0x80) || (kbd[VK_RWIN] & 0x80)) {
+        *pfEaten = FALSE;
+        return S_OK;
+    }
+
     wchar_t ch[2] = {0};
     HKL hklEnglish = LoadKeyboardLayout(L"00000409", KLF_NOTELLSHELL);
     ToUnicodeEx(wParam, MapVirtualKeyEx(wParam, MAPVK_VK_TO_VSC, hklEnglish), kbd, ch, 2, 0, hklEnglish);
