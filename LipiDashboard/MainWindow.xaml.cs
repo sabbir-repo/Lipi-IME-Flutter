@@ -74,7 +74,7 @@ namespace LipiDashboard
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            if (args.IsSettingsInvoked)
+            if (args.IsSettingsSelected)
             {
                 GeneralPanel.Visibility = Visibility.Collapsed;
                 AboutPanel.Visibility = Visibility.Collapsed;
@@ -82,8 +82,8 @@ namespace LipiDashboard
             }
             else
             {
-                var selectedItem = (NavigationViewItem)args.SelectedItem;
-                string tag = selectedItem.Tag?.ToString();
+                var selectedItem = args.SelectedItem as NavigationViewItem;
+                string tag = selectedItem?.Tag?.ToString();
 
                 GeneralPanel.Visibility = tag == "General" ? Visibility.Visible : Visibility.Collapsed;
                 SettingsPanel.Visibility = Visibility.Collapsed;
