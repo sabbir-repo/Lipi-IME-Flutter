@@ -12,12 +12,14 @@ namespace LipiService.Services
         private const string PipeName = "LipiImePipe";
         private readonly ApiService _apiService;
         private readonly SettingsManager _settingsManager;
+        private readonly CacheManager _cacheManager;
         private bool _isRunning = false;
 
-        public NamedPipeServerManager(ApiService apiService, SettingsManager settingsManager)
+        public NamedPipeServerManager(ApiService apiService, SettingsManager settingsManager, CacheManager cacheManager)
         {
             _apiService = apiService;
             _settingsManager = settingsManager;
+            _cacheManager = cacheManager;
         }
 
         public void Start()
@@ -78,12 +80,7 @@ namespace LipiService.Services
                                     var engWord = parts[2];
                                     var benWord = parts[3];
                                     
-                                    var prefs = _settingsManager.CurrentSettings.UserPreferences;
-                                    if (!prefs.ContainsKey(langCode)) {
-                                        prefs[langCode] = new System.Collections.Generic.Dictionary<string, string>();
-                                    }
-                                    prefs[langCode][engWord] = benWord;
-                                    _settingsManager.SaveSettings();
+                                    _cacheManager.PromoteWord(langCode, engWord, benWord);
                                 }
                                 continue;
                             }

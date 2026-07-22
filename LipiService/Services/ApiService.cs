@@ -30,21 +30,6 @@ namespace LipiService.Services
                 var cached = _cacheManager.GetCachedSuggestions(langCode, text);
                 if (cached != null) 
                 {
-                    // Reorder based on UserPreferences
-                    var prefs = _settingsManager.CurrentSettings.UserPreferences;
-                    if (prefs.ContainsKey(langCode) && prefs[langCode].ContainsKey(text))
-                    {
-                        var preferredWord = prefs[langCode][text];
-                        if (cached.Contains(preferredWord))
-                        {
-                            cached.Remove(preferredWord);
-                            cached.Insert(0, preferredWord);
-                        }
-                        else
-                        {
-                            cached.Insert(0, preferredWord);
-                        }
-                    }
                     return cached;
                 }
             }
@@ -91,22 +76,6 @@ namespace LipiService.Services
                             
                             // Cache the result for future offline use
                             _cacheManager.CacheWord(langCode, text, suggestions);
-                            
-                            // Reorder based on UserPreferences
-                            var prefs = _settingsManager.CurrentSettings.UserPreferences;
-                            if (prefs.ContainsKey(langCode) && prefs[langCode].ContainsKey(text))
-                            {
-                                var preferredWord = prefs[langCode][text];
-                                if (suggestions.Contains(preferredWord))
-                                {
-                                    suggestions.Remove(preferredWord);
-                                    suggestions.Insert(0, preferredWord);
-                                }
-                                else
-                                {
-                                    suggestions.Insert(0, preferredWord);
-                                }
-                            }
                             
                             return suggestions;
                         }

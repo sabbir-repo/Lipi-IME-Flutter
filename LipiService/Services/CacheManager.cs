@@ -127,5 +127,49 @@ namespace LipiService.Services
 
             return null;
         }
+        public void PromoteWord(string langCode, string word, string suggestion)
+        {
+            if (string.IsNullOrWhiteSpace(word) || string.IsNullOrWhiteSpace(suggestion)) return;
+            var wordLower = word.ToLower().Trim();
+
+            lock (_cacheLock)
+            {
+                if (_offlineCache.TryGetValue(langCode, out var langCache))
+                {
+                    List<string>? suggestions = null;
+                    if (langCache.TryGetValue(word, out var s1)) suggestions = s1;
+                    else if (langCache.TryGetValue(wordLower, out var s2)) suggestions = s2;
+
+                    if (suggestions != null)
+                    {
+                        if (suggestions.Contains(suggestion))
+                        {
+                            suggestions.Remove(suggestion);
+                            suggestions.Insert(0, suggestion);
+                            SaveCache();
+                            return;
+                        }
+                    }
+                }
+                
+                if (_basicOfflineDict.TryGetValue(langCode, out var basicDict))
+                {
+                    if (basicDict.TryGetValue(wordLower, out var basicSuggestions))
+                    {
+                        if (basicSuggestions.Contains(suggestion))
+                        {
+                            if (!_offlineCache.ContainsKey(langCode)) _offlineCache[langCode] = new Dictionary<string, List<string>>();
+                            
+                            var newSuggestions = new List<string>(basicSuggestions);
+                            newSuggestions.Remove(suggestion);
+                            newSuggestions.Insert(0, suggestion);
+                            
+                            _offlineCache[langCode][wordLower] = newSuggestions;
+                            SaveCache();
+                        }
+                    }
+                }
+            }
+        }
     }
 }
