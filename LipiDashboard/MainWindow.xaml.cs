@@ -57,12 +57,33 @@ namespace LipiDashboard
             OfflineModeSwitch.IsOn = _settingsManager.CurrentSettings.OfflineMode;
             BrowserBypassSwitch.IsOn = _settingsManager.CurrentSettings.BrowserBypass;
             
-            SugBgColorInput.Text = _settingsManager.CurrentSettings.SuggestionBgColor;
-            SugTextColorInput.Text = _settingsManager.CurrentSettings.SuggestionTextColor;
-            SugSelBgColorInput.Text = _settingsManager.CurrentSettings.SuggestionSelectedBgColor;
-            SugSelTextColorInput.Text = _settingsManager.CurrentSettings.SuggestionSelectedTextColor;
-            SugFontSizeInput.Text = _settingsManager.CurrentSettings.SuggestionFontSize.ToString();
+            try {
+                SugBgColorPicker.Color = Microsoft.UI.ColorHelper.FromArgb(255, 
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionBgColor.Substring(1, 2), 16),
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionBgColor.Substring(3, 2), 16),
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionBgColor.Substring(5, 2), 16));
+                
+                SugTextColorPicker.Color = Microsoft.UI.ColorHelper.FromArgb(255, 
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionTextColor.Substring(1, 2), 16),
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionTextColor.Substring(3, 2), 16),
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionTextColor.Substring(5, 2), 16));
+
+                SugSelBgColorPicker.Color = Microsoft.UI.ColorHelper.FromArgb(255, 
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionSelectedBgColor.Substring(1, 2), 16),
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionSelectedBgColor.Substring(3, 2), 16),
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionSelectedBgColor.Substring(5, 2), 16));
+
+                SugSelTextColorPicker.Color = Microsoft.UI.ColorHelper.FromArgb(255, 
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionSelectedTextColor.Substring(1, 2), 16),
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionSelectedTextColor.Substring(3, 2), 16),
+                    Convert.ToByte(_settingsManager.CurrentSettings.SuggestionSelectedTextColor.Substring(5, 2), 16));
+            } catch { }
+
+            SugFontSizeInput.Value = _settingsManager.CurrentSettings.SuggestionFontSize;
             SugFontFamilyInput.Text = _settingsManager.CurrentSettings.SuggestionFontFamily;
+            SugItemPadVInput.Value = _settingsManager.CurrentSettings.SuggestionItemPaddingV;
+            SugItemPadHInput.Value = _settingsManager.CurrentSettings.SuggestionItemPaddingH;
+            SugWinPadInput.Value = _settingsManager.CurrentSettings.SuggestionWindowPadding;
             
             _isLoaded = true;
         }
@@ -119,16 +140,38 @@ namespace LipiDashboard
             }
         }
 
+        private string ColorToHex(Windows.UI.Color color)
+        {
+            return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+        }
+
+        private async void SugUI_ColorPickerChanged(ColorPicker sender, ColorChangedEventArgs args)
+        {
+            if (!_isLoaded) return;
+            if (sender == SugBgColorPicker) _settingsManager.CurrentSettings.SuggestionBgColor = ColorToHex(args.NewColor);
+            if (sender == SugTextColorPicker) _settingsManager.CurrentSettings.SuggestionTextColor = ColorToHex(args.NewColor);
+            if (sender == SugSelBgColorPicker) _settingsManager.CurrentSettings.SuggestionSelectedBgColor = ColorToHex(args.NewColor);
+            if (sender == SugSelTextColorPicker) _settingsManager.CurrentSettings.SuggestionSelectedTextColor = ColorToHex(args.NewColor);
+            
+            _settingsManager.SaveSettings();
+            await NotifyServiceConfigUpdate();
+        }
+
+        private async void SugUI_NumberBoxChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            if (!_isLoaded || double.IsNaN(args.NewValue)) return;
+            if (sender == SugFontSizeInput) _settingsManager.CurrentSettings.SuggestionFontSize = args.NewValue;
+            if (sender == SugItemPadVInput) _settingsManager.CurrentSettings.SuggestionItemPaddingV = args.NewValue;
+            if (sender == SugItemPadHInput) _settingsManager.CurrentSettings.SuggestionItemPaddingH = args.NewValue;
+            if (sender == SugWinPadInput) _settingsManager.CurrentSettings.SuggestionWindowPadding = args.NewValue;
+            
+            _settingsManager.SaveSettings();
+            await NotifyServiceConfigUpdate();
+        }
+
         private async void SugUI_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!_isLoaded) return;
-            _settingsManager.CurrentSettings.SuggestionBgColor = SugBgColorInput.Text;
-            _settingsManager.CurrentSettings.SuggestionTextColor = SugTextColorInput.Text;
-            _settingsManager.CurrentSettings.SuggestionSelectedBgColor = SugSelBgColorInput.Text;
-            _settingsManager.CurrentSettings.SuggestionSelectedTextColor = SugSelTextColorInput.Text;
-            if (double.TryParse(SugFontSizeInput.Text, out double fSize)) {
-                _settingsManager.CurrentSettings.SuggestionFontSize = fSize;
-            }
             _settingsManager.CurrentSettings.SuggestionFontFamily = SugFontFamilyInput.Text;
             _settingsManager.SaveSettings();
             await NotifyServiceConfigUpdate();

@@ -15,6 +15,7 @@ namespace LipiService
         public System.Windows.Media.Brush ForegroundBrush { get; set; }
         public double FontSize { get; set; }
         public System.Windows.Media.FontFamily FontFamily { get; set; }
+        public Thickness ItemPadding { get; set; }
     }
 
     public partial class CandidateWindow : Window
@@ -72,6 +73,9 @@ namespace LipiService
             double fontSize = 18.0;
             System.Windows.Media.FontFamily fontFamily = new System.Windows.Media.FontFamily("Segoe UI");
 
+            double itemPadV = 5.0;
+            double itemPadH = 10.0;
+
             if (settings != null)
             {
                 try {
@@ -80,6 +84,9 @@ namespace LipiService
                     selectedFg = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(settings.SuggestionSelectedTextColor);
                     fontSize = settings.SuggestionFontSize;
                     fontFamily = new System.Windows.Media.FontFamily(settings.SuggestionFontFamily);
+                    itemPadV = settings.SuggestionItemPaddingV;
+                    itemPadH = settings.SuggestionItemPaddingH;
+                    RootBorder.Padding = new Thickness(settings.SuggestionWindowPadding);
                 } catch { }
             }
 
@@ -93,7 +100,8 @@ namespace LipiService
                     BackgroundBrush = (i == selectedIndex) ? selectedBg : normalBg,
                     ForegroundBrush = (i == selectedIndex) ? selectedFg : normalFg,
                     FontSize = fontSize,
-                    FontFamily = fontFamily
+                    FontFamily = fontFamily,
+                    ItemPadding = new Thickness(itemPadH, itemPadV, itemPadH, itemPadV)
                 });
             }
         }

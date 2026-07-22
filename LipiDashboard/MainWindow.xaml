@@ -133,35 +133,70 @@
                 <StackPanel x:Name="SuggestionUIPanel" Spacing="20" Visibility="Collapsed">
                     <TextBlock Text="Suggestion UI Customization" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,20"/>
                     <StackPanel Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="16" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Spacing="15">
+                        
+                        <!-- Colors -->
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
-                            <TextBlock Text="Window Background Color (Hex)" VerticalAlignment="Center"/>
-                            <TextBox x:Name="SugBgColorInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                            <TextBlock Text="Window Background Color" VerticalAlignment="Center"/>
+                            <DropDownButton Grid.Column="1" Content="Pick Color">
+                                <DropDownButton.Flyout>
+                                    <Flyout><ColorPicker x:Name="SugBgColorPicker" ColorChanged="SugUI_ColorPickerChanged" IsAlphaEnabled="False"/></Flyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
-                            <TextBlock Text="Text Color (Hex)" VerticalAlignment="Center"/>
-                            <TextBox x:Name="SugTextColorInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                            <TextBlock Text="Text Color" VerticalAlignment="Center"/>
+                            <DropDownButton Grid.Column="1" Content="Pick Color">
+                                <DropDownButton.Flyout>
+                                    <Flyout><ColorPicker x:Name="SugTextColorPicker" ColorChanged="SugUI_ColorPickerChanged" IsAlphaEnabled="False"/></Flyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
-                            <TextBlock Text="Selected Item Background Color (Hex)" VerticalAlignment="Center"/>
-                            <TextBox x:Name="SugSelBgColorInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                            <TextBlock Text="Selected Item Background Color" VerticalAlignment="Center"/>
+                            <DropDownButton Grid.Column="1" Content="Pick Color">
+                                <DropDownButton.Flyout>
+                                    <Flyout><ColorPicker x:Name="SugSelBgColorPicker" ColorChanged="SugUI_ColorPickerChanged" IsAlphaEnabled="False"/></Flyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
-                            <TextBlock Text="Selected Text Color (Hex)" VerticalAlignment="Center"/>
-                            <TextBox x:Name="SugSelTextColorInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                            <TextBlock Text="Selected Text Color" VerticalAlignment="Center"/>
+                            <DropDownButton Grid.Column="1" Content="Pick Color">
+                                <DropDownButton.Flyout>
+                                    <Flyout><ColorPicker x:Name="SugSelTextColorPicker" ColorChanged="SugUI_ColorPickerChanged" IsAlphaEnabled="False"/></Flyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
                         </Grid>
+
+                        <!-- Layout -->
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
                             <TextBlock Text="Font Size" VerticalAlignment="Center"/>
-                            <TextBox x:Name="SugFontSizeInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                            <NumberBox x:Name="SugFontSizeInput" Grid.Column="1" ValueChanged="SugUI_NumberBoxChanged" SmallChange="1" />
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
                             <TextBlock Text="Font Family" VerticalAlignment="Center"/>
                             <TextBox x:Name="SugFontFamilyInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Item Vertical Padding" VerticalAlignment="Center"/>
+                            <NumberBox x:Name="SugItemPadVInput" Grid.Column="1" ValueChanged="SugUI_NumberBoxChanged" SmallChange="1" />
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Item Horizontal Padding" VerticalAlignment="Center"/>
+                            <NumberBox x:Name="SugItemPadHInput" Grid.Column="1" ValueChanged="SugUI_NumberBoxChanged" SmallChange="1" />
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Window Padding" VerticalAlignment="Center"/>
+                            <NumberBox x:Name="SugWinPadInput" Grid.Column="1" ValueChanged="SugUI_NumberBoxChanged" SmallChange="1" />
                         </Grid>
                     </StackPanel>
                 </StackPanel>

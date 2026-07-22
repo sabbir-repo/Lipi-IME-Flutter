@@ -12,12 +12,15 @@ namespace LipiService.Services
         public bool BrowserBypass { get; set; } = true;
         public string Theme { get; set; } = "System";
         
-        public string SuggestionBgColor { get; set; } = "#FAFAFA";
-        public string SuggestionTextColor { get; set; } = "#000000";
-        public string SuggestionSelectedBgColor { get; set; } = "#DCE6FF";
-        public string SuggestionSelectedTextColor { get; set; } = "#000000";
+        public string SuggestionBgColor { get; set; } = "#111113";
+        public string SuggestionTextColor { get; set; } = "#c8c8c8";
+        public string SuggestionSelectedBgColor { get; set; } = "#3c3c3c";
+        public string SuggestionSelectedTextColor { get; set; } = "#ffffff";
         public double SuggestionFontSize { get; set; } = 18.0;
         public string SuggestionFontFamily { get; set; } = "Segoe UI";
+        public double SuggestionItemPaddingV { get; set; } = 5.0;
+        public double SuggestionItemPaddingH { get; set; } = 10.0;
+        public double SuggestionWindowPadding { get; set; } = 5.0;
 
         public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>> UserPreferences { get; set; } = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>>();
     }
