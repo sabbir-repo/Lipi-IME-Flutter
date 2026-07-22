@@ -77,5 +77,48 @@ namespace LipiDashboard
             // For now, we only have the General page which is inline.
             // If we added more pages, we'd navigate the ContentFrame here.
         }
+
+        private async void ClearCacheButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClearCacheButton.IsEnabled = false;
+            try
+            {
+                using (var client = new System.IO.Pipes.NamedPipeClientStream(".", "LipiImePipe", System.IO.Pipes.PipeDirection.InOut))
+                {
+                    await client.ConnectAsync(2000); // 2 second timeout
+                    using (var writer = new System.IO.StreamWriter(client, System.Text.Encoding.UTF8, 1024, true))
+                    using (var reader = new System.IO.StreamReader(client, System.Text.Encoding.UTF8, true, 1024, true))
+                    {
+                        writer.AutoFlush = true;
+                        await writer.WriteLineAsync("CLEAR_CACHE");
+                        await reader.ReadLineAsync(); // Wait for OK
+                    }
+                }
+                
+                ContentDialog successDialog = new ContentDialog
+                {
+                    Title = "Cache Cleared",
+                    Content = "Offline cache has been successfully cleared from memory and disk.",
+                    CloseButtonText = "OK",
+                    XamlRoot = this.Content.XamlRoot
+                };
+                await successDialog.ShowAsync();
+            }
+            catch (Exception ex)
+            {
+                ContentDialog errorDialog = new ContentDialog
+                {
+                    Title = "Error",
+                    Content = $"Failed to clear cache: {ex.Message}\nMake sure the service is running.",
+                    CloseButtonText = "OK",
+                    XamlRoot = this.Content.XamlRoot
+                };
+                await errorDialog.ShowAsync();
+            }
+            finally
+            {
+                ClearCacheButton.IsEnabled = true;
+            }
+        }
     }
 }

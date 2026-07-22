@@ -97,6 +97,13 @@ namespace LipiService.Services
                                 }
                                 continue;
                             }
+                            
+                            if (request == "CLEAR_CACHE")
+                            {
+                                _cacheManager.ClearCache();
+                                await writer.WriteLineAsync("OK");
+                                continue;
+                            }
 
                             if (request.StartsWith("SHOW|"))
                             {

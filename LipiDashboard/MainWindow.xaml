@@ -55,6 +55,21 @@
                             </Grid>
                         </StackPanel>
 
+                        <!-- Clear Cache -->
+                        <StackPanel Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="16" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Clear Offline Cache" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                                    <TextBlock Text="Deletes all learned words and cached suggestions from memory and disk" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                                <Button x:Name="ClearCacheButton" Content="Clear Cache" Grid.Column="1" Click="ClearCacheButton_Click" VerticalAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
+
                     </StackPanel>
                 </Frame.Content>
             </Frame>

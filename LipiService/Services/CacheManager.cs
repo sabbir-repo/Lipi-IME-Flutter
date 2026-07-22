@@ -171,5 +171,14 @@ namespace LipiService.Services
                 }
             }
         }
+
+        public void ClearCache()
+        {
+            lock (_cacheLock)
+            {
+                _offlineCache.Clear();
+            }
+            SaveCache();
+        }
     }
 }
