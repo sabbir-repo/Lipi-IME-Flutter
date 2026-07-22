@@ -11,10 +11,8 @@ namespace LipiService
         public string Word { get; set; } = "";
         public bool IsSelected { get; set; }
         
-        private System.Windows.Media.Brush _defaultBg = new SolidColorBrush(System.Windows.Media.Color.FromRgb(250, 250, 250));
-        private System.Windows.Media.Brush _selectedBg = new SolidColorBrush(System.Windows.Media.Color.FromRgb(220, 230, 255));
-        public System.Windows.Media.Brush BackgroundBrush => IsSelected ? _selectedBg : _defaultBg;
-        public System.Windows.Media.Brush ForegroundBrush => IsSelected ? System.Windows.Media.Brushes.Black : System.Windows.Media.Brushes.Gray;
+        public System.Windows.Media.Brush BackgroundBrush => IsSelected ? new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 60, 60, 60)) : System.Windows.Media.Brushes.Transparent;
+        public System.Windows.Media.Brush ForegroundBrush => IsSelected ? System.Windows.Media.Brushes.White : new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 200, 200, 200));
     }
 
     public partial class CandidateWindow : Window

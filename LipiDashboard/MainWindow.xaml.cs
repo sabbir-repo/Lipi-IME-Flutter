@@ -88,6 +88,7 @@ namespace LipiDashboard
                 GeneralPanel.Visibility = Visibility.Collapsed;
                 AboutPanel.Visibility = Visibility.Collapsed;
                 CustomDictionaryPanel.Visibility = Visibility.Collapsed;
+                TypingRulesPanel.Visibility = Visibility.Collapsed;
                 SettingsPanel.Visibility = Visibility.Visible;
             }
             else
