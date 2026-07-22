@@ -74,8 +74,21 @@ namespace LipiDashboard
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            // For now, we only have the General page which is inline.
-            // If we added more pages, we'd navigate the ContentFrame here.
+            if (args.IsSettingsInvoked)
+            {
+                GeneralPanel.Visibility = Visibility.Collapsed;
+                AboutPanel.Visibility = Visibility.Collapsed;
+                SettingsPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                var selectedItem = (NavigationViewItem)args.SelectedItem;
+                string tag = selectedItem.Tag?.ToString();
+
+                GeneralPanel.Visibility = tag == "General" ? Visibility.Visible : Visibility.Collapsed;
+                SettingsPanel.Visibility = Visibility.Collapsed;
+                AboutPanel.Visibility = tag == "About" ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
         private async void ClearCacheButton_Click(object sender, RoutedEventArgs e)
