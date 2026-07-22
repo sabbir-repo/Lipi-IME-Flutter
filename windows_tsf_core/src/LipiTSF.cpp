@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 
-CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL), _isActive(true), _selectedIndex(0)
+CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL), _isActive(true), _selectedIndex(0), _browserBypassEnabled(true), _lastConfigCheckTime(0)
 {
     DllAddRef();
 }
@@ -108,6 +108,11 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
 {
     if (pfEaten == NULL) return E_INVALIDARG;
     
+    if (_ShouldBypass()) {
+        *pfEaten = FALSE;
+        return S_OK;
+    }
+    
     BYTE kbd[256];
     GetKeyboardState(kbd);
 
@@ -154,6 +159,11 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
 STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, BOOL *pfEaten)
 {
     if (pfEaten == NULL) return E_INVALIDARG;
+
+    if (_ShouldBypass()) {
+        *pfEaten = FALSE;
+        return S_OK;
+    }
 
     BYTE kbd[256];
     GetKeyboardState(kbd);
@@ -282,6 +292,36 @@ private:
     ITfContext *_pic;
     WPARAM _wParam;
 };
+
+bool CLipiTSF::_ShouldBypass() {
+    ULONGLONG now = GetTickCount64();
+    if (now - _lastConfigCheckTime > 2000) {
+        if (_ipc.SendMessage(L"GET_CONFIG")) {
+            std::wstring response;
+            if (_ipc.ReceiveMessage(response)) {
+                _browserBypassEnabled = (response == L"1");
+            }
+        }
+        _lastConfigCheckTime = now;
+    }
+
+    if (_browserBypassEnabled) {
+        GUITHREADINFO gti;
+        gti.cbSize = sizeof(GUITHREADINFO);
+        if (GetGUIThreadInfo(0, &gti)) {
+            if (gti.hwndFocus) {
+                wchar_t className[256];
+                if (GetClassNameW(gti.hwndFocus, className, 256)) {
+                    if (wcscmp(className, L"Chrome_RenderWidgetHostHWND") == 0 ||
+                        wcscmp(className, L"MozillaWindowClass") == 0) { 
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
 
 void CLipiTSF::_HandleKeystroke(ITfContext *pic, WPARAM wParam) {
     CLipiEditSession *pEditSession = new CLipiEditSession(this, pic, wParam);

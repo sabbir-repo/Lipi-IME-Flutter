@@ -84,7 +84,21 @@ namespace LipiService.Services
                 }
             }
 
-            return new List<string>();
+            // 3. Fallback to Avro Phonetic
+            try 
+            {
+                string avroResult = AvroPhonetic.Parse(text);
+                if (!string.IsNullOrEmpty(avroResult))
+                {
+                    return new List<string> { avroResult, text };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Avro parsing failed: {ex.Message}");
+            }
+
+            return new List<string> { text };
         }
     }
 }

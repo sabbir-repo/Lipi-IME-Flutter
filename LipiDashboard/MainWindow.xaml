@@ -16,7 +16,9 @@
     <Grid>
         <NavigationView x:Name="NavView" PaneDisplayMode="Left" IsBackButtonVisible="Collapsed" SelectionChanged="NavView_SelectionChanged">
             <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Setting" Content="General" Tag="General" />
+                <NavigationViewItem Icon="Home" Content="General" Tag="General" />
+                <NavigationViewItem Icon="Library" Content="Custom Dictionary" Tag="CustomDictionary" />
+                <NavigationViewItem Icon="Document" Content="Typing Rules" Tag="TypingRules" />
                 <NavigationViewItem Icon="Help" Content="About" Tag="About" />
             </NavigationView.MenuItems>
 
@@ -38,6 +40,60 @@
                         </Grid>
                     </StackPanel>
                 </StackPanel>
+
+                <!-- Typing Rules Panel -->
+                <StackPanel x:Name="TypingRulesPanel" Spacing="20" Visibility="Collapsed">
+                    <TextBlock Text="Typing Rules" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,20"/>
+                    <StackPanel Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="16" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Disable IME in Web Pages (Website Bypass)" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                                <TextBlock Text="Automatically bypass typing in browser web pages (search bar still works)" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch x:Name="BrowserBypassSwitch" Grid.Column="1" Toggled="BrowserBypassSwitch_Toggled" />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Custom Dictionary Panel -->
+                <Grid x:Name="CustomDictionaryPanel" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Custom Dictionary" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,20"/>
+                    
+                    <!-- Add new word -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,20">
+                        <TextBox x:Name="DictEnglishInput" PlaceholderText="English Word (e.g. ami)" Width="200"/>
+                        <TextBox x:Name="DictBengaliInput" PlaceholderText="Bengali Translation (e.g. আমি)" Width="200"/>
+                        <Button x:Name="AddDictWordButton" Content="Add Word" Click="AddDictWordButton_Click" Style="{ThemeResource AccentButtonStyle}"/>
+                    </StackPanel>
+                    
+                    <!-- List of words -->
+                    <ListView x:Name="DictionaryListView" Grid.Row="2" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="12,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding EnglishWord}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding BengaliWord}" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="2" Content="Delete" Tag="{Binding EnglishWord}" Click="DeleteDictWordButton_Click" Style="{ThemeResource DefaultButtonStyle}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
 
                 <!-- Settings Panel -->
                 <StackPanel x:Name="SettingsPanel" Spacing="20" Visibility="Collapsed">

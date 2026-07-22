@@ -45,10 +45,10 @@ namespace LipiService.Services
             }
             
             _cacheFilePath = Path.Combine(lipiDir, "offline_cache.json");
-            LoadCache();
+            ReloadCache();
         }
 
-        private void LoadCache()
+        public void ReloadCache()
         {
             try
             {

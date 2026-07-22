@@ -105,6 +105,27 @@ namespace LipiService.Services
                                 continue;
                             }
 
+                            if (request == "RELOAD_CACHE")
+                            {
+                                _cacheManager.ReloadCache();
+                                await writer.WriteLineAsync("OK");
+                                continue;
+                            }
+
+                            if (request == "RELOAD_CONFIG")
+                            {
+                                _settingsManager.ReloadSettings();
+                                await writer.WriteLineAsync("OK");
+                                continue;
+                            }
+
+                            if (request == "GET_CONFIG")
+                            {
+                                int browserBypass = _settingsManager.CurrentSettings.BrowserBypass ? 1 : 0;
+                                await writer.WriteLineAsync($"{browserBypass}");
+                                continue;
+                            }
+
                             if (request.StartsWith("SHOW|"))
                             {
                                 var parts = request.Split('|');

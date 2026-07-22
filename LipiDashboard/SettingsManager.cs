@@ -8,6 +8,7 @@ namespace LipiDashboard
     {
         public bool OfflineMode { get; set; } = true;
         public bool OnlineMode { get; set; } = true;
+        public bool BrowserBypass { get; set; } = true;
         public string Theme { get; set; } = "System";
     }
 

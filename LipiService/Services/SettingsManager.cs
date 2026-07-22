@@ -9,6 +9,7 @@ namespace LipiService.Services
     {
         public bool OfflineMode { get; set; } = true;
         public bool OnlineMode { get; set; } = true;
+        public bool BrowserBypass { get; set; } = true;
         public string Theme { get; set; } = "System";
         public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>> UserPreferences { get; set; } = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>>();
     }
@@ -60,7 +61,12 @@ namespace LipiService.Services
             Console.WriteLine("Settings reloaded automatically.");
         }
 
-        public void LoadSettings()
+        public void ReloadSettings()
+        {
+            LoadSettings();
+        }
+
+        private void LoadSettings()
         {
             try
             {

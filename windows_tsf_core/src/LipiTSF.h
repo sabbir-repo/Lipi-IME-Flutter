@@ -51,4 +51,9 @@ private:
     
     std::vector<std::wstring> _suggestions;
     int _selectedIndex;
+    
+    bool _browserBypassEnabled;
+    ULONGLONG _lastConfigCheckTime;
+    
+    bool _ShouldBypass();
 };
