@@ -74,9 +74,6 @@ namespace LipiService.Services
                                 suggestions.Add(text);
                             }
                             
-                            // Cache the result for future offline use
-                            _cacheManager.CacheWord(langCode, text, suggestions);
-                            
                             return suggestions;
                         }
                     }

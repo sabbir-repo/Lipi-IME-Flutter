@@ -74,13 +74,26 @@ namespace LipiService.Services
                             if (request.StartsWith("LEARN|"))
                             {
                                 var parts = request.Split('|');
-                                if (parts.Length == 4)
+                                if (parts.Length >= 5)
                                 {
                                     var langCode = parts[1];
                                     var engWord = parts[2];
-                                    var benWord = parts[3];
-                                    
-                                    _cacheManager.PromoteWord(langCode, engWord, benWord);
+                                    if (int.TryParse(parts[3], out int selectedIndex))
+                                    {
+                                        var suggestions = new System.Collections.Generic.List<string>();
+                                        for (int i = 4; i < parts.Length; i++)
+                                        {
+                                            suggestions.Add(parts[i]);
+                                        }
+                                        
+                                        if (selectedIndex >= 0 && selectedIndex < suggestions.Count)
+                                        {
+                                            var selectedWord = suggestions[selectedIndex];
+                                            suggestions.RemoveAt(selectedIndex);
+                                            suggestions.Insert(0, selectedWord);
+                                            _cacheManager.CacheWord(langCode, engWord, suggestions);
+                                        }
+                                    }
                                 }
                                 continue;
                             }

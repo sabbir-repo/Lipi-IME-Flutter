@@ -380,6 +380,13 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
     }
 
     if (wParam != 0 && !isTerminator) {
+        // Debounce: if there are pending key events in the queue, skip fetching suggestions
+        // This prevents blocking on fast typing and avoids API rate limiting.
+        MSG msg;
+        if (PeekMessage(&msg, NULL, WM_KEYDOWN, WM_KEYDOWN, PM_NOREMOVE)) {
+            return S_OK;
+        }
+
         std::wstring request = L"bn-t-i0-und|" + _currentWord;
         std::wstring response;
         
@@ -467,7 +474,10 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         }
         
         if (!wordToLearn.empty() && !_suggestions.empty() && _selectedIndex >= 0 && _selectedIndex < (int)_suggestions.size()) {
-            std::wstring learnReq = L"LEARN|bn-t-i0-und|" + wordToLearn + L"|" + _suggestions[_selectedIndex];
+            std::wstring learnReq = L"LEARN|bn-t-i0-und|" + wordToLearn + L"|" + std::to_wstring(_selectedIndex);
+            for (const auto& s : _suggestions) {
+                learnReq += L"|" + s;
+            }
             std::ofstream logLearn("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
             logLearn << "SENDING LEARN: " << to_utf8(learnReq) << "\n";
             logLearn.close();
