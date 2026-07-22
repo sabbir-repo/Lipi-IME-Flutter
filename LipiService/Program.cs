@@ -29,7 +29,7 @@ namespace LipiService
             
             var settingsManager = new SettingsManager();
             var cacheManager = new CacheManager();
-            var apiService = new ApiService(cacheManager);
+            var apiService = new ApiService(cacheManager, settingsManager);
             var pipeServer = new NamedPipeServerManager(apiService, settingsManager);
             
             var app = new System.Windows.Application();

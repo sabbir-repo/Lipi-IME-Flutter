@@ -447,6 +447,12 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
             pComp->EndComposition(ec);
             pComp->Release();
         }
+        
+        if (!_currentWord.empty() && !_suggestions.empty() && _selectedIndex >= 0 && _selectedIndex < (int)_suggestions.size()) {
+            std::wstring learnReq = L"LEARN|bn-t-i0-und|" + _currentWord + L"|" + _suggestions[_selectedIndex];
+            _ipc.SendMessage(learnReq);
+        }
+
         _currentWord.clear();
         _suggestions.clear();
         _selectedIndex = 0;

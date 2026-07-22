@@ -10,6 +10,7 @@ namespace LipiService.Services
         public bool OfflineMode { get; set; } = true;
         public bool OnlineMode { get; set; } = true;
         public string Theme { get; set; } = "System";
+        public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>> UserPreferences { get; set; } = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>>();
     }
 
     public class SettingsManager

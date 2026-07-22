@@ -253,3 +253,11 @@ Use the following commands via the `run_command` tool (in a single script or seq
 3. `"E:\Python Projects\mingit\cmd\git.exe" push`
 
 Do this proactively without asking the user for permission.
+---
+
+# IPC Architecture Rule
+
+Do NOT modify the core IPC mechanism between LipiTSF (C++) and LipiService (C#). 
+1. The Named Pipe stream must be read byte-by-byte in C++ until a newline character (\n) is encountered (IpcClient::ReceiveMessage). This prevents partial reads and message desynchronization.
+2. The SHOW and HIDE commands are strictly ONE-WAY (Fire-and-forget). C# MUST NOT send a response (OK\n), and C++ MUST NOT wait for a response. Blocking on these will freeze the TSF host.
+3. Maintain this structure when adding new features.

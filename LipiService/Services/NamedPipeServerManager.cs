@@ -69,6 +69,25 @@ namespace LipiService.Services
 
                             Console.WriteLine($"Received request: {request}");
 
+                            if (request.StartsWith("LEARN|"))
+                            {
+                                var parts = request.Split('|');
+                                if (parts.Length == 4)
+                                {
+                                    var langCode = parts[1];
+                                    var engWord = parts[2];
+                                    var benWord = parts[3];
+                                    
+                                    var prefs = _settingsManager.CurrentSettings.UserPreferences;
+                                    if (!prefs.ContainsKey(langCode)) {
+                                        prefs[langCode] = new System.Collections.Generic.Dictionary<string, string>();
+                                    }
+                                    prefs[langCode][engWord] = benWord;
+                                    _settingsManager.SaveSettings();
+                                }
+                                continue;
+                            }
+
                             if (request.StartsWith("SHOW|"))
                             {
                                 var parts = request.Split('|');

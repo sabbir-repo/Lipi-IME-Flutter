@@ -10,12 +10,14 @@ namespace LipiService.Services
     {
         private readonly HttpClient _httpClient;
         private readonly CacheManager _cacheManager;
+        private readonly SettingsManager _settingsManager;
 
-        public ApiService(CacheManager cacheManager)
+        public ApiService(CacheManager cacheManager, SettingsManager settingsManager)
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromMilliseconds(2500);
             _cacheManager = cacheManager;
+            _settingsManager = settingsManager;
         }
 
         public async Task<List<string>> FetchSuggestionsAsync(string text, string langCode, bool offlineEnabled, bool onlineMode)
@@ -26,7 +28,25 @@ namespace LipiService.Services
             if (offlineEnabled)
             {
                 var cached = _cacheManager.GetCachedSuggestions(langCode, text);
-                if (cached != null) return cached;
+                if (cached != null) 
+                {
+                    // Reorder based on UserPreferences
+                    var prefs = _settingsManager.CurrentSettings.UserPreferences;
+                    if (prefs.ContainsKey(langCode) && prefs[langCode].ContainsKey(text))
+                    {
+                        var preferredWord = prefs[langCode][text];
+                        if (cached.Contains(preferredWord))
+                        {
+                            cached.Remove(preferredWord);
+                            cached.Insert(0, preferredWord);
+                        }
+                        else
+                        {
+                            cached.Insert(0, preferredWord);
+                        }
+                    }
+                    return cached;
+                }
             }
 
             // 2. Fetch Online
@@ -71,6 +91,22 @@ namespace LipiService.Services
                             
                             // Cache the result for future offline use
                             _cacheManager.CacheWord(langCode, text, suggestions);
+                            
+                            // Reorder based on UserPreferences
+                            var prefs = _settingsManager.CurrentSettings.UserPreferences;
+                            if (prefs.ContainsKey(langCode) && prefs[langCode].ContainsKey(text))
+                            {
+                                var preferredWord = prefs[langCode][text];
+                                if (suggestions.Contains(preferredWord))
+                                {
+                                    suggestions.Remove(preferredWord);
+                                    suggestions.Insert(0, preferredWord);
+                                }
+                                else
+                                {
+                                    suggestions.Insert(0, preferredWord);
+                                }
+                            }
                             
                             return suggestions;
                         }
