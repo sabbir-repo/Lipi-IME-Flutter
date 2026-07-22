@@ -56,6 +56,14 @@ namespace LipiDashboard
             OnlineModeSwitch.IsOn = _settingsManager.CurrentSettings.OnlineMode;
             OfflineModeSwitch.IsOn = _settingsManager.CurrentSettings.OfflineMode;
             BrowserBypassSwitch.IsOn = _settingsManager.CurrentSettings.BrowserBypass;
+            
+            SugBgColorInput.Text = _settingsManager.CurrentSettings.SuggestionBgColor;
+            SugTextColorInput.Text = _settingsManager.CurrentSettings.SuggestionTextColor;
+            SugSelBgColorInput.Text = _settingsManager.CurrentSettings.SuggestionSelectedBgColor;
+            SugSelTextColorInput.Text = _settingsManager.CurrentSettings.SuggestionSelectedTextColor;
+            SugFontSizeInput.Text = _settingsManager.CurrentSettings.SuggestionFontSize.ToString();
+            SugFontFamilyInput.Text = _settingsManager.CurrentSettings.SuggestionFontFamily;
+            
             _isLoaded = true;
         }
 
@@ -89,6 +97,7 @@ namespace LipiDashboard
                 AboutPanel.Visibility = Visibility.Collapsed;
                 CustomDictionaryPanel.Visibility = Visibility.Collapsed;
                 TypingRulesPanel.Visibility = Visibility.Collapsed;
+                SuggestionUIPanel.Visibility = Visibility.Collapsed;
                 SettingsPanel.Visibility = Visibility.Visible;
             }
             else
@@ -99,6 +108,7 @@ namespace LipiDashboard
                 GeneralPanel.Visibility = tag == "General" ? Visibility.Visible : Visibility.Collapsed;
                 TypingRulesPanel.Visibility = tag == "TypingRules" ? Visibility.Visible : Visibility.Collapsed;
                 CustomDictionaryPanel.Visibility = tag == "CustomDictionary" ? Visibility.Visible : Visibility.Collapsed;
+                SuggestionUIPanel.Visibility = tag == "SuggestionUI" ? Visibility.Visible : Visibility.Collapsed;
                 SettingsPanel.Visibility = Visibility.Collapsed;
                 AboutPanel.Visibility = tag == "About" ? Visibility.Visible : Visibility.Collapsed;
 
@@ -107,6 +117,21 @@ namespace LipiDashboard
                     LoadDictionary();
                 }
             }
+        }
+
+        private async void SugUI_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_isLoaded) return;
+            _settingsManager.CurrentSettings.SuggestionBgColor = SugBgColorInput.Text;
+            _settingsManager.CurrentSettings.SuggestionTextColor = SugTextColorInput.Text;
+            _settingsManager.CurrentSettings.SuggestionSelectedBgColor = SugSelBgColorInput.Text;
+            _settingsManager.CurrentSettings.SuggestionSelectedTextColor = SugSelTextColorInput.Text;
+            if (double.TryParse(SugFontSizeInput.Text, out double fSize)) {
+                _settingsManager.CurrentSettings.SuggestionFontSize = fSize;
+            }
+            _settingsManager.CurrentSettings.SuggestionFontFamily = SugFontFamilyInput.Text;
+            _settingsManager.SaveSettings();
+            await NotifyServiceConfigUpdate();
         }
 
         private async void ClearCacheButton_Click(object sender, RoutedEventArgs e)

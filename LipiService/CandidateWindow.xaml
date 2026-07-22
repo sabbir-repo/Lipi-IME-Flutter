@@ -5,7 +5,7 @@
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" ShowActivated="False" Focusable="False" ShowInTaskbar="False">
     <Grid Margin="10">
-        <Border Background="#111113" CornerRadius="8" BorderBrush="#2c2c36" BorderThickness="1">
+        <Border x:Name="RootBorder" Background="#111113" CornerRadius="8" BorderBrush="#2c2c36" BorderThickness="1">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="12" ShadowDepth="4" Opacity="0.6"/>
             </Border.Effect>
@@ -19,7 +19,7 @@
                             <Border Padding="15,8" Background="{Binding BackgroundBrush}" CornerRadius="4" Margin="5,2">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding IndexText}" Foreground="#6c6c7c" FontSize="14" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding Word}" Foreground="{Binding ForegroundBrush}" FontSize="18" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Word}" Foreground="{Binding ForegroundBrush}" FontSize="{Binding FontSize}" FontFamily="{Binding FontFamily}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

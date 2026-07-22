@@ -10,6 +10,13 @@ namespace LipiDashboard
         public bool OnlineMode { get; set; } = true;
         public bool BrowserBypass { get; set; } = true;
         public string Theme { get; set; } = "System";
+        
+        public string SuggestionBgColor { get; set; } = "#FAFAFA";
+        public string SuggestionTextColor { get; set; } = "#000000";
+        public string SuggestionSelectedBgColor { get; set; } = "#DCE6FF";
+        public string SuggestionSelectedTextColor { get; set; } = "#000000";
+        public double SuggestionFontSize { get; set; } = 18.0;
+        public string SuggestionFontFamily { get; set; } = "Segoe UI";
     }
 
     public class SettingsManager

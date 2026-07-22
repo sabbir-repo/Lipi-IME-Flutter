@@ -19,6 +19,7 @@
                 <NavigationViewItem Icon="Home" Content="General" Tag="General" />
                 <NavigationViewItem Icon="Library" Content="Custom Dictionary" Tag="CustomDictionary" />
                 <NavigationViewItem Icon="Document" Content="Typing Rules" Tag="TypingRules" />
+                <NavigationViewItem Icon="Edit" Content="Suggestion UI" Tag="SuggestionUI" />
                 <NavigationViewItem Icon="Help" Content="About" Tag="About" />
             </NavigationView.MenuItems>
 
@@ -124,6 +125,43 @@
                                 <TextBlock Text="Deletes all learned words and cached suggestions from memory and disk" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                             </StackPanel>
                             <Button x:Name="ClearCacheButton" Content="Clear Cache" Grid.Column="1" Click="ClearCacheButton_Click" VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Suggestion UI Panel -->
+                <StackPanel x:Name="SuggestionUIPanel" Spacing="20" Visibility="Collapsed">
+                    <TextBlock Text="Suggestion UI Customization" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,20"/>
+                    <StackPanel Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="16" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Spacing="15">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Window Background Color (Hex)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="SugBgColorInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Text Color (Hex)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="SugTextColorInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Selected Item Background Color (Hex)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="SugSelBgColorInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Selected Text Color (Hex)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="SugSelTextColorInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Font Size" VerticalAlignment="Center"/>
+                            <TextBox x:Name="SugFontSizeInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="200"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Font Family" VerticalAlignment="Center"/>
+                            <TextBox x:Name="SugFontFamilyInput" Grid.Column="1" TextChanged="SugUI_TextChanged"/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>

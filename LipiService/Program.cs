@@ -53,12 +53,15 @@ namespace LipiService
                 {
                     string dir = AppDomain.CurrentDomain.BaseDirectory;
                     string possiblePath1 = Path.Combine(dir, "LipiDashboard.exe");
-                    string possiblePath2 = Path.GetFullPath(Path.Combine(dir, @"..\..\..\..\..\..\LipiDashboard\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\LipiDashboard.exe"));
+                    string possiblePath2 = Path.GetFullPath(Path.Combine(dir, @"..\..\..\..\LipiDashboard\bin\Debug\net8.0-windows10.0.19041.0\win-x64\LipiDashboard.exe"));
+                    string possiblePath3 = Path.GetFullPath(Path.Combine(dir, @"..\..\..\..\LipiDashboard\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\LipiDashboard.exe"));
                     
                     if (File.Exists(possiblePath1))
                         Process.Start(possiblePath1);
                     else if (File.Exists(possiblePath2))
                         Process.Start(possiblePath2);
+                    else if (File.Exists(possiblePath3))
+                        Process.Start(possiblePath3);
                     else
                         System.Windows.Forms.MessageBox.Show("Could not find LipiDashboard.exe");
                 }

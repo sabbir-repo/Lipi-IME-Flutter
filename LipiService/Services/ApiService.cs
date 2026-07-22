@@ -20,12 +20,12 @@ namespace LipiService.Services
             _settingsManager = settingsManager;
         }
 
-        public async Task<List<string>> FetchSuggestionsAsync(string text, string langCode, bool offlineEnabled, bool onlineMode)
+        public async Task<List<string>> FetchSuggestionsAsync(string text, string langCode, bool offlineEnabled, bool onlineMode, bool forceFetch = false)
         {
             if (string.IsNullOrWhiteSpace(text)) return new List<string>();
 
             // 1. Check Offline Cache
-            if (offlineEnabled)
+            if (offlineEnabled && !forceFetch)
             {
                 var cached = _cacheManager.GetCachedSuggestions(langCode, text);
                 if (cached != null) 
@@ -72,6 +72,11 @@ namespace LipiService.Services
                             if (!suggestions.Contains(text))
                             {
                                 suggestions.Add(text);
+                            }
+                            
+                            if (forceFetch && offlineEnabled)
+                            {
+                                _cacheManager.CacheWord(langCode, text, suggestions);
                             }
                             
                             return suggestions;

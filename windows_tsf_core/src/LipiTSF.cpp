@@ -179,6 +179,14 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
         return S_OK;
     }
 
+    if ((kbd[VK_MENU] & 0x80) && wParam == 0x52) { // Alt+R
+        if (!_currentWord.empty()) {
+            *pfEaten = TRUE;
+            _HandleKeystroke(pic, 0x10000); // 0x10000 flag for Force Fetch
+            return S_OK;
+        }
+    }
+
     if ((kbd[VK_CONTROL] & 0x80) || (kbd[VK_MENU] & 0x80) || (kbd[VK_LWIN] & 0x80) || (kbd[VK_RWIN] & 0x80)) {
         *pfEaten = FALSE;
         return S_OK;
@@ -370,7 +378,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
 
         if (wParam == VK_BACK) {
             if (!_currentWord.empty()) _currentWord.pop_back();
-        } else if (!isTerminator) {
+        } else if (!isTerminator && wParam != 0x10000) {
             if (c != 0) _currentWord += c;
         }
     }
@@ -428,6 +436,9 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         }
 
         std::wstring request = L"bn-t-i0-und|" + _currentWord;
+        if (wParam == 0x10000) {
+            request = L"FORCE_FETCH_API|" + _currentWord;
+        }
         std::wstring response;
         
         _suggestions.clear();

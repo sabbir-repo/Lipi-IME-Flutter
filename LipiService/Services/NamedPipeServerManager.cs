@@ -97,6 +97,7 @@ namespace LipiService.Services
                                 }
                                 continue;
                             }
+
                             
                             if (request == "CLEAR_CACHE")
                             {
@@ -139,9 +140,9 @@ namespace LipiService.Services
                                         
                                         System.Windows.Application.Current.Dispatcher.Invoke(() => {
                                             if (Program.CandidateUI != null) {
+                                                Program.CandidateUI.UpdateSuggestions(words, selectedIndex, bufferText, _settingsManager.CurrentSettings);
                                                 Program.CandidateUI.Left = x;
                                                 Program.CandidateUI.Top = y + 25;
-                                                Program.CandidateUI.UpdateSuggestions(words, selectedIndex, bufferText);
                                                 Program.CandidateUI.Show();
                                             }
                                         });
@@ -159,7 +160,7 @@ namespace LipiService.Services
                                 continue;
                             }
 
-                            // Format expected from C++ TSF Core: "bn-t-i0-und|text"
+                            // Format expected from C++ TSF Core: "bn-t-i0-und|text" or "FORCE_FETCH_API|text"
                             var reqParts = request.Split('|');
                             if (reqParts.Length == 2)
                             {
@@ -168,8 +169,14 @@ namespace LipiService.Services
                                 
                                 bool offline = _settingsManager.CurrentSettings.OfflineMode;
                                 bool online = _settingsManager.CurrentSettings.OnlineMode;
+                                bool forceFetch = false;
                                 
-                                var suggestions = await _apiService.FetchSuggestionsAsync(text, langCode, offline, online);
+                                if (langCode == "FORCE_FETCH_API") {
+                                    forceFetch = true;
+                                    langCode = "bn-t-i0-und"; // default language
+                                }
+                                
+                                var suggestions = await _apiService.FetchSuggestionsAsync(text, langCode, offline, online, forceFetch);
                                 string responseStr = string.Join("|", suggestions);
                                 
                                 await writer.WriteLineAsync(responseStr);
