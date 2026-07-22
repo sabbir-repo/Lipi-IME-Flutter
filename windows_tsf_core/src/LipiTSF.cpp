@@ -1,4 +1,6 @@
 #include "LipiTSF.h"
+#include <fstream>
+#include <string>
 
 CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL), _isActive(true), _selectedIndex(0)
 {
@@ -289,6 +291,20 @@ void CLipiTSF::_HandleKeystroke(ITfContext *pic, WPARAM wParam) {
 }
 
 HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam) {
+    // Add temporary inline helper for logging strings
+    auto to_utf8 = [](const std::wstring& wstr) -> std::string {
+        if (wstr.empty()) return "";
+        int size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+        std::string str(size, 0);
+        WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], size, NULL, NULL);
+        if (str.back() == '\0') str.pop_back();
+        return str;
+    };
+    
+    std::ofstream log("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
+    log << "DoEditSession START. wParam=" << wParam << " currentWord=" << to_utf8(_currentWord) << " suggestionsSize=" << _suggestions.size() << "\n";
+    log.close();
+
     bool isTerminator = false;
     wchar_t termChar = 0;
     
@@ -452,7 +468,14 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         
         if (!wordToLearn.empty() && !_suggestions.empty() && _selectedIndex >= 0 && _selectedIndex < (int)_suggestions.size()) {
             std::wstring learnReq = L"LEARN|bn-t-i0-und|" + wordToLearn + L"|" + _suggestions[_selectedIndex];
+            std::ofstream logLearn("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
+            logLearn << "SENDING LEARN: " << to_utf8(learnReq) << "\n";
+            logLearn.close();
             _ipc.SendMessage(learnReq);
+        } else {
+            std::ofstream logFail("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
+            logFail << "LEARN FAILED. wordToLearn=" << to_utf8(wordToLearn) << " _suggestions.size=" << _suggestions.size() << " _selectedIndex=" << _selectedIndex << "\n";
+            logFail.close();
         }
 
         _currentWord.clear();
@@ -485,6 +508,10 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
             pFinalRange->Release();
         }
     }
+
+    std::ofstream logEnd("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
+    logEnd << "DoEditSession END.\n";
+    logEnd.close();
 
     return S_OK;
 }
