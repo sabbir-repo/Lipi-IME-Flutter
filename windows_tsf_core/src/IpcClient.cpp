@@ -135,40 +135,45 @@ bool IpcClient::ReceiveMessage(std::wstring& outMsg)
 {
     if (!IsConnected()) return false;
 
-    char buffer[4096];
+    std::string utf8Msg;
+    char ch;
     DWORD cbRead = 0;
 
-    LogDebug("Calling ReadFile...");
-    BOOL bSuccess = ReadFile(
-        _hPipe,
-        buffer,
-        sizeof(buffer) - 1,
-        &cbRead,
-        NULL);
-
-    LogDebug("ReadFile returned. bSuccess: " + std::to_string(bSuccess) + " cbRead: " + std::to_string(cbRead));
-
-    if (!bSuccess || cbRead == 0)
+    LogDebug("Calling ReadFile loop...");
+    while (true)
     {
-        Disconnect();
-        return false;
+        BOOL bSuccess = ReadFile(_hPipe, &ch, 1, &cbRead, NULL);
+        if (!bSuccess || cbRead == 0)
+        {
+            LogDebug("ReadFile failed or disconnected.");
+            Disconnect();
+            return false;
+        }
+        if (ch == '\n') {
+            break;
+        }
+        utf8Msg += ch;
     }
 
-    buffer[cbRead] = '\0';
+    // Remove trailing \r if present
+    if (!utf8Msg.empty() && utf8Msg.back() == '\r') {
+        utf8Msg.pop_back();
+    }
+
+    if (utf8Msg.empty()) {
+        outMsg = L"";
+        return true;
+    }
 
     // Convert UTF-8 back to UTF-16
-    int utf16Size = MultiByteToWideChar(CP_UTF8, 0, buffer, -1, NULL, 0);
+    int utf16Size = MultiByteToWideChar(CP_UTF8, 0, utf8Msg.c_str(), -1, NULL, 0);
     if (utf16Size <= 0) return false;
 
     std::wstring utf16Msg(utf16Size, 0);
-    MultiByteToWideChar(CP_UTF8, 0, buffer, -1, &utf16Msg[0], utf16Size);
+    MultiByteToWideChar(CP_UTF8, 0, utf8Msg.c_str(), -1, &utf16Msg[0], utf16Size);
 
-    // Remove the null terminator
-    if (utf16Msg.back() == L'\0') utf16Msg.pop_back();
-    
-    // Trim potential trailing newline from C# WriteLineAsync
-    if (!utf16Msg.empty() && utf16Msg.back() == L'\n') utf16Msg.pop_back();
-    if (!utf16Msg.empty() && utf16Msg.back() == L'\r') utf16Msg.pop_back();
+    // Remove the null terminator if present
+    if (!utf16Msg.empty() && utf16Msg.back() == L'\0') utf16Msg.pop_back();
 
     outMsg = utf16Msg;
     return true;

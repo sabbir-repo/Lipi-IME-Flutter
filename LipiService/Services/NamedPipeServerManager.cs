@@ -55,83 +55,75 @@ namespace LipiService.Services
         {
             try
             {
-                using (pipeServer) // Ensure pipeServer is disposed when done
+                using (pipeServer)
                 {
-                    byte[] buffer = new byte[8192];
-
-                Console.WriteLine("Entering while loop...");
-                while (pipeServer.IsConnected)
-                {
-                    Console.WriteLine("Calling ReadAsync...");
-                    int bytesRead = await pipeServer.ReadAsync(buffer, 0, buffer.Length);
-                    Console.WriteLine($"ReadAsync returned {bytesRead}");
-                    if (bytesRead == 0) break;
-
-                    string request = Encoding.UTF8.GetString(buffer, 0, bytesRead).TrimEnd('\r', '\n', '\0');
-                    if (string.IsNullOrEmpty(request)) continue;
-
-                    Console.WriteLine($"Received request: {request}");
-
-                    if (request.StartsWith("SHOW|"))
+                    using (var reader = new StreamReader(pipeServer, Encoding.UTF8, leaveOpen: true))
+                    using (var writer = new StreamWriter(pipeServer, Encoding.UTF8, leaveOpen: true) { AutoFlush = true })
                     {
-                        var parts = request.Split('|');
-                        if (parts.Length >= 5)
+                        Console.WriteLine("Entering while loop...");
+                        while (pipeServer.IsConnected)
                         {
-                            if (double.TryParse(parts[1], out double x) && double.TryParse(parts[2], out double y) && int.TryParse(parts[3], out int selectedIndex))
+                            Console.WriteLine("Calling ReadLineAsync...");
+                            string request = await reader.ReadLineAsync();
+                            if (request == null) break;
+
+                            Console.WriteLine($"Received request: {request}");
+
+                            if (request.StartsWith("SHOW|"))
                             {
-                                string bufferText = parts[4];
-                                string[] words = new string[parts.Length - 5];
-                                Array.Copy(parts, 5, words, 0, words.Length);
-                                
+                                var parts = request.Split('|');
+                                if (parts.Length >= 5)
+                                {
+                                    if (double.TryParse(parts[1], out double x) && double.TryParse(parts[2], out double y) && int.TryParse(parts[3], out int selectedIndex))
+                                    {
+                                        string bufferText = parts[4];
+                                        string[] words = new string[parts.Length - 5];
+                                        Array.Copy(parts, 5, words, 0, words.Length);
+                                        
+                                        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                                            if (Program.CandidateUI != null) {
+                                                Program.CandidateUI.Left = x;
+                                                Program.CandidateUI.Top = y + 25;
+                                                Program.CandidateUI.UpdateSuggestions(words, selectedIndex, bufferText);
+                                                Program.CandidateUI.Show();
+                                            }
+                                        });
+                                    }
+                                }
+                                continue;
+                            }
+                            else if (request == "HIDE")
+                            {
                                 System.Windows.Application.Current.Dispatcher.Invoke(() => {
                                     if (Program.CandidateUI != null) {
-                                        Program.CandidateUI.Left = x;
-                                        Program.CandidateUI.Top = y + 25;
-                                        Program.CandidateUI.UpdateSuggestions(words, selectedIndex, bufferText);
-                                        Program.CandidateUI.Show();
+                                        Program.CandidateUI.Hide();
                                     }
                                 });
+                                continue;
+                            }
+
+                            // Format expected from C++ TSF Core: "bn-t-i0-und|text"
+                            var reqParts = request.Split('|');
+                            if (reqParts.Length == 2)
+                            {
+                                var langCode = reqParts[0];
+                                var text = reqParts[1];
+                                
+                                bool offline = _settingsManager.CurrentSettings.OfflineMode;
+                                bool online = _settingsManager.CurrentSettings.OnlineMode;
+                                
+                                var suggestions = await _apiService.FetchSuggestionsAsync(text, langCode, offline, online);
+                                string responseStr = string.Join("|", suggestions);
+                                
+                                await writer.WriteLineAsync(responseStr);
+                            }
+                            else
+                            {
+                                await writer.WriteLineAsync("");
                             }
                         }
-                        byte[] resp = Encoding.UTF8.GetBytes("OK\n");
-                        await pipeServer.WriteAsync(resp, 0, resp.Length);
-                        continue;
-                    }
-                    else if (request == "HIDE")
-                    {
-                        System.Windows.Application.Current.Dispatcher.Invoke(() => {
-                            if (Program.CandidateUI != null) {
-                                Program.CandidateUI.Hide();
-                            }
-                        });
-                        byte[] resp = Encoding.UTF8.GetBytes("OK\n");
-                        await pipeServer.WriteAsync(resp, 0, resp.Length);
-                        continue;
-                    }
-
-                    // Format expected from C++ TSF Core: "bn-t-i0-und|text"
-                    var reqParts = request.Split('|');
-                    if (reqParts.Length == 2)
-                    {
-                        var langCode = reqParts[0];
-                        var text = reqParts[1];
-                        
-                        bool offline = _settingsManager.CurrentSettings.OfflineMode;
-                        bool online = _settingsManager.CurrentSettings.OnlineMode;
-                        
-                        var suggestions = await _apiService.FetchSuggestionsAsync(text, langCode, offline, online);
-                        string responseStr = string.Join("|", suggestions);
-                        
-                        byte[] responseBytes = Encoding.UTF8.GetBytes(responseStr + "\n");
-                        await pipeServer.WriteAsync(responseBytes, 0, responseBytes.Length);
-                    }
-                    else
-                    {
-                        byte[] responseBytes = Encoding.UTF8.GetBytes("\n");
-                        await pipeServer.WriteAsync(responseBytes, 0, responseBytes.Length);
                     }
                 }
-                } // Close using (pipeServer) block
             }
             catch (Exception ex)
             {

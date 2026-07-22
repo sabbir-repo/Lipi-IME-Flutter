@@ -469,9 +469,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         for (const auto& s : _suggestions) {
             showReq += L"|" + s;
         }
-        std::wstring showResp;
         _ipc.SendMessage(showReq);
-        _ipc.ReceiveMessage(showResp);
     }
     
     if (pFinalRange) {
