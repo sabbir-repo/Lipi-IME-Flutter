@@ -441,6 +441,8 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
     }
 
     if (isTerminator) {
+        std::wstring wordToLearn = _currentWord;
+        
         if (_pComposition) {
             ITfComposition *pComp = _pComposition;
             _pComposition = NULL;
@@ -448,8 +450,8 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
             pComp->Release();
         }
         
-        if (!_currentWord.empty() && !_suggestions.empty() && _selectedIndex >= 0 && _selectedIndex < (int)_suggestions.size()) {
-            std::wstring learnReq = L"LEARN|bn-t-i0-und|" + _currentWord + L"|" + _suggestions[_selectedIndex];
+        if (!wordToLearn.empty() && !_suggestions.empty() && _selectedIndex >= 0 && _selectedIndex < (int)_suggestions.size()) {
+            std::wstring learnReq = L"LEARN|bn-t-i0-und|" + wordToLearn + L"|" + _suggestions[_selectedIndex];
             _ipc.SendMessage(learnReq);
         }
 
