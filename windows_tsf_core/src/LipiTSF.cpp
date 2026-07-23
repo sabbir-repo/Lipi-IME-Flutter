@@ -415,28 +415,6 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         return S_OK;
     }
 
-    if (_currentWord == L"clear") {
-        if (_pComposition) {
-            ITfRange *pRange = NULL;
-            if (SUCCEEDED(_pComposition->GetRange(&pRange))) {
-                pRange->SetText(ec, 0, L"", 0);
-                pRange->Release();
-            }
-            ITfComposition *pComp = _pComposition;
-            _pComposition = NULL;
-            pComp->EndComposition(ec);
-            pComp->Release();
-        }
-
-        _ipc.SendMessage(L"CLEAR_CACHE");
-        _currentWord.clear();
-        _lastFetchedWord.clear();
-        _suggestions.clear();
-        _selectedIndex = 0;
-        _ipc.SendMessage(L"HIDE");
-        return S_OK;
-    }
-
     bool needsFetch = false;
     if (wParam == 0x10000) {
         needsFetch = true;
