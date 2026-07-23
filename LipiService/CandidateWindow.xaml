@@ -1,11 +1,11 @@
 <Window x:Class="LipiService.CandidateWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Lipi Candidate Window" SizeToContent="WidthAndHeight" MinWidth="50"
+        Title="Lipi Candidate Window" SizeToContent="WidthAndHeight" MinWidth="10" MinHeight="10"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" ShowActivated="False" Focusable="False" ShowInTaskbar="False">
     <Grid Margin="0">
-        <Border x:Name="RootBorder" Background="#111113" CornerRadius="8" BorderBrush="#2c2c36" BorderThickness="1" Padding="5">
+        <Border x:Name="RootBorder" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#111113" CornerRadius="8" BorderBrush="#2c2c36" BorderThickness="1" Padding="5">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="12" ShadowDepth="4" Opacity="0.6"/>
             </Border.Effect>
