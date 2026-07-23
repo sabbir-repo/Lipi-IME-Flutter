@@ -178,8 +178,8 @@ namespace LipiDashboard
                 using (var client = new System.IO.Pipes.NamedPipeClientStream(".", "LipiImePipe", System.IO.Pipes.PipeDirection.InOut))
                 {
                     await client.ConnectAsync(2000); // 2 second timeout
-                    using (var writer = new System.IO.StreamWriter(client, System.Text.Encoding.UTF8, 1024, true))
-                    using (var reader = new System.IO.StreamReader(client, System.Text.Encoding.UTF8, true, 1024, true))
+                    using (var writer = new System.IO.StreamWriter(client, new System.Text.UTF8Encoding(false), 1024, true))
+                    using (var reader = new System.IO.StreamReader(client, new System.Text.UTF8Encoding(false), true, 1024, true))
                     {
                         writer.AutoFlush = true;
                         await writer.WriteLineAsync("CLEAR_CACHE");
@@ -323,8 +323,8 @@ namespace LipiDashboard
                 using (var client = new System.IO.Pipes.NamedPipeClientStream(".", "LipiImePipe", System.IO.Pipes.PipeDirection.InOut))
                 {
                     await client.ConnectAsync(1000);
-                    using (var writer = new System.IO.StreamWriter(client, System.Text.Encoding.UTF8, 1024, true))
-                    using (var reader = new System.IO.StreamReader(client, System.Text.Encoding.UTF8, true, 1024, true))
+                    using (var writer = new System.IO.StreamWriter(client, new System.Text.UTF8Encoding(false), 1024, true))
+                    using (var reader = new System.IO.StreamReader(client, new System.Text.UTF8Encoding(false), true, 1024, true))
                     {
                         writer.AutoFlush = true;
                         await writer.WriteLineAsync("RELOAD_CACHE");
@@ -342,8 +342,8 @@ namespace LipiDashboard
                 using (var client = new System.IO.Pipes.NamedPipeClientStream(".", "LipiImePipe", System.IO.Pipes.PipeDirection.InOut))
                 {
                     await client.ConnectAsync(1000);
-                    using (var writer = new System.IO.StreamWriter(client, System.Text.Encoding.UTF8, 1024, true))
-                    using (var reader = new System.IO.StreamReader(client, System.Text.Encoding.UTF8, true, 1024, true))
+                    using (var writer = new System.IO.StreamWriter(client, new System.Text.UTF8Encoding(false), 1024, true))
+                    using (var reader = new System.IO.StreamReader(client, new System.Text.UTF8Encoding(false), true, 1024, true))
                     {
                         writer.AutoFlush = true;
                         await writer.WriteLineAsync("RELOAD_CONFIG");

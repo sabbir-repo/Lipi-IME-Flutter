@@ -1,6 +1,7 @@
 #include "IpcClient.h"
 #include <vector>
 #include <fstream>
+#include <algorithm>
 
 void LogDebug(const std::string& msg) {
     std::ofstream log("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
@@ -174,6 +175,10 @@ bool IpcClient::ReceiveMessage(std::wstring& outMsg)
 
     // Remove the null terminator if present
     if (!utf16Msg.empty() && utf16Msg.back() == L'\0') utf16Msg.pop_back();
+
+    // Strip BOM (\uFEFF) and Zero-Width Space (\u200B) if present
+    utf16Msg.erase(std::remove(utf16Msg.begin(), utf16Msg.end(), L'\xFEFF'), utf16Msg.end());
+    utf16Msg.erase(std::remove(utf16Msg.begin(), utf16Msg.end(), L'\x200B'), utf16Msg.end());
 
     outMsg = utf16Msg;
     return true;

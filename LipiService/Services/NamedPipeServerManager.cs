@@ -59,8 +59,8 @@ namespace LipiService.Services
             {
                 using (pipeServer)
                 {
-                    using (var reader = new StreamReader(pipeServer, Encoding.UTF8, leaveOpen: true))
-                    using (var writer = new StreamWriter(pipeServer, Encoding.UTF8, leaveOpen: true) { AutoFlush = true })
+                    using (var reader = new StreamReader(pipeServer, new UTF8Encoding(false), leaveOpen: true))
+                    using (var writer = new StreamWriter(pipeServer, new UTF8Encoding(false), leaveOpen: true) { AutoFlush = true })
                     {
                         Console.WriteLine("Entering while loop...");
                         while (pipeServer.IsConnected)

@@ -95,6 +95,18 @@ namespace LipiService.Services
         {
             if (string.IsNullOrWhiteSpace(word) || suggestions == null || suggestions.Count == 0) return;
             
+            var sanitizedSuggestions = new List<string>();
+            foreach (var s in suggestions)
+            {
+                if (string.IsNullOrWhiteSpace(s)) continue;
+                var cleaned = s.Replace("\uFEFF", "").Replace("\u200B", "").Trim();
+                if (!string.IsNullOrWhiteSpace(cleaned) && !sanitizedSuggestions.Contains(cleaned))
+                {
+                    sanitizedSuggestions.Add(cleaned);
+                }
+            }
+            if (sanitizedSuggestions.Count == 0) return;
+            
             lock (_cacheLock)
             {
                 if (!_offlineCache.ContainsKey(langCode))
@@ -102,7 +114,7 @@ namespace LipiService.Services
                     _offlineCache[langCode] = new Dictionary<string, List<string>>();
                 }
                 
-                _offlineCache[langCode][word] = suggestions;
+                _offlineCache[langCode][word] = sanitizedSuggestions;
             }
             SaveCache();
         }
