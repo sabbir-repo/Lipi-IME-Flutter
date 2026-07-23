@@ -411,8 +411,9 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
     if (wParam != 0 && !isTerminator) {
         // Debounce: if there are pending key events in the queue, skip fetching suggestions
         // This prevents blocking on fast typing and avoids API rate limiting.
+        // Bypass debounce if we are explicitly force fetching (wParam == 0x10000)
         MSG msg;
-        if (PeekMessage(&msg, NULL, WM_KEYDOWN, WM_KEYDOWN, PM_NOREMOVE)) {
+        if (wParam != 0x10000 && PeekMessage(&msg, NULL, WM_KEYDOWN, WM_KEYDOWN, PM_NOREMOVE)) {
             return S_OK;
         }
 
