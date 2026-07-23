@@ -230,9 +230,9 @@ namespace LipiDashboard
                     var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(content);
                     
                     var wordsList = new System.Collections.ObjectModel.ObservableCollection<DictItem>();
-                    if (dict != null && dict.ContainsKey("bn-t-i0-und"))
+                    if (dict != null && dict.ContainsKey("custom_dictionary"))
                     {
-                        foreach (var kvp in dict["bn-t-i0-und"])
+                        foreach (var kvp in dict["custom_dictionary"])
                         {
                             if (kvp.Value != null && kvp.Value.Count > 0)
                             {
@@ -268,16 +268,16 @@ namespace LipiDashboard
                     dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(content) ?? dict;
                 }
                 
-                if (!dict.ContainsKey("bn-t-i0-und")) dict["bn-t-i0-und"] = new Dictionary<string, List<string>>();
+                if (!dict.ContainsKey("custom_dictionary")) dict["custom_dictionary"] = new Dictionary<string, List<string>>();
                 
-                if (dict["bn-t-i0-und"].ContainsKey(eng))
+                if (dict["custom_dictionary"].ContainsKey(eng))
                 {
-                    dict["bn-t-i0-und"][eng].Remove(bn);
-                    dict["bn-t-i0-und"][eng].Insert(0, bn);
+                    dict["custom_dictionary"][eng].Remove(bn);
+                    dict["custom_dictionary"][eng].Insert(0, bn);
                 }
                 else
                 {
-                    dict["bn-t-i0-und"][eng] = new List<string> { bn };
+                    dict["custom_dictionary"][eng] = new List<string> { bn };
                 }
                 
                 System.IO.File.WriteAllText(path, System.Text.Json.JsonSerializer.Serialize(dict, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
@@ -303,9 +303,9 @@ namespace LipiDashboard
                         var content = System.IO.File.ReadAllText(path);
                         var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(content);
                         
-                        if (dict != null && dict.ContainsKey("bn-t-i0-und") && dict["bn-t-i0-und"].ContainsKey(eng))
+                        if (dict != null && dict.ContainsKey("custom_dictionary") && dict["custom_dictionary"].ContainsKey(eng))
                         {
-                            dict["bn-t-i0-und"].Remove(eng);
+                            dict["custom_dictionary"].Remove(eng);
                             System.IO.File.WriteAllText(path, System.Text.Json.JsonSerializer.Serialize(dict, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
                             LoadDictionary();
                             await NotifyServiceCacheReload();

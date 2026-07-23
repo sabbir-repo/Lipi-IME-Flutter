@@ -113,6 +113,12 @@ namespace LipiService.Services
             
             lock (_cacheLock)
             {
+                if (_offlineCache.TryGetValue("custom_dictionary", out var customCache))
+                {
+                    if (customCache.TryGetValue(text, out var customSuggestions)) return customSuggestions;
+                    if (customCache.TryGetValue(textLower, out var customSuggestionsLower)) return customSuggestionsLower;
+                }
+                
                 if (_offlineCache.TryGetValue(langCode, out var langCache))
                 {
                     if (langCache.TryGetValue(text, out var suggestions)) return suggestions;
