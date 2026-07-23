@@ -126,6 +126,13 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
         return S_OK;
     }
 
+    if ((kbd[VK_MENU] & 0x80) && wParam == 0x52) { // Alt+R
+        if (!_currentWord.empty()) {
+            *pfEaten = TRUE;
+            return S_OK;
+        }
+    }
+
     if ((kbd[VK_CONTROL] & 0x80) || (kbd[VK_MENU] & 0x80) || (kbd[VK_LWIN] & 0x80) || (kbd[VK_RWIN] & 0x80)) {
         *pfEaten = FALSE;
         return S_OK;
