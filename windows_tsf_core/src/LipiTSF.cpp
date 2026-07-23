@@ -415,15 +415,33 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         return S_OK;
     }
 
-    if (wParam != 0 && !isTerminator) {
-        // Debounce: if there are pending key events in the queue, skip fetching suggestions
-        // This prevents blocking on fast typing and avoids API rate limiting.
-        // Bypass debounce if we are explicitly force fetching (wParam == 0x10000)
-        MSG msg;
-        if (wParam != 0x10000 && PeekMessage(&msg, NULL, WM_KEYDOWN, WM_KEYDOWN, PM_NOREMOVE)) {
+    if (_currentWord == L"clear") {
+            _ipc.SendMessage(L"CLEAR_CACHE");
+            _currentWord.clear();
+            _lastFetchedWord.clear();
+            _suggestions.clear();
+            _selectedIndex = 0;
+            _ipc.SendMessage(L"HIDE");
             return S_OK;
         }
 
+    bool needsFetch = false;
+    if (wParam == 0x10000) {
+        needsFetch = true;
+    } else if (isTerminator) {
+        if (_lastFetchedWord != _currentWord && !_currentWord.empty()) {
+            needsFetch = true;
+        }
+    } else if (wParam != 0) {
+        if (_lastFetchedWord != _currentWord && !_currentWord.empty()) {
+            MSG msg;
+            if (!PeekMessage(&msg, NULL, WM_KEYDOWN, WM_KEYDOWN, PM_NOREMOVE)) {
+                needsFetch = true;
+            }
+        }
+    }
+
+    if (needsFetch) {
         std::wstring request = L"bn-t-i0-und|" + _currentWord;
         if (wParam == 0x10000) {
             request = L"FORCE_FETCH_API|" + _currentWord;
@@ -441,7 +459,12 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
                 response.erase(0, pos + 1);
             }
             if (!response.empty()) _suggestions.push_back(response);
+            
+            _lastFetchedWord = _currentWord;
         }
+    } else if (wParam != 0 && !isTerminator && !_currentWord.empty() && _lastFetchedWord != _currentWord) {
+        // Debounce: we skipped fetch, wait for next key to update UI and composition
+        return S_OK;
     }
 
     if (isTerminator && !_suggestions.empty()) {
@@ -529,6 +552,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         }
 
         _currentWord.clear();
+        _lastFetchedWord.clear();
         _suggestions.clear();
         _selectedIndex = 0;
         _ipc.SendMessage(L"HIDE");

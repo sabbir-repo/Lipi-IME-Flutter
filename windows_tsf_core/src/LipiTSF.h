@@ -46,6 +46,7 @@ private:
     IpcClient _ipc;
 
     std::wstring _currentWord;
+    std::wstring _lastFetchedWord;
     ITfComposition* _pComposition;
     bool _isActive;
     
