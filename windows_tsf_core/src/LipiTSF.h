@@ -34,6 +34,8 @@ public:
 private:
     void _InitKeyEventSink();
     void _UninitKeyEventSink();
+    void _InitPreservedKeys();
+    void _UninitPreservedKeys();
     void _HandleKeystroke(ITfContext *pic, WPARAM wParam);
     
 public:

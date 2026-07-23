@@ -60,6 +60,7 @@ STDMETHODIMP CLipiTSF::Activate(ITfThreadMgr *ptim, TfClientId tid)
     _tid = tid;
 
     _InitKeyEventSink();
+    _InitPreservedKeys();
     _ipc.Connect();
 
     return S_OK;
@@ -67,6 +68,7 @@ STDMETHODIMP CLipiTSF::Activate(ITfThreadMgr *ptim, TfClientId tid)
 
 STDMETHODIMP CLipiTSF::Deactivate()
 {
+    _UninitPreservedKeys();
     _UninitKeyEventSink();
     _ipc.Disconnect();
 
@@ -99,6 +101,38 @@ void CLipiTSF::_UninitKeyEventSink()
     }
 }
 
+void CLipiTSF::_InitPreservedKeys()
+{
+    ITfKeystrokeMgr *pKeystrokeMgr = NULL;
+    if (SUCCEEDED(_ptim->QueryInterface(IID_ITfKeystrokeMgr, (void **)&pKeystrokeMgr)))
+    {
+        TF_PRESERVEDKEY tfpkForceFetch = { 'R', TF_MOD_ALT };
+        const wchar_t descForceFetch[] = L"Force Fetch API";
+        pKeystrokeMgr->PreserveKey(_tid, GUID_PRESERVEDKEY_FORCEFETCH, &tfpkForceFetch, descForceFetch, (ULONG)wcslen(descForceFetch));
+
+        TF_PRESERVEDKEY tfpkToggle = { 'T', TF_MOD_ALT };
+        const wchar_t descToggle[] = L"Toggle Lipi IME";
+        pKeystrokeMgr->PreserveKey(_tid, GUID_PRESERVEDKEY_TOGGLE, &tfpkToggle, descToggle, (ULONG)wcslen(descToggle));
+
+        pKeystrokeMgr->Release();
+    }
+}
+
+void CLipiTSF::_UninitPreservedKeys()
+{
+    ITfKeystrokeMgr *pKeystrokeMgr = NULL;
+    if (SUCCEEDED(_ptim->QueryInterface(IID_ITfKeystrokeMgr, (void **)&pKeystrokeMgr)))
+    {
+        TF_PRESERVEDKEY tfpkForceFetch = { 'R', TF_MOD_ALT };
+        pKeystrokeMgr->UnpreserveKey(GUID_PRESERVEDKEY_FORCEFETCH, &tfpkForceFetch);
+
+        TF_PRESERVEDKEY tfpkToggle = { 'T', TF_MOD_ALT };
+        pKeystrokeMgr->UnpreserveKey(GUID_PRESERVEDKEY_TOGGLE, &tfpkToggle);
+
+        pKeystrokeMgr->Release();
+    }
+}
+
 STDMETHODIMP CLipiTSF::OnSetFocus(BOOL fForeground)
 {
     if (!fForeground) {
@@ -120,18 +154,6 @@ STDMETHODIMP CLipiTSF::OnTestKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lPar
     
     BYTE kbd[256];
     GetKeyboardState(kbd);
-
-    if ((GetAsyncKeyState(VK_MENU) < 0) && wParam == 0x54) { // Alt+T
-        *pfEaten = TRUE;
-        return S_OK;
-    }
-
-    if ((GetAsyncKeyState(VK_MENU) < 0) && wParam == 0x52) { // Alt+R
-        if (!_currentWord.empty()) {
-            *pfEaten = TRUE;
-            return S_OK;
-        }
-    }
 
     if ((GetAsyncKeyState(VK_CONTROL) < 0) || (GetAsyncKeyState(VK_MENU) < 0) || (GetAsyncKeyState(VK_LWIN) < 0) || (GetAsyncKeyState(VK_RWIN) < 0)) {
         *pfEaten = FALSE;
@@ -179,25 +201,6 @@ STDMETHODIMP CLipiTSF::OnKeyDown(ITfContext *pic, WPARAM wParam, LPARAM lParam, 
 
     BYTE kbd[256];
     GetKeyboardState(kbd);
-
-    if ((GetAsyncKeyState(VK_MENU) < 0) && wParam == 0x54) { // Alt+T
-        *pfEaten = TRUE;
-        _isActive = !_isActive;
-        if (!_isActive && !_currentWord.empty()) {
-            _currentWord.clear(); // just clear internal state to avoid ghost chars
-            _suggestions.clear();
-            _ipc.SendMessage(L"HIDE");
-        }
-        return S_OK;
-    }
-
-    if ((GetAsyncKeyState(VK_MENU) < 0) && wParam == 0x52) { // Alt+R
-        if (!_currentWord.empty()) {
-            *pfEaten = TRUE;
-            _HandleKeystroke(pic, 0x10000); // 0x10000 flag for Force Fetch
-            return S_OK;
-        }
-    }
 
     if ((GetAsyncKeyState(VK_CONTROL) < 0) || (GetAsyncKeyState(VK_MENU) < 0) || (GetAsyncKeyState(VK_LWIN) < 0) || (GetAsyncKeyState(VK_RWIN) < 0)) {
         *pfEaten = FALSE;
@@ -258,6 +261,28 @@ STDMETHODIMP CLipiTSF::OnKeyUp(ITfContext *pic, WPARAM wParam, LPARAM lParam, BO
 STDMETHODIMP CLipiTSF::OnPreservedKey(ITfContext *pic, REFGUID rguid, BOOL *pfEaten)
 {
     if (pfEaten == NULL) return E_INVALIDARG;
+
+    if (IsEqualGUID(rguid, GUID_PRESERVEDKEY_FORCEFETCH))
+    {
+        if (_isActive && !_currentWord.empty())
+        {
+            *pfEaten = TRUE;
+            _HandleKeystroke(pic, 0x10000); // 0x10000 flag for Force Fetch
+            return S_OK;
+        }
+    }
+    else if (IsEqualGUID(rguid, GUID_PRESERVEDKEY_TOGGLE))
+    {
+        *pfEaten = TRUE;
+        _isActive = !_isActive;
+        if (!_isActive && !_currentWord.empty()) {
+            _currentWord.clear();
+            _suggestions.clear();
+            _ipc.SendMessage(L"HIDE");
+        }
+        return S_OK;
+    }
+
     *pfEaten = FALSE;
     return S_OK;
 }
