@@ -4,8 +4,12 @@
 #include <algorithm>
 
 void LogDebug(const std::string& msg) {
+#ifdef _DEBUG
     std::ofstream log("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
     log << msg << "\n";
+#else
+    (void)msg; // no-op in Release builds
+#endif
 }
 
 const std::wstring IpcClient::PIPE_NAME = L"\\\\.\\pipe\\LipiImePipe";
@@ -88,6 +92,7 @@ void IpcClient::Disconnect()
         CloseHandle(_hPipe);
         _hPipe = INVALID_HANDLE_VALUE;
     }
+    _readBuffer.clear();
 }
 
 bool IpcClient::SendMessage(const std::wstring& msg)
@@ -137,23 +142,28 @@ bool IpcClient::ReceiveMessage(std::wstring& outMsg)
     if (!IsConnected()) return false;
 
     std::string utf8Msg;
-    char ch;
-    DWORD cbRead = 0;
 
     LogDebug("Calling ReadFile loop...");
     while (true)
     {
-        BOOL bSuccess = ReadFile(_hPipe, &ch, 1, &cbRead, NULL);
+        size_t newlinePos = _readBuffer.find('\n');
+        if (newlinePos != std::string::npos)
+        {
+            utf8Msg = _readBuffer.substr(0, newlinePos);
+            _readBuffer.erase(0, newlinePos + 1);
+            break;
+        }
+
+        char chunk[512];
+        DWORD cbRead = 0;
+        BOOL bSuccess = ReadFile(_hPipe, chunk, sizeof(chunk), &cbRead, NULL);
         if (!bSuccess || cbRead == 0)
         {
             LogDebug("ReadFile failed or disconnected.");
             Disconnect();
             return false;
         }
-        if (ch == '\n') {
-            break;
-        }
-        utf8Msg += ch;
+        _readBuffer.append(chunk, cbRead);
     }
 
     // Remove trailing \r if present

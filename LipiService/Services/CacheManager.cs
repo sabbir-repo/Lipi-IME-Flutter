@@ -46,6 +46,7 @@ namespace LipiService.Services
             
             _cacheFilePath = Path.Combine(lipiDir, "offline_cache.json");
             ReloadCache();
+            AppDomain.CurrentDomain.ProcessExit += (_, _) => SaveCacheNow();
         }
 
         public void ReloadCache()
@@ -77,7 +78,15 @@ namespace LipiService.Services
             }
         }
 
-        private void SaveCache()
+        private System.Threading.Timer? _saveTimer;
+        private void ScheduleSave()
+        {
+            // coalesce bursts of learned words into one disk write, 2s after idle
+            _saveTimer ??= new System.Threading.Timer(_ => SaveCacheNow(), null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            _saveTimer.Change(TimeSpan.FromSeconds(2), System.Threading.Timeout.InfiniteTimeSpan);
+        }
+
+        public void SaveCacheNow()
         {
             try
             {
@@ -85,7 +94,11 @@ namespace LipiService.Services
                     WriteIndented = true,
                     Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 };
-                var json = JsonSerializer.Serialize(_offlineCache, options);
+                string json;
+                lock (_cacheLock)
+                {
+                    json = JsonSerializer.Serialize(_offlineCache, options);
+                }
                 File.WriteAllText(_cacheFilePath, json);
             }
             catch (Exception ex)
@@ -119,7 +132,7 @@ namespace LipiService.Services
                 
                 _offlineCache[langCode][word] = sanitizedSuggestions;
             }
-            SaveCache();
+            ScheduleSave();
         }
 
         public List<string>? GetCachedSuggestions(string langCode, string text)
@@ -167,7 +180,7 @@ namespace LipiService.Services
                         {
                             suggestions.Remove(suggestion);
                             suggestions.Insert(0, suggestion);
-                            SaveCache();
+                            SaveCacheNow();
                             return;
                         }
                     }
@@ -186,7 +199,7 @@ namespace LipiService.Services
                             newSuggestions.Insert(0, suggestion);
                             
                             _offlineCache[langCode][wordLower] = newSuggestions;
-                            SaveCache();
+                            SaveCacheNow();
                         }
                     }
                 }
@@ -199,7 +212,7 @@ namespace LipiService.Services
             {
                 _offlineCache.Clear();
             }
-            SaveCache();
+            SaveCacheNow();
         }
     }
 }

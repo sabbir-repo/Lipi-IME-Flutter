@@ -18,4 +18,5 @@ public:
 private:
     HANDLE _hPipe;
     static const std::wstring PIPE_NAME;
+    std::string _readBuffer;
 };

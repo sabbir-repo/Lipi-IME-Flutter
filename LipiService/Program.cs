@@ -69,6 +69,7 @@ namespace LipiService
             
             ToolStripMenuItem exitItem = new ToolStripMenuItem("Exit Lipi IME");
             exitItem.Click += (s, e) => {
+                cacheManager.SaveCacheNow();
                 trayIcon.Visible = false;
                 trayIcon.Dispose();
                 app.Shutdown();
