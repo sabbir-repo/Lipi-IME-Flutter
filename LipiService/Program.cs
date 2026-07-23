@@ -2,8 +2,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
+using System.Windows;
 using LipiService.Services;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace LipiService
 {
@@ -39,13 +40,13 @@ namespace LipiService
             app.ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown;
             CandidateUI = new CandidateWindow();
             
-            NotifyIcon trayIcon = new NotifyIcon();
+            var trayIcon = new TaskbarIcon();
             trayIcon.Icon = System.Drawing.SystemIcons.Information;
-            trayIcon.Text = "Lipi IME Service";
-            trayIcon.Visible = true;
+            trayIcon.ToolTipText = "Lipi IME Service";
+            trayIcon.Visibility = Visibility.Visible;
 
-            ContextMenuStrip contextMenu = new ContextMenuStrip();
-            ToolStripMenuItem dashboardItem = new ToolStripMenuItem("Open Dashboard");
+            var contextMenu = new System.Windows.Controls.ContextMenu();
+            var dashboardItem = new System.Windows.Controls.MenuItem { Header = "Open Dashboard" };
             dashboardItem.Click += (s, e) => {
                 string processName = "LipiDashboard";
                 var running = Process.GetProcessesByName(processName);
@@ -63,23 +64,23 @@ namespace LipiService
                     else if (File.Exists(possiblePath3))
                         Process.Start(possiblePath3);
                     else
-                        System.Windows.Forms.MessageBox.Show("Could not find LipiDashboard.exe");
+                        System.Windows.MessageBox.Show("Could not find LipiDashboard.exe");
                 }
             };
             
-            ToolStripMenuItem exitItem = new ToolStripMenuItem("Exit Lipi IME");
+            var exitItem = new System.Windows.Controls.MenuItem { Header = "Exit Lipi IME" };
             exitItem.Click += (s, e) => {
                 cacheManager.SaveCacheNow();
-                trayIcon.Visible = false;
+                trayIcon.Visibility = Visibility.Collapsed;
                 trayIcon.Dispose();
                 app.Shutdown();
             };
 
             contextMenu.Items.Add(dashboardItem);
-            contextMenu.Items.Add(new ToolStripSeparator());
+            contextMenu.Items.Add(new System.Windows.Controls.Separator());
             contextMenu.Items.Add(exitItem);
 
-            trayIcon.ContextMenuStrip = contextMenu;
+            trayIcon.ContextMenu = contextMenu;
 
             pipeServer.Start();
             
