@@ -46,17 +46,6 @@
                 <StackPanel x:Name="TypingRulesPanel" Spacing="20" Visibility="Collapsed">
                     <TextBlock Text="Typing Rules" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,0,0,20"/>
                     <StackPanel Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="16" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <TextBlock Text="Disable IME in Web Pages (Website Bypass)" Style="{ThemeResource SubtitleTextBlockStyle}" />
-                                <TextBlock Text="Automatically bypass typing in browser web pages (search bar still works)" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            </StackPanel>
-                            <ToggleSwitch x:Name="BrowserBypassSwitch" Grid.Column="1" Toggled="BrowserBypassSwitch_Toggled" />
-                        </Grid>
                     </StackPanel>
                 </StackPanel>
 

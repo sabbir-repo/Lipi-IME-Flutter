@@ -55,7 +55,6 @@ namespace LipiDashboard
             _isLoaded = false;
             OnlineModeSwitch.IsOn = _settingsManager.CurrentSettings.OnlineMode;
             OfflineModeSwitch.IsOn = _settingsManager.CurrentSettings.OfflineMode;
-            BrowserBypassSwitch.IsOn = _settingsManager.CurrentSettings.BrowserBypass;
             
             try {
                 SugBgColorPicker.Color = Microsoft.UI.ColorHelper.FromArgb(255, 
@@ -102,13 +101,7 @@ namespace LipiDashboard
             _settingsManager.SaveSettings();
         }
 
-        private async void BrowserBypassSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!_isLoaded) return;
-            _settingsManager.CurrentSettings.BrowserBypass = BrowserBypassSwitch.IsOn;
-            _settingsManager.SaveSettings();
-            await NotifyServiceConfigUpdate();
-        }
+
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
