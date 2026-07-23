@@ -44,6 +44,52 @@ namespace LipiService
             InitializeComponent();
             Suggestions = new ObservableCollection<CandidateItem>();
             SuggestionsList.ItemsSource = Suggestions;
+            this.SizeChanged += CandidateWindow_SizeChanged;
+        }
+
+        private double _targetX = double.NaN;
+        private double _targetY = double.NaN;
+
+        public void SetPosition(double x, double y)
+        {
+            _targetX = x;
+            _targetY = y;
+            UpdatePosition();
+        }
+
+        private void CandidateWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdatePosition();
+        }
+
+        private void UpdatePosition()
+        {
+            if (double.IsNaN(_targetX) || double.IsNaN(_targetY)) return;
+
+            var drawingPoint = new System.Drawing.Point((int)_targetX, (int)_targetY);
+            var screen = System.Windows.Forms.Screen.FromPoint(drawingPoint);
+            var workArea = screen.WorkingArea;
+            
+            double w = this.ActualWidth;
+            double h = this.ActualHeight;
+            if (w == 0 || h == 0) return;
+
+            double newLeft = _targetX;
+            double newTop = _targetY;
+
+            if (newLeft + w > workArea.Right) {
+                newLeft = workArea.Right - w;
+            }
+            
+            if (newTop + h > workArea.Bottom) {
+                newTop = _targetY - h - 35; // 35 is approx text height + padding to push above cursor
+            }
+
+            if (newLeft < workArea.Left) newLeft = workArea.Left;
+            if (newTop < workArea.Top) newTop = workArea.Top;
+
+            this.Left = newLeft;
+            this.Top = newTop;
         }
 
         public void UpdateSuggestions(string[] words, int selectedIndex, string bufferText = "", LipiService.Services.Settings settings = null)

@@ -101,6 +101,11 @@ void CLipiTSF::_UninitKeyEventSink()
 
 STDMETHODIMP CLipiTSF::OnSetFocus(BOOL fForeground)
 {
+    if (!fForeground) {
+        _currentWord.clear();
+        _suggestions.clear();
+        _ipc.SendMessage(L"HIDE");
+    }
     return S_OK;
 }
 
@@ -258,6 +263,8 @@ STDMETHODIMP CLipiTSF::OnCompositionTerminated(TfEditCookie ecWrite, ITfComposit
         _pComposition = NULL;
     }
     _currentWord.clear();
+    _suggestions.clear();
+    _ipc.SendMessage(L"HIDE");
     return S_OK;
 }
 

@@ -141,8 +141,7 @@ namespace LipiService.Services
                                         System.Windows.Application.Current.Dispatcher.Invoke(() => {
                                             if (Program.CandidateUI != null) {
                                                 Program.CandidateUI.UpdateSuggestions(words, selectedIndex, bufferText, _settingsManager.CurrentSettings);
-                                                Program.CandidateUI.Left = x;
-                                                Program.CandidateUI.Top = y + 25;
+                                                Program.CandidateUI.SetPosition(x, y + 25);
                                                 Program.CandidateUI.Show();
                                             }
                                         });
