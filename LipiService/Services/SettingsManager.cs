@@ -27,6 +27,7 @@ namespace LipiService.Services
 
     public class SettingsManager
     {
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions { WriteIndented = true };
         private readonly string _settingsFilePath;
         private readonly string _lipiDir;
         private FileSystemWatcher? _watcher;
@@ -104,8 +105,7 @@ namespace LipiService.Services
             try
             {
                 if (_watcher != null) _watcher.EnableRaisingEvents = false; // Prevent circular trigger
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                var json = JsonSerializer.Serialize(CurrentSettings, options);
+                var json = JsonSerializer.Serialize(CurrentSettings, _jsonOptions);
                 File.WriteAllText(_settingsFilePath, json);
             }
             catch (Exception ex)

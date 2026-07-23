@@ -7,6 +7,10 @@ namespace LipiService.Services
 {
     public class CacheManager
     {
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions { 
+            WriteIndented = true,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
         private readonly string _cacheFilePath;
         private Dictionary<string, Dictionary<string, List<string>>> _offlineCache = new();
         private readonly object _cacheLock = new object();
@@ -90,14 +94,10 @@ namespace LipiService.Services
         {
             try
             {
-                var options = new JsonSerializerOptions { 
-                    WriteIndented = true,
-                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-                };
                 string json;
                 lock (_cacheLock)
                 {
-                    json = JsonSerializer.Serialize(_offlineCache, options);
+                    json = JsonSerializer.Serialize(_offlineCache, _jsonOptions);
                 }
                 File.WriteAllText(_cacheFilePath, json);
             }
