@@ -81,7 +81,10 @@ namespace LipiService.Services
         {
             try
             {
-                var options = new JsonSerializerOptions { WriteIndented = true };
+                var options = new JsonSerializerOptions { 
+                    WriteIndented = true,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                };
                 var json = JsonSerializer.Serialize(_offlineCache, options);
                 File.WriteAllText(_cacheFilePath, json);
             }
