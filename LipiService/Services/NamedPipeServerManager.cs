@@ -3,7 +3,10 @@ using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace LipiService.Services
 {
@@ -14,6 +17,28 @@ namespace LipiService.Services
         private readonly SettingsManager _settingsManager;
         private readonly CacheManager _cacheManager;
         private bool _isRunning = false;
+        private Timer? _idleTimer;
+
+        [DllImport("kernel32.dll")]
+        static extern bool SetProcessWorkingSetSize(IntPtr hProcess, IntPtr min, IntPtr max);
+
+        private void ResetIdleTimer()
+        {
+            if (_idleTimer == null)
+            {
+                _idleTimer = new Timer(_ => 
+                {
+                    try {
+                        GC.Collect(2, GCCollectionMode.Optimized, blocking: false);
+                        SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, (IntPtr)(-1), (IntPtr)(-1));
+                    } catch {}
+                }, null, 30000, Timeout.Infinite);
+            }
+            else
+            {
+                _idleTimer.Change(30000, Timeout.Infinite);
+            }
+        }
 
         public NamedPipeServerManager(ApiService apiService, SettingsManager settingsManager, CacheManager cacheManager)
         {
@@ -68,6 +93,8 @@ namespace LipiService.Services
                             Console.WriteLine("Calling ReadLineAsync...");
                             string request = await reader.ReadLineAsync();
                             if (request == null) break;
+
+                            ResetIdleTimer();
 
                             Console.WriteLine($"Received request: {request}");
 
