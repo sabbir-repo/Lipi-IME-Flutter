@@ -352,6 +352,7 @@ void CLipiTSF::_HandleKeystroke(ITfContext *pic, WPARAM wParam) {
 }
 
 HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam) {
+#ifdef _DEBUG
     // Add temporary inline helper for logging strings
     auto to_utf8 = [](const std::wstring& wstr) -> std::string {
         if (wstr.empty()) return "";
@@ -365,6 +366,7 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
     std::ofstream log("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
     log << "DoEditSession START. wParam=" << wParam << " currentWord=" << to_utf8(_currentWord) << " suggestionsSize=" << _suggestions.size() << "\n";
     log.close();
+#endif
 
     bool isTerminator = false;
     wchar_t termChar = 0;
@@ -556,14 +558,18 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
             for (const auto& s : _suggestions) {
                 learnReq += L"|" + s;
             }
+#ifdef _DEBUG
             std::ofstream logLearn("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
             logLearn << "SENDING LEARN: " << to_utf8(learnReq) << "\n";
             logLearn.close();
+#endif
             _ipc.SendMessage(learnReq);
         } else {
+#ifdef _DEBUG
             std::ofstream logFail("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
             logFail << "LEARN FAILED. wordToLearn=" << to_utf8(wordToLearn) << " _suggestions.size=" << _suggestions.size() << " _selectedIndex=" << _selectedIndex << "\n";
             logFail.close();
+#endif
         }
 
         _currentWord.clear();
@@ -598,9 +604,11 @@ HRESULT CLipiTSF::_DoEditSession(TfEditCookie ec, ITfContext *pic, WPARAM wParam
         }
     }
 
+#ifdef _DEBUG
     std::ofstream logEnd("D:\\PortableDev\\Temp\\LipiTSF.log", std::ios_base::app);
     logEnd << "DoEditSession END.\n";
     logEnd.close();
+#endif
 
     return S_OK;
 }

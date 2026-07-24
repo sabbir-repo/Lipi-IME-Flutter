@@ -144,6 +144,8 @@ bool IpcClient::ReceiveMessage(std::wstring& outMsg)
     std::string utf8Msg;
 
     LogDebug("Calling ReadFile loop...");
+    // Hard deadline so a busy/hung service can never freeze the host application.
+    const ULONGLONG deadline = GetTickCount64() + 1500;
     while (true)
     {
         size_t newlinePos = _readBuffer.find('\n');
@@ -152,6 +154,27 @@ bool IpcClient::ReceiveMessage(std::wstring& outMsg)
             utf8Msg = _readBuffer.substr(0, newlinePos);
             _readBuffer.erase(0, newlinePos + 1);
             break;
+        }
+
+        // Wait for data without blocking forever: poll with PeekNamedPipe until the deadline.
+        DWORD bytesAvail = 0;
+        if (!PeekNamedPipe(_hPipe, NULL, 0, NULL, &bytesAvail, NULL))
+        {
+            LogDebug("PeekNamedPipe failed or disconnected.");
+            Disconnect();
+            return false;
+        }
+        if (bytesAvail == 0)
+        {
+            if (GetTickCount64() >= deadline)
+            {
+                // Timed out: disconnect fully so a late reply can never desync the next request.
+                LogDebug("ReceiveMessage timed out; disconnecting.");
+                Disconnect();
+                return false;
+            }
+            Sleep(2);
+            continue;
         }
 
         char chunk[512];

@@ -165,7 +165,7 @@ namespace LipiService.Services
                                         string[] words = new string[parts.Length - 5];
                                         Array.Copy(parts, 5, words, 0, words.Length);
                                         
-                                        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                                        System.Windows.Application.Current.Dispatcher.InvokeAsync(() => {
                                             if (Program.CandidateUI != null) {
                                                 Program.CandidateUI.UpdateSuggestions(words, selectedIndex, bufferText, _settingsManager.CurrentSettings);
                                                 Program.CandidateUI.SetPosition(x, y + 25);
@@ -178,7 +178,7 @@ namespace LipiService.Services
                             }
                             else if (request == "HIDE")
                             {
-                                System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                                System.Windows.Application.Current.Dispatcher.InvokeAsync(() => {
                                     if (Program.CandidateUI != null) {
                                         Program.CandidateUI.Hide();
                                     }
