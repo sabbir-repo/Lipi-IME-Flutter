@@ -57,6 +57,8 @@ private:
     
     bool _browserBypassEnabled;
     ULONGLONG _lastConfigCheckTime;
+    bool _isExcludedApp;
+    bool _exclusionChecked;
     
     bool _ShouldBypass();
 };

@@ -89,6 +89,10 @@ namespace LipiDashboard
             SugGlassTintSlider.Value = _settingsManager.CurrentSettings.SuggestionGlassTintOpacity;
             SugGlassCornerSlider.Value = _settingsManager.CurrentSettings.SuggestionGlassCornerRadius;
             SugGlassHighlightSlider.Value = _settingsManager.CurrentSettings.SuggestionGlassHighlightOpacity;
+
+            LatencyBudgetSlider.Value = Math.Clamp(_settingsManager.CurrentSettings.OnlineLatencyBudgetMs, 100, 1000);
+            RefreshExcludedAppsList();
+            _ = UpdateServiceStatusAsync();
             
             _isLoaded = true;
         }
@@ -113,7 +117,7 @@ namespace LipiDashboard
         {
             if (args.IsSettingsSelected)
             {
-                GeneralPanel.Visibility = Visibility.Collapsed;
+                GeneralScroller.Visibility = Visibility.Collapsed;
                 AboutPanel.Visibility = Visibility.Collapsed;
                 CustomDictionaryPanel.Visibility = Visibility.Collapsed;
                 TypingRulesPanel.Visibility = Visibility.Collapsed;
@@ -125,7 +129,7 @@ namespace LipiDashboard
                 var selectedItem = args.SelectedItem as NavigationViewItem;
                 string tag = selectedItem?.Tag?.ToString();
 
-                GeneralPanel.Visibility = tag == "General" ? Visibility.Visible : Visibility.Collapsed;
+                GeneralScroller.Visibility = tag == "General" ? Visibility.Visible : Visibility.Collapsed;
                 TypingRulesPanel.Visibility = tag == "TypingRules" ? Visibility.Visible : Visibility.Collapsed;
                 CustomDictionaryPanel.Visibility = tag == "CustomDictionary" ? Visibility.Visible : Visibility.Collapsed;
                 SuggestionUIScroller.Visibility = tag == "SuggestionUI" ? Visibility.Visible : Visibility.Collapsed;
@@ -135,6 +139,11 @@ namespace LipiDashboard
                 if (tag == "CustomDictionary")
                 {
                     LoadDictionary();
+                }
+
+                if (tag == "General")
+                {
+                    _ = UpdateServiceStatusAsync();
                 }
             }
         }
@@ -356,6 +365,142 @@ namespace LipiDashboard
             }
         }
         
+        // ---- General panel: Latency Budget ----
+
+        private async void LatencyBudgetSlider_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            if (!_isLoaded) return;
+            _settingsManager.CurrentSettings.OnlineLatencyBudgetMs = e.NewValue;
+            _settingsManager.SaveSettings();
+            await NotifyServiceConfigUpdate();
+        }
+
+        // ---- General panel: Excluded Apps ----
+
+        private static string NormalizeAppName(string name)
+        {
+            var n = (name ?? "").Trim().ToLowerInvariant();
+            if (n.Length > 0 && !n.EndsWith(".exe")) n += ".exe";
+            return n;
+        }
+
+        private void RefreshExcludedAppsList()
+        {
+            var items = _settingsManager.CurrentSettings.ExcludedApps;
+            ExcludedAppsList.ItemsSource = items != null ? items.ToList() : new List<string>();
+        }
+
+        private async void AddExcludedAppButton_Click(object sender, RoutedEventArgs e)
+        {
+            string app = NormalizeAppName(ExcludedAppInput.Text);
+            if (string.IsNullOrEmpty(app)) return;
+
+            if (_settingsManager.CurrentSettings.ExcludedApps == null)
+                _settingsManager.CurrentSettings.ExcludedApps = new List<string>();
+
+            if (!_settingsManager.CurrentSettings.ExcludedApps.Contains(app))
+            {
+                _settingsManager.CurrentSettings.ExcludedApps.Add(app);
+                _settingsManager.SaveSettings();
+                await NotifyServiceConfigUpdate();
+            }
+
+            ExcludedAppInput.Text = "";
+            RefreshExcludedAppsList();
+        }
+
+        private async void RemoveExcludedAppButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is string app)
+            {
+                if (_settingsManager.CurrentSettings.ExcludedApps != null && _settingsManager.CurrentSettings.ExcludedApps.Remove(app))
+                {
+                    _settingsManager.SaveSettings();
+                    await NotifyServiceConfigUpdate();
+                }
+                RefreshExcludedAppsList();
+            }
+        }
+
+        // ---- General panel: Service Status ----
+
+        private async System.Threading.Tasks.Task UpdateServiceStatusAsync()
+        {
+            bool processRunning = false;
+            try { processRunning = System.Diagnostics.Process.GetProcessesByName("LipiService").Length > 0; } catch { }
+
+            bool pipeAlive = false;
+            if (processRunning)
+            {
+                try
+                {
+                    using (var client = new System.IO.Pipes.NamedPipeClientStream(".", "LipiImePipe", System.IO.Pipes.PipeDirection.InOut))
+                    {
+                        await client.ConnectAsync(500);
+                        pipeAlive = true;
+                    }
+                }
+                catch { }
+            }
+
+            if (processRunning && pipeAlive)
+                ServiceStatusText.Text = "Running — pipe connected";
+            else if (processRunning)
+                ServiceStatusText.Text = "Process running, but pipe not responding";
+            else
+                ServiceStatusText.Text = "Not running";
+        }
+
+        private async void RestartServiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            RestartServiceButton.IsEnabled = false;
+            ServiceStatusText.Text = "Restarting...";
+
+            string exePath = null;
+            try
+            {
+                var procs = System.Diagnostics.Process.GetProcessesByName("LipiService");
+                foreach (var p in procs)
+                {
+                    try { if (exePath == null) exePath = p.MainModule?.FileName; } catch { }
+                    try { p.Kill(); p.WaitForExit(3000); } catch { }
+                    p.Dispose();
+                }
+            }
+            catch { }
+
+            if (string.IsNullOrEmpty(exePath))
+            {
+                var candidate = System.IO.Path.Combine(AppContext.BaseDirectory, "LipiService.exe");
+                if (System.IO.File.Exists(candidate)) exePath = candidate;
+            }
+
+            if (!string.IsNullOrEmpty(exePath) && System.IO.File.Exists(exePath))
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        UseShellExecute = true,
+                        WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
+                    });
+                    await System.Threading.Tasks.Task.Delay(1500); // give the pipe time to come up
+                    await UpdateServiceStatusAsync();
+                }
+                catch (Exception ex)
+                {
+                    ServiceStatusText.Text = $"Failed to start service: {ex.Message}";
+                }
+            }
+            else
+            {
+                ServiceStatusText.Text = "LipiService.exe not found — start the service manually once, then Restart will work.";
+            }
+
+            RestartServiceButton.IsEnabled = true;
+        }
+
         private async System.Threading.Tasks.Task NotifyServiceCacheReload()
         {
             try

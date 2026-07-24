@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 
-CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL), _isActive(true), _selectedIndex(0), _browserBypassEnabled(true), _lastConfigCheckTime(0)
+CLipiTSF::CLipiTSF() : _cRef(1), _ptim(NULL), _tid(TF_CLIENTID_NULL), _pComposition(NULL), _isActive(true), _selectedIndex(0), _browserBypassEnabled(true), _lastConfigCheckTime(0), _isExcludedApp(false), _exclusionChecked(false)
 {
     DllAddRef();
 }
@@ -341,7 +341,32 @@ private:
 };
 
 bool CLipiTSF::_ShouldBypass() {
-    return false;
+    // Excluded Apps: keep the IME fully disabled inside listed processes.
+    // Re-check periodically so Dashboard changes apply without restarting the host app.
+    ULONGLONG now = GetTickCount64();
+    ULONGLONG interval = _exclusionChecked ? 30000 : 5000;
+    if (_lastConfigCheckTime == 0 || (now - _lastConfigCheckTime) >= interval) {
+        _lastConfigCheckTime = now;
+
+        wchar_t path[MAX_PATH] = {0};
+        if (GetModuleFileNameW(NULL, path, MAX_PATH) > 0) {
+            std::wstring exe(path);
+            size_t slash = exe.find_last_of(L"\\/");
+            if (slash != std::wstring::npos) exe = exe.substr(slash + 1);
+            for (size_t i = 0; i < exe.size(); ++i) {
+                if (exe[i] >= L'A' && exe[i] <= L'Z') exe[i] = exe[i] + (L'a' - L'A');
+            }
+
+            if (!exe.empty() && _ipc.Connect()) {
+                std::wstring reply;
+                if (_ipc.SendMessage(L"IS_EXCLUDED|" + exe) && _ipc.ReceiveMessage(reply)) {
+                    _isExcludedApp = (reply == L"1");
+                    _exclusionChecked = true;
+                }
+            }
+        }
+    }
+    return _isExcludedApp;
 }
 
 void CLipiTSF::_HandleKeystroke(ITfContext *pic, WPARAM wParam) {

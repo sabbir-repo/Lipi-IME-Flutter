@@ -26,6 +26,9 @@ namespace LipiDashboard
         public double SuggestionGlassTintOpacity { get; set; } = 40.0;      // 0-100 (%), colour tint strength over the glass
         public double SuggestionGlassCornerRadius { get; set; } = 12.0;     // rounded corner radius of the glass panel
         public double SuggestionGlassHighlightOpacity { get; set; } = 25.0; // 0-100 (%), white edge highlight of the glass
+
+        public double OnlineLatencyBudgetMs { get; set; } = 350.0;          // 100-1000 ms: max time a keystroke waits for the online API
+        public System.Collections.Generic.List<string> ExcludedApps { get; set; } = new System.Collections.Generic.List<string>(); // process names where the IME stays disabled
     }
 
     public class SettingsManager

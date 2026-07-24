@@ -16,8 +16,6 @@ namespace LipiService.Services
         // In-memory memo of recent API results so a slow fetch never blocks typing twice.
         private readonly ConcurrentDictionary<string, List<string>> _recentFetches = new ConcurrentDictionary<string, List<string>>();
         private const int RecentFetchLimit = 300;
-        // Max time a normal keystroke is allowed to wait for the online API.
-        private const int OnlineBudgetMs = 350;
 
         public ApiService(CacheManager cacheManager, SettingsManager settingsManager)
         {
@@ -69,8 +67,9 @@ namespace LipiService.Services
                 }
                 else
                 {
-                    // Normal typing: never block the keystroke for longer than OnlineBudgetMs.
-                    var completed = await Task.WhenAny(apiTask, Task.Delay(OnlineBudgetMs));
+                    // Normal typing: never block the keystroke for longer than the configured latency budget.
+                    int budgetMs = (int)Math.Clamp(_settingsManager.CurrentSettings.OnlineLatencyBudgetMs, 100, 1000);
+                    var completed = await Task.WhenAny(apiTask, Task.Delay(budgetMs));
                     if (completed == apiTask && apiTask.Status == TaskStatus.RanToCompletion && apiTask.Result != null)
                     {
                         MemoizeRecent(memoKey, apiTask.Result);

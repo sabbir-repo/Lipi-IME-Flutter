@@ -147,6 +147,25 @@ namespace LipiService.Services
                                 continue;
                             }
 
+                            if (request.StartsWith("IS_EXCLUDED|"))
+                            {
+                                string exeName = request.Substring("IS_EXCLUDED|".Length).Trim().ToLowerInvariant();
+                                bool excluded = false;
+                                var excludedApps = _settingsManager.CurrentSettings.ExcludedApps;
+                                if (excludedApps != null && exeName.Length > 0)
+                                {
+                                    foreach (var app in excludedApps)
+                                    {
+                                        if (string.IsNullOrWhiteSpace(app)) continue;
+                                        var normalized = app.Trim().ToLowerInvariant();
+                                        if (!normalized.EndsWith(".exe")) normalized += ".exe";
+                                        if (normalized == exeName) { excluded = true; break; }
+                                    }
+                                }
+                                await writer.WriteLineAsync(excluded ? "1" : "0");
+                                continue;
+                            }
+
                             if (request == "GET_CONFIG")
                             {
                                 int browserBypass = _settingsManager.CurrentSettings.BrowserBypass ? 1 : 0;

@@ -28,6 +28,9 @@ namespace LipiService.Services
         public double SuggestionGlassCornerRadius { get; set; } = 12.0;     // rounded corner radius of the glass panel
         public double SuggestionGlassHighlightOpacity { get; set; } = 25.0; // 0-100 (%), white edge highlight of the glass
 
+        public double OnlineLatencyBudgetMs { get; set; } = 350.0;          // 100-1000 ms: max time a keystroke waits for the online API
+        public System.Collections.Generic.List<string> ExcludedApps { get; set; } = new System.Collections.Generic.List<string>(); // process names where the IME stays disabled
+
         public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>> UserPreferences { get; set; } = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string>>();
     }
 
