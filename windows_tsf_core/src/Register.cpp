@@ -87,6 +87,24 @@ BOOL RegisterProfiles()
         0, // icon length
         0, 0, 0, 1, 0);
 
+    if (SUCCEEDED(hr))
+    {
+        // Substitute keyboard layout = English (US).
+        // Without this, when the TIP does not eat keys (excluded apps or
+        // IME toggled off), Windows falls back to the default Bengali
+        // layout and Bangla characters get typed instead of English.
+        HKEY hSubstKey;
+        const WCHAR c_szSubstPath[] =
+            L"SOFTWARE\\Microsoft\\CTF\\TIP\\{8D68E2F2-AE02-4D6F-9C14-A2D0C545E445}"
+            L"\\LanguageProfile\\0x00000845\\{D2765A2C-9E40-41BC-A5BA-F1352A9D6A6A}";
+        if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, c_szSubstPath, 0, KEY_SET_VALUE, &hSubstKey) == ERROR_SUCCESS)
+        {
+            DWORD dwLayout = 0x00000409; // en-US keyboard layout
+            RegSetValueEx(hSubstKey, L"SubstituteLayout", 0, REG_DWORD, (const BYTE*)&dwLayout, sizeof(dwLayout));
+            RegCloseKey(hSubstKey);
+        }
+    }
+
     pProfileMgr->Release();
     return SUCCEEDED(hr);
 }

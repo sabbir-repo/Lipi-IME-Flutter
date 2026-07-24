@@ -25,6 +25,14 @@ namespace LipiDashboard
     {
         private SettingsManager _settingsManager;
         private bool _isLoaded = false;
+        private Microsoft.UI.Xaml.DispatcherTimer _focusTimer;
+        private string _lastFocusedApp = "";
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
 
         public MainWindow()
         {
@@ -48,6 +56,12 @@ namespace LipiDashboard
             LoadSettingsIntoUI();
             
             NavView.SelectedItem = NavView.MenuItems.First();
+
+            _focusTimer = new Microsoft.UI.Xaml.DispatcherTimer();
+            _focusTimer.Interval = TimeSpan.FromSeconds(1);
+            _focusTimer.Tick += FocusTimer_Tick;
+            _focusTimer.Start();
+            this.Closed += (s, e) => { try { _focusTimer.Stop(); } catch { } };
         }
 
         private void LoadSettingsIntoUI()
@@ -390,9 +404,9 @@ namespace LipiDashboard
             ExcludedAppsList.ItemsSource = items != null ? items.ToList() : new List<string>();
         }
 
-        private async void AddExcludedAppButton_Click(object sender, RoutedEventArgs e)
+        private async System.Threading.Tasks.Task AddExcludedAppAsync(string rawName)
         {
-            string app = NormalizeAppName(ExcludedAppInput.Text);
+            string app = NormalizeAppName(rawName);
             if (string.IsNullOrEmpty(app)) return;
 
             if (_settingsManager.CurrentSettings.ExcludedApps == null)
@@ -405,8 +419,42 @@ namespace LipiDashboard
                 await NotifyServiceConfigUpdate();
             }
 
-            ExcludedAppInput.Text = "";
             RefreshExcludedAppsList();
+        }
+
+        private async void AddExcludedAppButton_Click(object sender, RoutedEventArgs e)
+        {
+            await AddExcludedAppAsync(ExcludedAppInput.Text);
+            ExcludedAppInput.Text = "";
+        }
+
+        private async void BlockFocusedAppButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_lastFocusedApp)) return;
+            await AddExcludedAppAsync(_lastFocusedApp);
+        }
+
+        private void FocusTimer_Tick(object sender, object e)
+        {
+            try
+            {
+                IntPtr hwnd = GetForegroundWindow();
+                if (hwnd == IntPtr.Zero) return;
+                GetWindowThreadProcessId(hwnd, out uint pid);
+                if (pid == 0 || pid == (uint)Environment.ProcessId) return;
+
+                using var proc = System.Diagnostics.Process.GetProcessById((int)pid);
+                string exe = NormalizeAppName(proc.ProcessName);
+                if (string.IsNullOrEmpty(exe) || exe == "lipiservice.exe" || exe == "lipidashboard.exe") return;
+
+                if (exe != _lastFocusedApp)
+                {
+                    _lastFocusedApp = exe;
+                    FocusedAppText.Text = exe;
+                    BlockFocusedAppButton.IsEnabled = true;
+                }
+            }
+            catch { }
         }
 
         private async void RemoveExcludedAppButton_Click(object sender, RoutedEventArgs e)

@@ -80,6 +80,17 @@
                     <StackPanel Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="16" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                         <TextBlock Text="Excluded Apps" Style="{ThemeResource SubtitleTextBlockStyle}" />
                         <TextBlock Text="Lipi IME stays disabled inside these apps (process name, e.g. notepad.exe). Changes take effect within ~30 seconds." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Focused app (auto-detected)" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="FocusedAppText" Text="—" FontWeight="SemiBold" />
+                            </StackPanel>
+                            <Button x:Name="BlockFocusedAppButton" Content="Block This App" Grid.Column="1" Margin="8,0,0,0" IsEnabled="False" Click="BlockFocusedAppButton_Click" VerticalAlignment="Center" />
+                        </Grid>
                         <Grid Margin="0,8,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
