@@ -117,7 +117,7 @@ namespace LipiDashboard
                 AboutPanel.Visibility = Visibility.Collapsed;
                 CustomDictionaryPanel.Visibility = Visibility.Collapsed;
                 TypingRulesPanel.Visibility = Visibility.Collapsed;
-                SuggestionUIPanel.Visibility = Visibility.Collapsed;
+                SuggestionUIScroller.Visibility = Visibility.Collapsed;
                 SettingsPanel.Visibility = Visibility.Visible;
             }
             else
@@ -128,7 +128,7 @@ namespace LipiDashboard
                 GeneralPanel.Visibility = tag == "General" ? Visibility.Visible : Visibility.Collapsed;
                 TypingRulesPanel.Visibility = tag == "TypingRules" ? Visibility.Visible : Visibility.Collapsed;
                 CustomDictionaryPanel.Visibility = tag == "CustomDictionary" ? Visibility.Visible : Visibility.Collapsed;
-                SuggestionUIPanel.Visibility = tag == "SuggestionUI" ? Visibility.Visible : Visibility.Collapsed;
+                SuggestionUIScroller.Visibility = tag == "SuggestionUI" ? Visibility.Visible : Visibility.Collapsed;
                 SettingsPanel.Visibility = Visibility.Collapsed;
                 AboutPanel.Visibility = tag == "About" ? Visibility.Visible : Visibility.Collapsed;
 
