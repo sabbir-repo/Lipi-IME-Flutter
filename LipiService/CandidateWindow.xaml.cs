@@ -62,13 +62,50 @@ namespace LipiService
             UpdatePosition();
         }
 
+        // Win32 replacement for System.Windows.Forms.Screen.FromPoint(...).WorkingArea
+        // (WinForms was removed from this project to reduce memory usage).
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        private struct NativePoint { public int X; public int Y; }
+
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        private struct NativeRect { public int Left; public int Top; public int Right; public int Bottom; }
+
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        private struct NativeMonitorInfo { public int cbSize; public NativeRect rcMonitor; public NativeRect rcWork; public uint dwFlags; }
+
+        private const uint MONITOR_DEFAULTTONEAREST = 2;
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr MonitorFromPoint(NativePoint pt, uint dwFlags);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool GetMonitorInfo(IntPtr hMonitor, ref NativeMonitorInfo lpmi);
+
         private void UpdatePosition()
         {
             if (double.IsNaN(_targetX) || double.IsNaN(_targetY)) return;
 
-            var drawingPoint = new System.Drawing.Point((int)_targetX, (int)_targetY);
-            var screen = System.Windows.Forms.Screen.FromPoint(drawingPoint);
-            var workArea = screen.WorkingArea;
+            // Find the work area of the monitor containing the caret point
+            // (same behavior as the old Screen.FromPoint on multi-monitor setups).
+            var pt = new NativePoint { X = (int)_targetX, Y = (int)_targetY };
+            var mi = new NativeMonitorInfo { cbSize = System.Runtime.InteropServices.Marshal.SizeOf<NativeMonitorInfo>() };
+            NativeRect workArea;
+            IntPtr hMonitor = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
+            if (hMonitor != IntPtr.Zero && GetMonitorInfo(hMonitor, ref mi))
+            {
+                workArea = mi.rcWork;
+            }
+            else
+            {
+                // Fallback: primary monitor work area
+                workArea = new NativeRect
+                {
+                    Left = (int)SystemParameters.WorkArea.Left,
+                    Top = (int)SystemParameters.WorkArea.Top,
+                    Right = (int)SystemParameters.WorkArea.Right,
+                    Bottom = (int)SystemParameters.WorkArea.Bottom
+                };
+            }
             
             double w = this.ActualWidth;
             double h = this.ActualHeight;
